@@ -3,7 +3,8 @@ const Koa = require('koa');
 const server = require('koa-static');
 const render = require('koa-ejs');
 const bodyParser = require('koa-bodyparser');
-const session = require('koa-session');
+const session = require('koa-generic-session');
+const SQLite3Store = require('koa-sqlite3-session');
 const { v4: uuid } = require('uuid');
 
 const app = new Koa();
@@ -16,8 +17,9 @@ render(app, {
 });
 app.use(server('./public'));
 app.use(bodyParser());
-app.keys = [''];
+app.keys = ['SECRET_KEY'];
 app.use(session({
+    store: new SQLite3Store('session.db', {}),
     maxAge: 1000 * 60 * 60 * 24,
     secure: false
 }, app));

@@ -6,12 +6,12 @@ const validator = require('validatorjs');
 const bcrypt = require('bcrypt');
 
 router.get('/signup', async (ctx, next) => {
+    console.log(ctx.session);
+
     await ctx.render('signup');
 })
 
 router.post('/signup', async (ctx, next) => {
-    console.log(ctx.request.body);
-
     let userName = ctx.request.body.user_name;
     let mail = ctx.request.body.mail;
     let password = ctx.request.body.password;
@@ -35,36 +35,27 @@ router.post('/signup', async (ctx, next) => {
         password: 'required|string|min:5|max:100'
     });
 
-    if (userNameValidate.fails(() => { })) {
-        // ユーザー名エラー
-        console.log('ユーザー名')
-    }
+    if (userNameValidate.fails() || mailValidate.fails() || passwordValidate.fails()) {
+        if (userNameValidate.fails()) ctx.session.error_user_name = 'Validation Error';
+        if (mailValidate.fails()) ctx.session.error_mail = 'Validation Error';
+        if (passwordValidate.fails()) ctx.session.error_password = 'Validation Error';
 
-    if (mailValidate.fails(() => { })) {
-        // メールエラー
-        console.log('メールアドレス')
-    }
-
-    if (passwordValidate.fails(() => { })) {
-        // パスワードエラー
-        console.log('パスワード')
+        ctx.redirect('/signup');
     }
 
     // 重複
     connection.query('SELECT user_id FROM user WHERE mail = ?', [mail], function (error, result, field) {
-        if (result.length === 0) {
-            // 登録可能
-            console.log('可能')
+        if (result.length !== 0) {
+            ctx.session.error_mail = '既に登録されているメールアドレスです';
 
-            let sql = 'INSERT INTO user (user_name, mail, password) VALUES (?, ?, ?)';
-            connection.query(sql, [userName, mail, bcrypt.hashSync(password, 10)], function (error, result, field) {
-                console.log('登録')
-            })
-        } else {
-            // 登録不可
-            console.log('不可')
+            ctx.redirect('/signup');
         }
     });
+
+    let sql = 'INSERT INTO user (user_name, mail, password) VALUES (?, ?, ?)';
+    connection.query(sql, [userName, mail, bcrypt.hashSync(password, 10)], function (error, result, field) {
+        console.log('登録')
+    })
 
     ctx.redirect('/signup')
 })
