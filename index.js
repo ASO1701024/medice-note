@@ -13,7 +13,7 @@ render(app, {
     layout: 'base',
     viewExt: 'html',
     cache: false,
-    debug: true
+    debug: false
 });
 app.use(server('./public'));
 app.use(bodyParser());
@@ -37,5 +37,9 @@ app.use(signupRouter.allowedMethods());
 const loginRouter = require('./router/login');
 app.use(loginRouter.routes());
 app.use(loginRouter.allowedMethods());
+
+const logoutRouter = require('./router/logout');
+app.use(logoutRouter.routes())
+app.use(logoutRouter.allowedMethods())
 
 app.listen(5000);
