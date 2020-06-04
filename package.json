@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^4.0.1",
     "koa": "^2.12.0",
     "koa-bodyparser": "^4.3.0",
     "koa-ejs": "^4.3.0",
@@ -18,6 +19,7 @@
     "koa-static": "^5.0.0",
     "mysql": "^2.18.1",
     "sendmail": "^1.6.1",
-    "uuid": "^8.1.0"
+    "uuid": "^8.1.0",
+    "validatorjs": "^3.18.1"
   }
 }
