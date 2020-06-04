@@ -3,6 +3,7 @@ const Koa = require('koa');
 const server = require('koa-static');
 const render = require('koa-ejs');
 const bodyParser = require('koa-bodyparser');
+const session = require('koa-session');
 const { v4: uuid } = require('uuid');
 
 const app = new Koa();
@@ -15,6 +16,11 @@ render(app, {
 });
 app.use(server('./public'));
 app.use(bodyParser());
+app.keys = [''];
+app.use(session({
+    maxAge: 1000 * 60 * 60 * 24,
+    secure: false
+}, app));
 
 // uuid().split('-').join('')
 
