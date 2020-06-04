@@ -22,4 +22,8 @@ const indexRouter = require('./router/index');
 app.use(indexRouter.routes())
 app.use(indexRouter.allowedMethods())
 
+const loginRouter = require('./router/login');
+app.use(loginRouter.routes())
+app.use(loginRouter.allowedMethods())
+
 app.listen(5000);
