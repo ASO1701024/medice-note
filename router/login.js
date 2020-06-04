@@ -1,6 +1,5 @@
 const Router = require('koa-router');
 const router = new Router();
-const mysql = require('mysql');
 const connection = require('../db');
 
 router.get('/login', async (ctx, next) => {
