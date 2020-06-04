@@ -6,12 +6,15 @@ const validator = require('validatorjs');
 const bcrypt = require('bcrypt');
 
 router.get('/signup', async (ctx, next) => {
-    console.log(ctx.session);
+    let session = ctx.session;
+    console.log(session);
 
     await ctx.render('signup');
 })
 
 router.post('/signup', async (ctx, next) => {
+    let session = ctx.session;
+
     let userName = ctx.request.body.user_name;
     let mail = ctx.request.body.mail;
     let password = ctx.request.body.password;
@@ -36,9 +39,9 @@ router.post('/signup', async (ctx, next) => {
     });
 
     if (userNameValidate.fails() || mailValidate.fails() || passwordValidate.fails()) {
-        if (userNameValidate.fails()) ctx.session.error_user_name = 'Validation Error';
-        if (mailValidate.fails()) ctx.session.error_mail = 'Validation Error';
-        if (passwordValidate.fails()) ctx.session.error_password = 'Validation Error';
+        if (userNameValidate.fails()) session.error_user_name = 'Validation Error';
+        if (mailValidate.fails()) session.error_mail = 'Validation Error';
+        if (passwordValidate.fails()) session.error_password = 'Validation Error';
 
         ctx.redirect('/signup');
     }
@@ -46,7 +49,7 @@ router.post('/signup', async (ctx, next) => {
     // 重複
     connection.query('SELECT user_id FROM user WHERE mail = ?', [mail], function (error, result, field) {
         if (result.length !== 0) {
-            ctx.session.error_mail = '既に登録されているメールアドレスです';
+            session.error_mail = '既に登録されているメールアドレスです';
 
             ctx.redirect('/signup');
         }
