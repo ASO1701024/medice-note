@@ -7,7 +7,6 @@ const { v4: uuid } = require('uuid');
 
 router.get('/signup', async (ctx, next) => {
     let session = ctx.session;
-    console.log(session);
 
     let result = {};
     result['data'] = {};
@@ -26,8 +25,6 @@ router.get('/signup', async (ctx, next) => {
         result['data']['error_password'] = session.error_password;
         session.error_password = undefined;
     }
-
-    console.log(result)
 
     await ctx.render('signup', result);
 })
