@@ -5,6 +5,7 @@ const validator = require('validatorjs');
 const bcrypt = require('bcrypt');
 const { v4: uuid } = require('uuid');
 const transporter = require('../mail');
+const config = require('../config.json');
 
 router.get('/signup', async (ctx, next) => {
     let session = ctx.session;
@@ -92,7 +93,7 @@ router.post('/signup', async (ctx, next) => {
     await connection.query('INSERT INTO user_authentication_key VALUES(?, ?, ?)', [userId, authKey, date]);
 
     transporter.sendMail({
-        from: 'medice.note@gmail.com',
+        from: config.mail.auth.user,
         to: mail,
         subject: 'メールアドレス認証',
         text: '登録いただきありがとうございます\n' +
