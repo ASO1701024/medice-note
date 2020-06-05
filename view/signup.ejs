@@ -1,5 +1,11 @@
 <main>
     <h1>Medice Note</h1>
+    <% if (typeof data.success_message !== "undefined") { %>
+        <p class="success_message"><%= data.success_message %></p>
+    <% } %>
+    <% if (typeof data.error_message !== "undefined") { %>
+        <p class="error_message"><%= data.error_message %></p>
+    <% } %>
     <form action="/signup" method="post">
         <label>
             <span class="label">ユーザー名</span>

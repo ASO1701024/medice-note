@@ -12,6 +12,16 @@ router.get('/signup', async (ctx, next) => {
     let result = {};
     result['data'] = {};
 
+    if (session.success_message !== undefined) {
+        result['data']['success_message'] = session.success_message;
+        session.success_message = undefined;
+    }
+
+    if (session.error_message !== undefined) {
+        result['data']['error_message'] = session.error_message;
+        session.error_message = undefined;
+    }
+
     if (session.error_user_name !== undefined) {
         result['data']['error_user_name'] = session.error_user_name;
         session.error_user_name = undefined;
@@ -88,11 +98,11 @@ router.post('/signup', async (ctx, next) => {
         text: '登録いただきありがとうございます\n' +
             'アカウントを有効化するには下記のURLにアクセスしメールアドレスを認証してください\n' +
             'https://www.medice-note.vxx0.com/auth-mail/' + authKey
-    }, function (error, info) {
+    }, function (error) {
         if (error) {
-            console.log(error);
+            session.error_message = '認証メールの送信に失敗しました';
         } else {
-            console.log(info.response);
+            session.success_message = '認証メールを送信しました';
         }
     });
 

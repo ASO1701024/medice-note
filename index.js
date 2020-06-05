@@ -38,7 +38,11 @@ app.use(loginRouter.routes());
 app.use(loginRouter.allowedMethods());
 
 const logoutRouter = require('./router/logout');
-app.use(logoutRouter.routes())
-app.use(logoutRouter.allowedMethods())
+app.use(logoutRouter.routes());
+app.use(logoutRouter.allowedMethods());
+
+const authMailRouter = require('./router/auth_mail');
+app.use(authMailRouter.routes());
+app.use(authMailRouter.allowedMethods());
 
 app.listen(5000);
