@@ -4,6 +4,7 @@ const connection = require('../db');
 const validator = require('validatorjs');
 const bcrypt = require('bcrypt');
 const { v4: uuid } = require('uuid');
+const transporter = require('../mail');
 
 router.get('/signup', async (ctx, next) => {
     let session = ctx.session;
@@ -79,6 +80,21 @@ router.post('/signup', async (ctx, next) => {
     let date = new Date();
     date.setHours(date.getHours() + 24);
     await connection.query('INSERT INTO user_authentication_key VALUES(?, ?, ?)', [userId, authKey, date]);
+
+    transporter.sendMail({
+        from: 'medice.note@gmail.com',
+        to: mail,
+        subject: 'メールアドレス認証',
+        text: '登録いただきありがとうございます\n' +
+            'アカウントを有効化するには下記のURLにアクセスしメールアドレスを認証してください\n' +
+            'https://www.medice-note.vxx0.com/auth-mail/' + authKey
+    }, function (error, info) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log(info.response);
+        }
+    });
 
     ctx.redirect('/signup')
 })

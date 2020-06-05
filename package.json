@@ -20,7 +20,7 @@
     "koa-sqlite3-session": "^1.0.4",
     "koa-static": "^5.0.0",
     "mysql2": "^2.1.0",
-    "sendmail": "^1.6.1",
+    "nodemailer": "^6.4.8",
     "uuid": "^8.1.0",
     "validatorjs": "^3.18.1"
   },
