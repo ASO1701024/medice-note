@@ -10,7 +10,7 @@ const app = new Koa();
 render(app, {
     root: path.join(__dirname, 'view'),
     layout: 'base',
-    viewExt: 'html',
+    viewExt: 'ejs',
     cache: false,
     debug: false
 });

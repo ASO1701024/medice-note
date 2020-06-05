@@ -10,21 +10,24 @@ router.get('/signup', async (ctx, next) => {
     console.log(session);
 
     let result = {};
+    result['data'] = {};
 
     if (session.error_user_name !== undefined) {
-        result['error_user_name'] = session.error_user_name;
+        result['data']['error_user_name'] = session.error_user_name;
         session.error_user_name = undefined;
     }
 
     if (session.error_mail !== undefined) {
-        result['error_mail'] = session.error_mail;
+        result['data']['error_mail'] = session.error_mail;
         session.error_mail = undefined;
     }
 
     if (session.error_password !== undefined) {
-        result['error_password'] = session.error_password;
+        result['data']['error_password'] = session.error_password;
         session.error_password = undefined;
     }
+
+    console.log(result)
 
     await ctx.render('signup', result);
 })
@@ -71,14 +74,13 @@ router.post('/signup', async (ctx, next) => {
     }
 
     sql = 'INSERT INTO user (user_name, mail, password) VALUES (?, ?, ?)';
-    let [t1] = await connection.query(sql, [userName, mail, bcrypt.hashSync(password, 10)]);
+    let [user] = await connection.query(sql, [userName, mail, bcrypt.hashSync(password, 10)]);
 
-    let userId = t1.insertId;
+    let userId = user.insertId;
     let authKey = uuid().split('-').join('');
     console.log(authKey);
     let date = new Date();
     date.setHours(date.getHours() + 24);
-    console.log(`${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`);
     await connection.query('INSERT INTO user_authentication_key VALUES(?, ?, ?)', [userId, authKey, date]);
 
     ctx.redirect('/signup')
