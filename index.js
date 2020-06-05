@@ -5,7 +5,6 @@ const render = require('koa-ejs');
 const bodyParser = require('koa-bodyparser');
 const session = require('koa-generic-session');
 const SQLite3Store = require('koa-sqlite3-session');
-const { v4: uuid } = require('uuid');
 
 const app = new Koa();
 render(app, {

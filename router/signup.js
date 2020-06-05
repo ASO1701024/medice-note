@@ -1,11 +1,9 @@
 const Router = require('koa-router');
 const router = new Router();
-// const mysql = require('mysql');
 const connection = require('../db');
 const validator = require('validatorjs');
 const bcrypt = require('bcrypt');
-// const session = require('koa-generic-session');
-// const SQLite3Store = require('koa-sqlite3-session');
+const { v4: uuid } = require('uuid');
 
 router.get('/signup', async (ctx, next) => {
     let session = ctx.session;
@@ -63,33 +61,25 @@ router.post('/signup', async (ctx, next) => {
     }
 
     // 重複
-    let test = 'test1';
-    console.log('test1 > ' + test);
-
     let sql = 'SELECT user_id FROM user WHERE mail = ?';
-    await connection.query(sql, [mail], function (error, result, field) {
-        console.log('count > ' + result.length);
-        if (result.length !== 0) {
-            console.log('test2_1 > ' + test);
-            test = 'test2';
-            console.log('test2_2 > ' + test);
+    let [result] = await connection.query(sql, [mail]);
 
-            session.error_mail = '既に登録されているメールアドレスです';
-            console.log(session);
-            // ctx.body = session;
+    if (result.length !== 0) {
+        session.error_mail = '既に登録されているメールアドレスです';
 
-            ctx.redirect('/signup');
-        } else {
-            let sql = 'INSERT INTO user (user_name, mail, password) VALUES (?, ?, ?)';
-            connection.query(sql, [userName, mail, bcrypt.hashSync(password, 10)], function (error, result, field) {
-                console.log('登録')
-            })
-        }
-    });
+        return ctx.redirect('/signup')
+    }
 
-    console.log('test3_1 > ' + test);
-    test = 'test3';
-    console.log('test3_2 > ' + test);
+    sql = 'INSERT INTO user (user_name, mail, password) VALUES (?, ?, ?)';
+    let [t1] = await connection.query(sql, [userName, mail, bcrypt.hashSync(password, 10)]);
+
+    let userId = t1.insertId;
+    let authKey = uuid().split('-').join('');
+    console.log(authKey);
+    let date = new Date();
+    date.setHours(date.getHours() + 24);
+    console.log(`${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`);
+    await connection.query('INSERT INTO user_authentication_key VALUES(?, ?, ?)', [userId, authKey, date]);
 
     ctx.redirect('/signup')
 })
