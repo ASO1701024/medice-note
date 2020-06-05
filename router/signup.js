@@ -87,7 +87,7 @@ router.post('/signup', async (ctx, next) => {
 
     let userId = user.insertId;
     let authKey = uuid().split('-').join('');
-    console.log(authKey);
+
     let date = new Date();
     date.setHours(date.getHours() + 24);
     await connection.query('INSERT INTO user_authentication_key VALUES(?, ?, ?)', [userId, authKey, date]);
