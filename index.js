@@ -23,8 +23,6 @@ app.use(session({
     secure: false
 }, app));
 
-// uuid().split('-').join('')
-
 const indexRouter = require('./router/index');
 app.use(indexRouter.routes());
 app.use(indexRouter.allowedMethods());
@@ -48,5 +46,9 @@ app.use(authMailRouter.allowedMethods());
 const forgotPasswordRouter = require('./router/forgot-password');
 app.use(forgotPasswordRouter.routes());
 app.use(forgotPasswordRouter.allowedMethods());
+
+const authPasswordRouter = require('./router/auth-password');
+app.use(authPasswordRouter.routes());
+app.use(authPasswordRouter.allowedMethods());
 
 app.listen(5000);
