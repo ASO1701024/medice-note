@@ -45,4 +45,8 @@ const authMailRouter = require('./router/auth-mail');
 app.use(authMailRouter.routes());
 app.use(authMailRouter.allowedMethods());
 
+const forgotPasswordRouter = require('./router/forgot-password');
+app.use(forgotPasswordRouter.routes());
+app.use(forgotPasswordRouter.allowedMethods());
+
 app.listen(5000);
