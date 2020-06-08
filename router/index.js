@@ -12,8 +12,9 @@ router.get('/', async (ctx, next) => {
         result = 'ログイン済み\n' + session.auth_id;
     }
 
-
-    console.log(app.getUserId(session.auth_id));
+    console.log(session.auth_id);
+    let userId = await app.getUserId(session.auth_id);
+    console.log(userId);
 
     await ctx.render('index', {
         message: result
