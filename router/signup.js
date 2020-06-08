@@ -1,10 +1,10 @@
 const Router = require('koa-router');
 const router = new Router();
-const connection = require('../db');
+const connection = require('../app/db');
 const validator = require('validatorjs');
 const bcrypt = require('bcrypt');
 const { v4: uuid } = require('uuid');
-const transporter = require('../mail');
+const transporter = require('../app/mail');
 const config = require('../config.json');
 
 router.get('/signup', async (ctx, next) => {

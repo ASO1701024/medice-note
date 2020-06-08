@@ -1,6 +1,6 @@
 const Router = require('koa-router');
 const router = new Router();
-const connection = require('../db');
+const connection = require('../app/db');
 const bcrypt = require('bcrypt');
 const { v4: uuid } = require('uuid');
 

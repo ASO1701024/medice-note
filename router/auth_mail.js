@@ -1,6 +1,6 @@
 const Router = require('koa-router');
 const router = new Router();
-const connection = require('../db');
+const connection = require('../app/db');
 
 router.get('/auth-mail/:auth_key', async (ctx, next) => {
     let session = ctx.session;
