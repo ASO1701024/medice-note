@@ -41,7 +41,7 @@ const logoutRouter = require('./router/logout');
 app.use(logoutRouter.routes());
 app.use(logoutRouter.allowedMethods());
 
-const authMailRouter = require('./router/auth_mail');
+const authMailRouter = require('./router/auth-mail');
 app.use(authMailRouter.routes());
 app.use(authMailRouter.allowedMethods());
 
