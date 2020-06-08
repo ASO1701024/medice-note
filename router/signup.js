@@ -92,7 +92,7 @@ router.post('/signup', async (ctx, next) => {
     date.setHours(date.getHours() + 24);
     await connection.query('INSERT INTO user_authentication_key VALUES(?, ?, ?)', [userId, authKey, date]);
 
-    transporter.sendMail({
+    await transporter.sendMail({
         from: config.mail.auth.user,
         to: mail,
         subject: 'メールアドレス認証',

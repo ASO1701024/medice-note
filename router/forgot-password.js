@@ -43,7 +43,7 @@ router.post('/forgot-password', async (ctx, next) => {
     date.setHours(date.getHours() + 24);
     await connection.query('INSERT INTO user_reset_password_key VALUES(?, ?, ?)', [userId, authKey, date]);
 
-    transporter.sendMail({
+    await transporter.sendMail({
         from: config.mail.auth.user,
         to: mail,
         subject: 'パスワード再発行',
