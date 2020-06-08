@@ -99,12 +99,10 @@ router.post('/signup', async (ctx, next) => {
         text: '登録いただきありがとうございます\n' +
             'アカウントを有効化するには下記のURLにアクセスしメールアドレスを認証してください\n' +
             'https://www.medice-note.vxx0.com/auth-mail/' + authKey
-    }, function (error) {
-        if (error) {
-            session.error_message = '認証メールの送信に失敗しました';
-        } else {
-            session.success_message = '認証メールを送信しました';
-        }
+    }).then(() => {
+        session.success_message = '認証メールを送信しました';
+    }).catch(() => {
+        session.error_message = '認証メールの送信に失敗しました';
     });
 
     ctx.redirect('/signup')
