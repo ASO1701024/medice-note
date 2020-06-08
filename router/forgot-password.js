@@ -50,12 +50,10 @@ router.post('/forgot-password', async (ctx, next) => {
         text: 'パスワード再発行リクエストが行われました\n' +
             'パスワードを復元するには下記のURLにアクセスしメールアドレスを認証してください\n' +
             'https://www.medice-note.vxx0.com/auth-password/' + authKey
-    }, function (error) {
-        if (error) {
-            session.error_message = '認証メールの送信に失敗しました';
-        } else {
-            session.success_message = '認証メールを送信しました';
-        }
+    }).then(() => {
+        session.success_message = '認証メールを送信しました';
+    }).catch(() => {
+        session.error_message = '認証メールの送信に失敗しました';
     });
 
     return ctx.redirect('/forgot-password');
