@@ -2,7 +2,7 @@ const Router = require('koa-router');
 const router = new Router();
 const app = require('../app/app');
 
-router.get('/', async (ctx, next) => {
+router.get('/', async (ctx) => {
     let session = ctx.session;
 
     let result;
