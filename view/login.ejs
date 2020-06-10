@@ -1,0 +1,23 @@
+<main>
+    <h1>Medice Note</h1>
+    <% if (typeof data.success_message !== "undefined") { %>
+        <p class="success_message"><%= data.success_message %></p>
+    <% } %>
+    <% if (typeof data.error_message !== "undefined") { %>
+        <p class="error_message"><%= data.error_message %></p>
+    <% } %>
+    <form action="/login" method="post">
+        <label>
+            <span class="label">メールアドレス</span>
+            <input type="email" name="mail" required>
+        </label>
+        <label>
+            <span class="label">パスワード</span>
+            <input type="password" name="password" autocomplete="on" required>
+        </label>
+        <input type="submit" value="ログイン">
+        <p class="account_action">
+            <a href="/signup">アカウントを作成</a>
+        </p>
+    </form>
+</main>
