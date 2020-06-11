@@ -1,20 +1,24 @@
+/*session
+update_medicine_id: 更新する薬情報の薬ID
+update_denied_error: 薬情報変更失敗時のエラーメッセージ　
+*/
 const Router = require('koa-router');
 const router = new Router();
 const app = require('../app/app');
 const connection = require('../app/db');
 const medicineValidation = require('./medicine-validation.js');
 
-router.get('/medicine-update/:x', async (ctx) => {
+router.get('/medicine-update/:medicine_id', async (ctx) => {
     let session = ctx.session;
-    let medicineId = ctx.params.x;
-    session.update_medicine_x = medicineId;
-    if(!session.auth_id){
+    let medicineId = ctx.params.medicine_id;
+    session.update_medicine_id = medicineId;
+    if(!session.auth_id) {
         return ctx.redirect('/login');
     }
 
     let result = {};
     result['data'] = {};
-    if(session.update_denied_error){
+    if(session.update_denied_error) {
         result['data']['errorMsg'] = session.update_denied_error;
         session.update_denied_error = null;
     }
@@ -39,7 +43,7 @@ router.get('/medicine-update/:x', async (ctx) => {
     let medicineResult = (await connection.query(sql, [userId,medicineId]))[0][0];
 
     //存在しないmedice_idの指定、もしくは自分以外が作成した薬情報を指定した時の処理
-    if(typeof medicineResult === 'undefined'){
+    if(typeof medicineResult === 'undefined') {
         return ctx.redirect('/medicine-register')
     }
 
@@ -56,11 +60,11 @@ router.get('/medicine-update/:x', async (ctx) => {
 
 router.post('/medicine-update', async (ctx) => {
     let session = ctx.session;
-    if(!session.auth_id){
+    if(!session.auth_id) {
         return ctx.redirect('/login');
     }
-    let updateMedicineId = session.update_medicine_x;
-    session.update_medicine_x = null;
+    let updateMedicineId = session.update_medicine_id;
+    session.update_medicine_id = null;
 
     //必須項目
     let medicineName = ctx.request.body.medicineName;
@@ -89,9 +93,9 @@ router.post('/medicine-update', async (ctx) => {
 
     //検証パス時は値をDBに保存し、検証拒否時はエラーメッセージを表示
     return await asyncValidation(requestArray);
-    async function asyncValidation(data){
+    async function asyncValidation(data) {
         let result = await medicineValidation(data)
-        if(result.is_success){
+        if(result.is_success) {
             console.log("success");
             let sql = 'UPDATE medicine ' +
                 'SET medicine_name=?,hospital_name=?,number=?,take_time=?,adjustment_time=?' +
@@ -99,9 +103,8 @@ router.post('/medicine-update', async (ctx) => {
                 'WHERE medicine_id = ?';
             await connection.query(sql, requestArray);
             return ctx.redirect('/medicine-update/'+updateMedicineId);
-        }else{
+        }else {
             console.log("false");
-            session.update_denied_request = result.request;
             session.update_denied_error = result.errors;
             return ctx.redirect('/medicine-update/'+updateMedicineId);
         }

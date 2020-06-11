@@ -1,7 +1,6 @@
 /*session
 register_denied_request: 薬登録失敗時、送信された登録情報をHTMLのformのvalueに設定して表示
 register_denied_error: 薬登録失敗時のエラーメッセージ　
-
 */
 const Router = require('koa-router');
 const router = new Router();
@@ -11,12 +10,12 @@ const medicineValidation = require('./medicine-validation.js');
 
 router.get('/medicine-register', async (ctx) => {
     let session = ctx.session;
-    if(!session.auth_id){
+    if(!session.auth_id) {
         return ctx.redirect('/login');
     }
 
     let result = {};
-    if(session.register_denied_error){
+    if(session.register_denied_error) {
         result['data'] = {};
         result['data']['errorMsg'] = session.register_denied_error;
         result['data']['request'] = session.register_denied_request;
@@ -29,7 +28,7 @@ router.get('/medicine-register', async (ctx) => {
 
 router.post('/medicine-register', async (ctx) => {
     let session = ctx.session;
-    if(!session.auth_id){
+    if(!session.auth_id) {
         return ctx.redirect('/login');
     }
 
@@ -52,7 +51,7 @@ router.post('/medicine-register', async (ctx) => {
     let description = ctx.request.body.description || '';
 
     //現在はグループ指定機能が存在しないので、削除不能の初期グループに追加する。
-    let sql = 'SELECT MG.group_id FROM medicine_group MG WHERE MG.user_id = ? AND MG.is_deletable = 1;';
+    let sql = 'SELECT group_id FROM medicine_group WHERE user_id = ? AND is_deletable = 1;';
     let userId = await app.getUserId(session.auth_id);
     let group_id = (await connection.query(sql, [userId]))[0][0].group_id;
 
@@ -60,14 +59,14 @@ router.post('/medicine-register', async (ctx) => {
 
     //検証パス時は値をDBに保存し、検証拒否時はエラーメッセージを表示
     return await asyncValidation(requestArray);
-    async function asyncValidation(data){
+    async function asyncValidation(data) {
         let result = await medicineValidation(data)
-        if(result.is_success){
+        if(result.is_success) {
             console.log("success");
             let sql = 'INSERT INTO medicine VALUES(0,?,?,?,?,?,?,?,?,?,?,?)';
             await connection.query(sql, requestArray);
             return ctx.redirect('/medicine-register');
-        }else{
+        }else {
             console.log("false");
             session.register_denied_request = result.request;
             session.register_denied_error = result.errors;

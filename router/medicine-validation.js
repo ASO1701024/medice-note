@@ -1,6 +1,6 @@
 //受け取った薬情報を検証する。
 //登録時と変更時に検証を行うため、外部ファイルから利用。
-async function validation(items){
+async function validation(items) {
     const validator = require('validatorjs');
     //データをvalidationするために整形
     let requests = {
@@ -38,11 +38,11 @@ async function validation(items){
     let requestValidate = new validator(requests, rules);
 
     //validationの結果を取り出してresultに代入
-    let result = {errors:{},is_success:false, request:{}};
+    let result = {errors:{}, is_success:false, request:{}};
     await requestValidate.checkAsync(()=>{
         //検証成功時処理
         result.is_success = true;
-    },()=>{
+    },()=> {
         //検証拒否時処理
         result.is_success =  false
         result.errors.medicineName = requestValidate.errors.first('medicineName');
@@ -60,7 +60,6 @@ async function validation(items){
         result.errors.groupId = requestValidate.errors.first('groupId')
         result.request = requests;
     })
-    // console.log(result)
     return result;
 }
 module.exports = validation
