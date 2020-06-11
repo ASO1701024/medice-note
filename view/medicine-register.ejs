@@ -1,4 +1,5 @@
 <main>
+        <h1>登録テスト</h1>
     <form action="/medicine-register" method="post">
         <% if (typeof data !== "undefined" && data.errorMsg.medicineName !== false) { %>
             <p class="medicine_register_error_message"><%= data.errorMsg.medicineName %></p>

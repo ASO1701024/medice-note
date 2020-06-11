@@ -11,6 +11,9 @@ const medicineValidation = require('./medicine-validation.js');
 
 router.get('/medicine-register', async (ctx) => {
     let session = ctx.session;
+    if(!session.auth_id){
+        return ctx.redirect('/login');
+    }
 
     let result = {};
     if(session.register_denied_error){
@@ -45,17 +48,15 @@ router.post('/medicine-register', async (ctx) => {
     let startsDate = startsYear + '-' + startsMonth + '-' + startsDay;
 
     //任意項目
+    let image = "";
     let description = ctx.request.body.description || '';
 
-    //medicineのgroup_idを取得する。
     //現在はグループ指定機能が存在しないので、削除不能の初期グループに追加する。
     let sql = 'SELECT MG.group_id FROM medicine_group MG WHERE MG.user_id = ? AND MG.is_deletable = 1;';
     let userId = await app.getUserId(session.auth_id);
     let group_id = (await connection.query(sql, [userId]))[0][0].group_id;
-    console.log(group_id)
 
-
-    let requestArray = [medicineName, hospitalName, number, takeTime, adjustmentTime, startsDate, period, medicineType, description, group_id];
+    let requestArray = [medicineName, hospitalName, number, takeTime, adjustmentTime, startsDate, period, medicineType, image, description, group_id];
 
     //検証パス時は値をDBに保存し、検証拒否時はエラーメッセージを表示
     return await asyncValidation(requestArray);
@@ -63,7 +64,7 @@ router.post('/medicine-register', async (ctx) => {
         let result = await medicineValidation(data)
         if(result.is_success){
             console.log("success");
-            let sql = 'INSERT INTO medicine VALUES(0,?,?,?,?,?,?,?,?,"",?,?)';
+            let sql = 'INSERT INTO medicine VALUES(0,?,?,?,?,?,?,?,?,?,?,?)';
             await connection.query(sql, requestArray);
             return ctx.redirect('/medicine-register');
         }else{

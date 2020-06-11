@@ -3,7 +3,8 @@
 async function validation(items){
     const validator = require('validatorjs');
     //データをvalidationするために整形
-    let requests = {medicineName: String(items[0]),
+    let requests = {
+        medicineName: String(items[0]),
         hospitalName: items[1],
         number: items[2],
         takeTime: items[3],
@@ -13,7 +14,9 @@ async function validation(items){
         startsDay: items[5].split('-')[2],
         period: items[6],
         medicineType: items[7],
-        description: items[8]
+        image: items[8],
+        description: items[9],
+        groupId:items[10]
     };
     //validationのルール
     let rules = {
@@ -27,7 +30,9 @@ async function validation(items){
         startsDay: 'required|numeric|min:1|max:31',
         period: 'required|min:0',
         medicineType: 'required',
-        description: 'max:255'
+        image: 'max:100',
+        description: 'max:255',
+        groupId:'numeric|min:0'
     }
     //validation実行
     let requestValidate = new validator(requests, rules);
@@ -50,9 +55,12 @@ async function validation(items){
         result.errors.startsDay = requestValidate.errors.first('startsDay');
         result.errors.period = requestValidate.errors.first('period');
         result.errors.medicineType = requestValidate.errors.first('medicineType');
+        result.errors.image = requestValidate.errors.first('image')
         result.errors.description = requestValidate.errors.first('description');
+        result.errors.groupId = requestValidate.errors.first('groupId')
         result.request = requests;
     })
+    // console.log(result)
     return result;
 }
 module.exports = validation
