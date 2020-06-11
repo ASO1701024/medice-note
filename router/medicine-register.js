@@ -49,11 +49,11 @@ router.post('/medicine-register', async (ctx) => {
 
     //medicineのgroup_idを取得する。
     //現在はグループ指定機能が存在しないので、削除不能の初期グループに追加する。
-    let sql = 'SELECT MG.group_id ' +
-        'FROM (SELECT user_id FROM session WHERE session_id=?)as SQ ' +
-            'LEFT JOIN medicine_group MG ON SQ.user_id = MG.user_id ' +
-        'WHERE is_deletable = 1;';
-    let group_id = (await connection.query(sql, [session.auth_id]))[0][0]['group_id'];
+    let sql = 'SELECT MG.group_id FROM medicine_group MG WHERE MG.user_id = ? AND MG.is_deletable = 1;';
+    let userId = await app.getUserId(session.auth_id);
+    let group_id = (await connection.query(sql, [userId]))[0][0].group_id;
+    console.log(group_id)
+
 
     let requestArray = [medicineName, hospitalName, number, takeTime, adjustmentTime, startsDate, period, medicineType, description, group_id];
 
@@ -63,7 +63,7 @@ router.post('/medicine-register', async (ctx) => {
         let result = await medicineValidation(data)
         if(result.is_success){
             console.log("success");
-            let sql = 'INSERT INTO medicine VALUES(?,?,?,?,?,?,?,?,?,?)';
+            let sql = 'INSERT INTO medicine VALUES(0,?,?,?,?,?,?,?,?,"",?,?)';
             await connection.query(sql, requestArray);
             return ctx.redirect('/medicine-register');
         }else{
