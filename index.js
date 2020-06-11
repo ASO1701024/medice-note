@@ -56,8 +56,12 @@ app.use(contactRouter.routes());
 app.use(authPasswordRouter.allowedMethods());
 
 
-const testUserCreateRouter = require('./router/medicine-register');
-app.use(testUserCreateRouter.routes());
-app.use(testUserCreateRouter.allowedMethods());
+const testMedicineRegisterRouter = require('./router/medicine-register');
+app.use(testMedicineRegisterRouter.routes());
+app.use(testMedicineRegisterRouter.allowedMethods());
+
+const testMedicineUpdateRouter = require('./router/medicine-update');
+app.use(testMedicineUpdateRouter.routes());
+app.use(testMedicineUpdateRouter.allowedMethods());
 
 app.listen(5000);
