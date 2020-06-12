@@ -79,7 +79,7 @@ router.post('/signup', async (ctx, next) => {
     if (result.length !== 0) {
         session.error_mail = '既に登録されているメールアドレスです';
 
-        return ctx.redirect('/signup')
+        return ctx.redirect('/signup');
     }
 
     sql = 'INSERT INTO user (user_name, mail, password) VALUES (?, ?, ?)';
@@ -91,6 +91,9 @@ router.post('/signup', async (ctx, next) => {
     let date = new Date();
     date.setHours(date.getHours() + 24);
     await connection.query('INSERT INTO user_authentication_key VALUES(?, ?, ?)', [userId, authKey, date]);
+
+    sql = 'INSERT INTO medicine_group (group_name, user_id, is_deletable) VALUES (?, ?, ?)';
+    await connection.query(sql, ['デフォルト', userId, true]);
 
     await transporter.sendMail({
         from: config.mail.auth.user,
