@@ -75,14 +75,14 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
     let group_id = (await connection.query(sql, [userId]))[0][0].group_id;
 
     let requestArray = [medicineName, hospitalName, number, takeTime, adjustmentTime,
-        startsDate, period, medicineType, image, description, String(group_id), medicineId];
+        startsDate, period, medicineType, image, description, medicineId];
 
     //検証パス時は値をDBに保存し、検証拒否時はエラーメッセージを表示
     let result = await medicineValidation(requestArray);
     if (result.is_success) {
         let sql = 'UPDATE medicine ' +
             'SET medicine_name=?,hospital_name=?,number=?,take_time=?,adjustment_time=?,' +
-            'starts_date=?,period=?,type_id=?,image=?,description=?,group_id=? ' +
+            'starts_date=?,period=?,type_id=?,image=?,description=? ' +
             'WHERE medicine_id = ?';
         await connection.query(sql, requestArray);
         return ctx.redirect('/medicine-update/' + medicineId);
