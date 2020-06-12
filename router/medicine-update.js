@@ -27,7 +27,7 @@ router.get('/medicine-update/:medicine_id', async (ctx) => {
     let medicineData = await getMedicine(medicineId, session.auth_id);
     if (medicineData === false) {
         //薬一覧に遷移するように後で変更する。
-        return ctx.redirect('/login');
+        return ctx.redirect('/');
     }
 
     //renderに渡す為にデータを成形
@@ -52,7 +52,7 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
     //更新権限の有無の確認。間違えて使わないように確認後はnullで初期化。
     if (medicineData === false) {
         //薬一覧に遷移するように後で変更する。
-        return ctx.redirect('/login');
+        return ctx.redirect('/');
     }
     medicineData = null;
 
