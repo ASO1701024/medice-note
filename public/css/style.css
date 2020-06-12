@@ -1,1 +1,11 @@
-/* style.css */
+* {
+    font-family: 'M PLUS 1p', sans-serif;
+    font-weight: 300;
+}
+.form-error {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 80%;
+    color: #dc3545;
+}

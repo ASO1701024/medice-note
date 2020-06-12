@@ -5,20 +5,17 @@ const app = require('../app/app');
 router.get('/', async (ctx) => {
     let session = ctx.session;
 
-    let result;
     if (session.auth_id === undefined) {
-        result = '未ログイン';
-    } else {
-        result = 'ログイン済み\n' + session.auth_id;
+        return await ctx.render('index');
     }
 
-    console.log(session.auth_id);
-    let userId = await app.getUserId(session.auth_id);
-    console.log(userId);
+    /*
+    let result;
+    let authId = session.auth_id;
+    let userId = await app.getUserId(authId);
+    */
 
-    await ctx.render('index', {
-        message: result
-    });
+    await ctx.render('medicine-list');
 })
 
 module.exports = router;
