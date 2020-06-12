@@ -7,7 +7,7 @@ const router = new Router();
 const app = require('../app/app');
 const connection = require('../app/db');
 const medicineValidation = require('../app/medicine-validation.js');
-const getMedicine = require('../app/get_medicine');
+const getMedicine = require('../app/get-medicine');
 
 router.get('/medicine-update/:medicine_id', async (ctx) => {
     let session = ctx.session;
