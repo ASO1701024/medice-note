@@ -55,4 +55,12 @@ const contactRouter = require('./router/contact');
 app.use(contactRouter.routes());
 app.use(contactRouter.allowedMethods());
 
+const medicineRegisterRouter = require('./router/medicine-register');
+app.use(medicineRegisterRouter.routes());
+app.use(medicineRegisterRouter.allowedMethods());
+
+const medicineUpdateRouter = require('./router/medicine-update');
+app.use(medicineUpdateRouter.routes());
+app.use(medicineUpdateRouter.allowedMethods());
+
 app.listen(5000);
