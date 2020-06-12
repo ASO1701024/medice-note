@@ -3,7 +3,7 @@ const connection = require('../app/db');
 
 // 薬idから薬の情報を取得する。
 // 所有者ではないor存在しないmedicineIdの指定の場合はfalseを返す。
-async function getMedicine(medicineId,authId) {
+async function getMedicine(medicineId, authId) {
     // medicineテーブルのmedicine_id以外を取得
     let sql =
         'SELECT medicine_name as medicineName,' +
