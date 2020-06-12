@@ -70,10 +70,6 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
     let image = "";
     let description = ctx.request.body.description || '';
 
-    let sql = 'SELECT group_id FROM medicine_group WHERE user_id = ? AND is_deletable = 1;';
-    let userId = await app.getUserId(session.auth_id);
-    let group_id = (await connection.query(sql, [userId]))[0][0].group_id;
-
     let requestArray = [medicineName, hospitalName, number, takeTime, adjustmentTime,
         startsDate, period, medicineType, image, description, medicineId];
 
