@@ -75,7 +75,6 @@ async function validation(items) {
         result.errors.groupId = requestValidate.errors.first('groupId');
         result.request = requests;
     })
-    console.log(result)
     return result;
 }
 

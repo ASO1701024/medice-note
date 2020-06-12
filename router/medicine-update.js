@@ -70,7 +70,7 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
     let image = "";
     let description = ctx.request.body.description || '';
 
-    let sql = 'SELECT MG.group_id FROM medicine_group MG WHERE MG.user_id = ? AND MG.is_deletable = 1;';
+    let sql = 'SELECT group_id FROM medicine_group WHERE user_id = ? AND is_deletable = 1;';
     let userId = await app.getUserId(session.auth_id);
     let group_id = (await connection.query(sql, [userId]))[0][0].group_id;
 
@@ -80,7 +80,6 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
     //検証パス時は値をDBに保存し、検証拒否時はエラーメッセージを表示
     let result = await medicineValidation(requestArray);
     if (result.is_success) {
-        console.log("success");
         let sql = 'UPDATE medicine ' +
             'SET medicine_name=?,hospital_name=?,number=?,take_time=?,adjustment_time=?,' +
             'starts_date=?,period=?,type_id=?,image=?,description=?,group_id=? ' +
@@ -88,7 +87,6 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
         await connection.query(sql, requestArray);
         return ctx.redirect('/medicine-update/' + medicineId);
     } else {
-        console.log("false");
         session.update_denied_error = result.errors;
         return ctx.redirect('/medicine-update/' + medicineId);
     }

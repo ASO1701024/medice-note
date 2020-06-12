@@ -57,12 +57,10 @@ router.post('/medicine-register', async (ctx) => {
     //検証パス時は値をDBに保存し、検証拒否時はエラーメッセージを表示
     let result = await medicineValidation(requestArray)
     if (result.is_success) {
-        console.log("success");
         let sql = 'INSERT INTO medicine VALUES(0,?,?,?,?,?,?,?,?,?,?,?)';
         await connection.query(sql, requestArray);
         return ctx.redirect('/medicine-register');
     }
-    console.log("false");
     session.register_denied_request = result.request;
     session.register_denied_error = result.errors;
     return ctx.redirect('/medicine-register');
