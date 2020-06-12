@@ -16,7 +16,7 @@ async function validation(items) {
         medicineType: items[7],
         image: items[8],
         description: items[9],
-        groupId:items[10]
+        groupId: items[10]
     };
     //validationのルール
     let rules = {
@@ -32,19 +32,19 @@ async function validation(items) {
         medicineType: 'required',
         image: 'max:100',
         description: 'max:255',
-        groupId:'numeric|min:0'
+        groupId: 'numeric|min:0'
     }
     //validation実行
     let requestValidate = new validator(requests, rules);
 
     //validationの結果を取り出してresultに代入
-    let result = {errors:{}, is_success:false, request:{}};
-    await requestValidate.checkAsync(()=>{
+    let result = {errors: {}, is_success: false, request: {}};
+    await requestValidate.checkAsync(() => {
         //検証成功時処理
         result.is_success = true;
-    },()=> {
+    }, () => {
         //検証拒否時処理
-        result.is_success =  false
+        result.is_success = false
         result.errors.medicineName = requestValidate.errors.first('medicineName');
         result.errors.hospitalName = requestValidate.errors.first('hospitalName');
         result.errors.number = requestValidate.errors.first('number');
@@ -58,8 +58,9 @@ async function validation(items) {
         result.errors.image = requestValidate.errors.first('image')
         result.errors.description = requestValidate.errors.first('description');
         result.errors.groupId = requestValidate.errors.first('groupId')
-        result.request = requests;
+        result.request = items;
     })
     return result;
 }
+
 module.exports = validation

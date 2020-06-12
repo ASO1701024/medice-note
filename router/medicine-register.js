@@ -10,12 +10,12 @@ const medicineValidation = require('./medicine-validation.js');
 
 router.get('/medicine-register', async (ctx) => {
     let session = ctx.session;
-    if(!session.auth_id) {
+    if (!session.auth_id) {
         return ctx.redirect('/login');
     }
 
     let result = {};
-    if(session.register_denied_error) {
+    if (session.register_denied_error) {
         result['data'] = {};
         result['data']['errorMsg'] = session.register_denied_error;
         result['data']['request'] = session.register_denied_request;
@@ -28,7 +28,7 @@ router.get('/medicine-register', async (ctx) => {
 
 router.post('/medicine-register', async (ctx) => {
     let session = ctx.session;
-    if(!session.auth_id) {
+    if (!session.auth_id) {
         return ctx.redirect('/login');
     }
 
@@ -38,13 +38,9 @@ router.post('/medicine-register', async (ctx) => {
     let number = ctx.request.body.number;
     let takeTime = ctx.request.body.takeTime;
     let adjustmentTime = ctx.request.body.adjustmentTime;
+    let startsDate = ctx.request.body.startsDate;
     let period = ctx.request.body.period;
     let medicineType = ctx.request.body.medicineType;
-
-    let startsYear = ctx.request.body.startsYear;
-    let startsMonth = ctx.request.body.startsMonth;
-    let startsDay = ctx.request.body.startsDay;
-    let startsDate = startsYear + '-' + startsMonth + '-' + startsDay;
 
     //任意項目
     let image = "";
@@ -59,14 +55,15 @@ router.post('/medicine-register', async (ctx) => {
 
     //検証パス時は値をDBに保存し、検証拒否時はエラーメッセージを表示
     return await asyncValidation(requestArray);
+
     async function asyncValidation(data) {
         let result = await medicineValidation(data)
-        if(result.is_success) {
+        if (result.is_success) {
             console.log("success");
             let sql = 'INSERT INTO medicine VALUES(0,?,?,?,?,?,?,?,?,?,?,?)';
             await connection.query(sql, requestArray);
             return ctx.redirect('/medicine-register');
-        }else {
+        } else {
             console.log("false");
             session.register_denied_request = result.request;
             session.register_denied_error = result.errors;

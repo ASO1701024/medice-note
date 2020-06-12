@@ -55,7 +55,6 @@ const contactRouter = require('./router/contact');
 app.use(contactRouter.routes());
 app.use(authPasswordRouter.allowedMethods());
 
-
 const medicineRegisterRouter = require('./router/medicine-register');
 app.use(medicineRegisterRouter.routes());
 app.use(medicineRegisterRouter.allowedMethods());

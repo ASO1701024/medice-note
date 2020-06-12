@@ -1,44 +1,42 @@
 <main>
-        <h1>変更テスト</h1>
+    <h1>変更テスト</h1>
     <form action="/medicine-update" method="post">
         <% if (typeof data.errorMsg !== "undefined" && data.errorMsg.medicineName !== false) { %>
             <p class="medicine_update_error_message"><%= data.errorMsg.medicineName %></p>
         <% } %>
         <% if (typeof data.request !== "undefined" ) { %>
-            薬名 <input type="text"name="medicineName" value="<%= data.request.medicineName %>"><br>
+            薬名 <input type="text" name="medicineName" value="<%= data.request.medicineName %>"><br>
         <% } %>
-
 
         <% if (typeof data.errorMsg !== "undefined" && data.errorMsg.hospitalName !== false) { %>
             <p class="medicine_update_error_message"><%= data.errorMsg.hospitalName %></p>
         <% } %>
         <% if (typeof data.request !== "undefined" ) { %>
-            病院名 <input type="text"name="hospitalName" value="<%= data.request.hospitalName %>"><br>
+            病院名 <input type="text" name="hospitalName" value="<%= data.request.hospitalName %>"><br>
         <% } %>
-
 
         <% if (typeof data.errorMsg !== "undefined" && data.errorMsg.number !== false) { %>
             <p class="medicine_update_error_message"><%= data.errorMsg.number %></p>
         <% } %>
         <% if (typeof data.request !== "undefined" ) { %>
-            飲む個数 <input type="text"name="number" value="<%= data.request.number %>"><br>
+            飲む個数 <input type="text" name="number" value="<%= data.request.number %>"><br>
         <% }else{ %>
-            飲む個数 <input type="text"name="number" value=""><br>
+            飲む個数 <input type="text" name="number" value=""><br>
         <% } %>
 
         <% if (typeof data.errorMsg !== "undefined" && data.errorMsg.takeTime !== false) { %>
             <p class="medicine_update_error_message"><%= data.errorMsg.takeTime %></p>
         <% } %>
         <% if (typeof data.request !== "undefined" ) { %>
-            飲む時間 <input type="text"name="takeTime" value="<%= data.request.takeTime %>"><br>
-        <% }%>
+            飲む時間 <input type="text" name="takeTime" value="<%= data.request.takeTime %>"><br>
+        <% } %>
 
         <% if (typeof data.errorMsg !== "undefined" && data.errorMsg.adjustmentTime !== false) { %>
             <p class="medicine_update_error_message"><%= data.errorMsg.adjustmentTime %></p>
         <% } %>
         <% if (typeof data.request !== "undefined" ) { %>
-            調整時間 <input type="text"name="adjustmentTime" value="<%= data.request.adjustmentTime %>"><br>
-        <% }%>
+            調整時間 <input type="text" name="adjustmentTime" value="<%= data.request.adjustmentTime %>"><br>
+        <% } %>
 
         <% if (typeof data.errorMsg !== "undefined" && data.errorMsg.startsYear !== false) { %>
             <p class="medicine_update_error_message"><%= data.errorMsg.startsYear %></p>
@@ -51,35 +49,35 @@
         <% } %>
 
         <% if (typeof data.request !== "undefined" ) { %>
-            処方日 <input type="text"name="startsYear" value="<%= data.request.startsYear %>">年
-        <% }%>
+            処方日 <input type="text" name="startsYear" value="<%= data.request.startsYear %>">年
+        <% } %>
         <% if (typeof data.request !== "undefined" ) { %>
-            <input type="text"name="startsMonth" value="<%= data.request.startsMonth %>">月
-        <% }%>
+            <input type="text" name="startsMonth" value="<%= data.request.startsMonth %>">月
+        <% } %>
         <% if (typeof data.request !== "undefined" ) { %>
-            <input type="text"name="startsDay" value="<%= data.request.startsDay %>">日<br>
-        <% }%>
+            <input type="text" name="startsDay" value="<%= data.request.startsDay %>">日<br>
+        <% } %>
 
         <% if (typeof data.errorMsg !== "undefined" && data.errorMsg.period !== false) { %>
             <p class="medicine_update_error_message"><%= data.errorMsg.period %></p>
         <% } %>
         <% if (typeof data.request !== "undefined" ) { %>
-            処方期間 <input type="text"name="period" value="<%= data.request.period %>">日<br>
-        <% }%>
+            処方期間 <input type="text" name="period" value="<%= data.request.period %>">日<br>
+        <% } %>
 
         <% if (typeof data.errorMsg !== "undefined" && data.errorMsg.medicineType !== false) { %>
             <p class="medicine_update_error_message"><%= data.errorMsg.medicineType %></p>
         <% } %>
         <% if (typeof data.request !== "undefined" ) { %>
-            種別 <input type="text"name="medicineType" value="<%= data.request.medicineType %>"><br>
-        <% }%>
+            種別 <input type="text" name="medicineType" value="<%= data.request.medicineType %>"><br>
+        <% } %>
 
         <% if (typeof data.errorMsg !== "undefined" && data.errorMsg.description !== false) { %>
             <p class="medicine_update_error_message"><%= data.errorMsg.description %></p>
         <% } %>
         <% if (typeof data.request !== "undefined" ) { %>
-            説明 <input type="text"name="description" value="<%= data.request.description %>"><br>
-        <% }%>
+            説明 <input type="text" name="description" value="<%= data.request.description %>"><br>
+        <% } %>
         <input type="submit" value="登録">
     </form>
 </main>

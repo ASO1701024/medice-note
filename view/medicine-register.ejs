@@ -1,103 +1,90 @@
 <main>
-        <h1>登録テスト</h1>
+    <h1>登録テスト</h1>
     <form action="/medicine-register" method="post">
         <% if (typeof data !== "undefined" && data.errorMsg.medicineName !== false) { %>
             <p class="medicine_register_error_message"><%= data.errorMsg.medicineName %></p>
         <% } %>
         <% if (typeof data !== "undefined" && data.errorMsg.medicineName == false) { %>
-            薬名 <input type="text"name="medicineName" value="<%= data.request.medicineName %>"><br>
+            薬名 <input type="text" name="medicineName" value="<%= data.request.medicineName %>"><br>
         <% }else{ %>
-            薬名 <input type="text"name="medicineName" value=""><br>
-        <% }%>
+            薬名 <input type="text" name="medicineName" value=""><br>
+        <% } %>
 
         <% if (typeof data !== "undefined" && data.errorMsg.hospitalName !== false) { %>
             <p class="medicine_register_error_message"><%= data.errorMsg.hospitalName %></p>
         <% } %>
         <% if (typeof data !== "undefined" && data.errorMsg.hospitalName == false) { %>
-            病院名 <input type="text"name="hospitalName" value="<%= data.request.hospitalName %>"><br>
+            病院名 <input type="text" name="hospitalName" value="<%= data.request.hospitalName %>"><br>
         <% }else{ %>
-            病院名 <input type="text"name="hospitalName" value=""><br>
-        <% }%>
+            病院名 <input type="text" name="hospitalName" value=""><br>
+        <% } %>
 
         <% if (typeof data !== "undefined" && data.errorMsg.number !== false) { %>
             <p class="medicine_register_error_message"><%= data.errorMsg.number %></p>
         <% } %>
         <% if (typeof data !== "undefined" && data.errorMsg.number == false) { %>
-            飲む個数 <input type="text"name="number" value="<%= data.request.number %>"><br>
+            飲む個数 <input type="text" name="number" value="<%= data.request.number %>"><br>
         <% }else{ %>
-            飲む個数 <input type="text"name="number" value=""><br>
-        <% }%>
+            飲む個数 <input type="text" name="number" value=""><br>
+        <% } %>
 
         <% if (typeof data !== "undefined" && data.errorMsg.takeTime !== false) { %>
             <p class="medicine_register_error_message"><%= data.errorMsg.takeTime %></p>
         <% } %>
         <% if (typeof data !== "undefined" && data.errorMsg.takeTime == false) { %>
-            飲む時間 <input type="text"name="takeTime" value="<%= data.request.takeTime %>"><br>
+            飲む時間 <input type="time" name="takeTime" value="<%= data.request.takeTime %>"><br>
         <% }else{ %>
-            飲む時間 <input type="text"name="takeTime" value=""><br>
-        <% }%>
+            飲む時間 <input type="time" name="takeTime" value=""><br>
+        <% } %>
 
         <% if (typeof data !== "undefined" && data.errorMsg.adjustmentTime !== false) { %>
             <p class="medicine_register_error_message"><%= data.errorMsg.adjustmentTime %></p>
         <% } %>
+
+        <!--調整時間：食前、食後とかのチェックボックス valueは分単位で-->
         <% if (typeof data !== "undefined" && data.errorMsg.adjustmentTime == false) { %>
-            調整時間 <input type="text"name="adjustmentTime" value="<%= data.request.adjustmentTime %>"><br>
+            調整時間 <input type="text" name="adjustmentTime" value="<%= data.request.adjustmentTime %>"><br>
         <% }else{ %>
-            調整時間 <input type="text"name="adjustmentTime"><br>
-        <% }%>
-
-        <% if (typeof data !== "undefined" && data.errorMsg.startsYear !== false) { %>
-            <p class="medicine_register_error_message"><%= data.errorMsg.startsYear %></p>
-        <% } %>
-        <% if (typeof data !== "undefined" && data.errorMsg.startsMonth !== false) { %>
-            <p class="medicine_register_error_message"><%= data.errorMsg.startsMonth %></p>
-        <% } %>
-        <% if (typeof data !== "undefined" && data.errorMsg.startsDay !== false) { %>
-            <p class="medicine_register_error_message"><%= data.errorMsg.startsDay %></p>
+            調整時間 <input type="text" name="adjustmentTime"><br>
         <% } %>
 
-        <% if (typeof data !== "undefined" && data.errorMsg.startsYear == false) { %>
-            処方日 <input type="text"name="startsYear" value="<%= data.request.startsYear %>">年
+        <% if (typeof data !== "undefined" && data.errorMsg.startsDate !== false) { %>
+            <p class="medicine_register_error_message"><%= data.errorMsg.startsDate %></p>
+        <% } %>
+
+        <% if (typeof data !== "undefined" && data.errorMsg.startsDate == false) { %>
+            処方日 <input type="date" name="startsDate" value="<%= data.request.startsDate %>">年
         <% }else{ %>
-            処方日 <input type="text"name="startsYear" value="">年
-        <% }%>
-        <% if (typeof data !== "undefined" && data.errorMsg.startsMonth == false) { %>
-                <input type="text"name="startsMonth" value="<%= data.request.startsMonth %>">月
-        <% }else{ %>
-            <input type="text"name="startsMonth" value="">月
-        <% }%>
-        <% if (typeof data !== "undefined" && data.errorMsg.startsDay == false) { %>
-            <input type="text"name="startsDay" value="<%= data.request.startsDay %>">日<br>
-        <% }else{ %>
-            <input type="text"name="startsDay" value="">日<br>
-        <% }%>
+            処方日 <input type="date" name="startsDate" value="2018-01-11">年
+        <% } %>
 
         <% if (typeof data !== "undefined" && data.errorMsg.period !== false) { %>
             <p class="medicine_register_error_message"><%= data.errorMsg.period %></p>
         <% } %>
         <% if (typeof data !== "undefined" && data.errorMsg.period == false) { %>
-            処方期間 <input type="text"name="period" value="<%= data.request.period %>">日<br>
+            処方期間 <input type="text" name="period" value="<%= data.request.period %>">日<br>
         <% }else{ %>
-            処方期間 <input type="text"name="period" value="">日<br>
-        <% }%>
+            処方期間 <input type="text" name="period" value="">日<br>
+        <% } %>
 
+        <!--種別：錠剤とか粉薬とか、を<select>でvalueは1,2,3...-->
         <% if (typeof data !== "undefined" && data.errorMsg.medicineType !== false) { %>
             <p class="medicine_register_error_message"><%= data.errorMsg.medicineType %></p>
         <% } %>
         <% if (typeof data !== "undefined" && data.errorMsg.medicineType == false) { %>
-                種別 <input type="text"name="medicineType" value="<%= data.request.medicineType %>"><br>
+            種別 <input type="text" name="medicineType" value="<%= data.request.medicineType %>"><br>
         <% }else{ %>
-                種別 <input type="text"name="medicineType" value=""><br>
-        <% }%>
+            種別 <input type="text" name="medicineType" value=""><br>
+        <% } %>
 
         <% if (typeof data !== "undefined" && data.errorMsg.description !== false) { %>
             <p class="medicine_register_error_message"><%= data.errorMsg.description %></p>
         <% } %>
         <% if (typeof data !== "undefined" && data.errorMsg.description == false) { %>
-            説明 <input type="text"name="description" value="<%= data.request.description %>"><br>
+            説明 <input type="text" name="description" value="<%= data.request.description %>"><br>
         <% }else{ %>
-            説明 <input type="text"name="description" value=""><br>
-        <% }%>
+            説明 <input type="text" name="description" value=""><br>
+        <% } %>
         <input type="submit" value="登録">
     </form>
 </main>
