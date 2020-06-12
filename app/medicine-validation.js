@@ -29,7 +29,7 @@ async function validation(items) {
         startsMonth: 'required|numeric|min:1|max:12',
         startsDay: 'required|numeric|min:1|max:31',
         period: 'required|min:0',
-        medicineType: 'required',
+        medicineType: 'required|numeric',
         image: 'max:100',
         description: 'max:255',
         groupId: 'numeric|min:0'
@@ -44,7 +44,7 @@ async function validation(items) {
         result.is_success = true;
     }, () => {
         //検証拒否時処理
-        result.is_success = false
+        result.is_success = false;
         result.errors.medicineName = requestValidate.errors.first('medicineName');
         result.errors.hospitalName = requestValidate.errors.first('hospitalName');
         result.errors.number = requestValidate.errors.first('number');
@@ -57,10 +57,10 @@ async function validation(items) {
         result.errors.medicineType = requestValidate.errors.first('medicineType');
         result.errors.image = requestValidate.errors.first('image')
         result.errors.description = requestValidate.errors.first('description');
-        result.errors.groupId = requestValidate.errors.first('groupId')
+        result.errors.groupId = requestValidate.errors.first('groupId');
         result.request = items;
     })
     return result;
 }
 
-module.exports = validation
+module.exports = validation;

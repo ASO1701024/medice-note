@@ -1,6 +1,6 @@
 <main>
     <h1>変更テスト</h1>
-    <form action="/medicine-update" method="post">
+    <form action="/medicine-update/<%= data.request.medicineID %>" method="post">
         <% if (typeof data.errorMsg !== "undefined" && data.errorMsg.medicineName !== false) { %>
             <p class="medicine_update_error_message"><%= data.errorMsg.medicineName %></p>
         <% } %>
@@ -28,7 +28,7 @@
             <p class="medicine_update_error_message"><%= data.errorMsg.takeTime %></p>
         <% } %>
         <% if (typeof data.request !== "undefined" ) { %>
-            飲む時間 <input type="text" name="takeTime" value="<%= data.request.takeTime %>"><br>
+            飲む時間 <input type="time" name="takeTime" value="<%= data.request.takeTime %>"><br>
         <% } %>
 
         <% if (typeof data.errorMsg !== "undefined" && data.errorMsg.adjustmentTime !== false) { %>
@@ -38,24 +38,11 @@
             調整時間 <input type="text" name="adjustmentTime" value="<%= data.request.adjustmentTime %>"><br>
         <% } %>
 
-        <% if (typeof data.errorMsg !== "undefined" && data.errorMsg.startsYear !== false) { %>
-            <p class="medicine_update_error_message"><%= data.errorMsg.startsYear %></p>
-        <% } %>
-        <% if (typeof data.errorMsg !== "undefined" && data.errorMsg.startsMonth !== false) { %>
-            <p class="medicine_update_error_message"><%= data.errorMsg.startsMonth %></p>
-        <% } %>
-        <% if (typeof data.errorMsg !== "undefined" && data.errorMsg.startsDay !== false) { %>
-            <p class="medicine_update_error_message"><%= data.errorMsg.startsDay %></p>
-        <% } %>
-
-        <% if (typeof data.request !== "undefined" ) { %>
-            処方日 <input type="text" name="startsYear" value="<%= data.request.startsYear %>">年
+        <% if (typeof data.errorMsg !== "undefined" && data.errorMsg.startsDate !== false) { %>
+            <p class="medicine_update_error_message"><%= data.errorMsg.startsDate %></p>
         <% } %>
         <% if (typeof data.request !== "undefined" ) { %>
-            <input type="text" name="startsMonth" value="<%= data.request.startsMonth %>">月
-        <% } %>
-        <% if (typeof data.request !== "undefined" ) { %>
-            <input type="text" name="startsDay" value="<%= data.request.startsDay %>">日<br>
+            処方日 <input type="date" name="startsDate" value="<%= data.request.startsDate %>">年
         <% } %>
 
         <% if (typeof data.errorMsg !== "undefined" && data.errorMsg.period !== false) { %>
