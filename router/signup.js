@@ -69,7 +69,7 @@ router.post('/signup', async (ctx, next) => {
         if (mailValidate.fails()) session.error_mail = '100文字以下のメールアドレスを入力';
         if (passwordValidate.fails()) session.error_password = '5文字以上100文字以下で入力';
 
-        ctx.redirect('/signup');
+        return ctx.redirect('/signup');
     }
 
     // 重複
