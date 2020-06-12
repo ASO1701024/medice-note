@@ -1,8 +1,9 @@
-//受け取った薬情報を検証する。
-//登録時と変更時に検証を行うため、外部ファイルから利用。
+const validator = require('validatorjs');
+
+// 受け取った薬情報を検証する。
+// 登録時と変更時に検証を行うため、外部ファイルから利用。
 async function validation(items) {
-    const validator = require('validatorjs');
-    //データをvalidationするために整形
+    // データをvalidationするために整形
     let requests = {
         medicineName: String(items[0]),
         hospitalName: items[1],
@@ -16,21 +17,21 @@ async function validation(items) {
         description: items[9],
         groupId: items[10]
     };
-    //validationのルール
+    // validationのルール
     let rules = {
         medicineName: 'required',
         hospitalName: 'required|max:100',
         number: 'required|numeric',
-        takeTime: 'required', //HH:MMの形。後で考える。
-        adjustmentTime: ['required','numeric',{ 'in': ['-30', '0', '30', '120'] }],
-        startsDate: 'required|min:1', //YYYY-mm-ddの形。後で考える。
+        takeTime: 'required', // HH:MMの形。後で考える。
+        adjustmentTime: ['required', 'numeric', {'in': ['-30', '0', '30', '120']}],
+        startsDate: 'required|min:1', // YYYY-mm-ddの形。後で考える。
         period: 'required|numeric|min:0',
         medicineType: 'required|numeric',
         image: 'max:100',
         description: 'max:255',
         groupId: 'numeric'
     };
-    //エラーメッセージ
+    // エラーメッセージ
     let errorMessage = {
         'required.medicineName': "薬の名前は必須項目です",
         'required.hospitalName': "病院名は必須項目です",
@@ -51,16 +52,16 @@ async function validation(items) {
         'min.period': "何日分は1以上の数字を入力して下さい",
         'in.adjustmentTime': "飲むタイミングはチェックボックスから選択して下さい"
     }
-    //validation実行
+    // validation実行
     let requestValidate = new validator(requests, rules, errorMessage);
 
-    //validationの結果を取り出してresultに代入
+    // validationの結果を取り出してresultに代入
     let result = {errors: {}, is_success: false, request: {}};
     await requestValidate.checkAsync(() => {
-        //検証成功時処理
+        // 検証成功時処理
         result.is_success = true;
     }, () => {
-        //検証拒否時処理
+        // 検証拒否時処理
         result.is_success = false;
         result.errors.medicineName = requestValidate.errors.first('medicineName');
         result.errors.hospitalName = requestValidate.errors.first('hospitalName');
