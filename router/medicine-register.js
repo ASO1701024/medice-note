@@ -6,7 +6,7 @@ const Router = require('koa-router');
 const router = new Router();
 const app = require('../app/app');
 const connection = require('../app/db');
-const medicineValidation = require('../app/medicine-validation.js');
+const medicineValidation = require('../app/medicine-validation');
 
 router.get('/medicine-register', async (ctx) => {
     let session = ctx.session;
