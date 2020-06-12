@@ -53,9 +53,9 @@
         <% } %>
 
         <% if (typeof data !== "undefined" && data.errorMsg.startsDate == false) { %>
-            処方日 <input type="date" name="startsDate" value="<%= data.request.startsDate %>">年
+            処方日 <input type="date" name="startsDate" value="<%= data.request.startsDate %>">年<br>
         <% }else{ %>
-            処方日 <input type="date" name="startsDate" value="2018-01-11">年
+            処方日 <input type="date" name="startsDate" value="2018-01-11">年<br>
         <% } %>
 
         <% if (typeof data !== "undefined" && data.errorMsg.period !== false) { %>
