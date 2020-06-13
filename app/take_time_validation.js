@@ -3,7 +3,7 @@ async function validationTakeTime(items) {
     let requests = {
         array: items,
         medicine1: items[0],
-        medicine2: items[1],ƒ
+        medicine2: items[1],
         medicine3: items[2],
         medicine4: items[3],
         medicine5: items[4],
