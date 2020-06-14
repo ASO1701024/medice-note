@@ -35,23 +35,23 @@ router.post('/medicine-register', async (ctx) => {
 
     //medicineテーブルに登録
     //必須項目
-    let medicineName = ctx.request.body.medicineName;
-    let hospitalName = ctx.request.body.hospitalName;
-    let number = ctx.request.body.number;
-    let startsDate = ctx.request.body.startsDate;
-    let period = ctx.request.body.period;
-    let medicineType = ctx.request.body.medicineType;
+    let medicineName = ctx.request.body['medicineName'];
+    let hospitalName = ctx.request.body['hospitalName'];
+    let number = ctx.request.body['number'];
+    let startsDate = ctx.request.body['startsDate'];
+    let period = ctx.request.body['period'];
+    let medicineType = ctx.request.body['medicineType'];
     //任意項目
     let image = "";
-    let description = ctx.request.body.description || '';
+    let description = ctx.request.body['description'] || '';
 
     //medicine_take_timeテーブルに登録
-    let takeTimeArray = ctx.request.body.takeTime || [];
+    let takeTimeArray = ctx.request.body['takeTime'] || [];
 
     //削除不能の初期グループのgroup_idを取得
     let sql = 'SELECT group_id FROM medicine_group WHERE user_id = ? AND is_deletable = 1;';
     let userId = await app.getUserId(session.auth_id);
-    let groupId = (await connection.query(sql, [userId]))[0][0].group_id;
+    let groupId = (await connection.query(sql, [userId]))[0][0]['group_id'];
 
     let medicineArray = [medicineName, hospitalName, number,
         startsDate, period, medicineType, image, description, groupId];
@@ -75,8 +75,6 @@ router.post('/medicine-register', async (ctx) => {
         }
         return ctx.redirect('/medicine-register');
     }
-    validationResultArray[0].errors.takeTime = {};
-    validationResultArray[0].errors.takeTime = {};
     validationResultArray[0].errors.takeTime = validationResultArray[1].errors;
     validationResultArray[0].request.takeTime = takeTimeArray;
     session.register_denied_request = validationResultArray[0].request;

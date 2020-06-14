@@ -60,15 +60,14 @@
         <% if (typeof data !== "undefined" && Object.keys(data.request.takeTime).filter((key) => {
             return data.request.takeTime[key] === '4'
         }).length > 0) { %>
-            食前<input type="checkbox" name="takeTime[]" value="4" checked="checked"><br>
+            食後<input type="checkbox" name="takeTime[]" value="4" checked="checked"><br>
         <% }else{ %>
-            食前<input type="checkbox" name="takeTime[]" value="4"><br>
+            食後<input type="checkbox" name="takeTime[]" value="4"><br>
         <% } %>
 
         <% if (typeof data !== "undefined" && data.errorMsg.startsDate !== false) { %>
             <p class="medicine_register_error_message"><%= data.errorMsg.startsDate %></p>
         <% } %>
-
         <% if (typeof data !== "undefined" && data.errorMsg.startsDate == false) { %>
             処方日 <input type="date" name="startsDate" value="<%= data.request.startsDate %>">年<br>
         <% }else{ %>
