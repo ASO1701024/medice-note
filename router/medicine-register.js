@@ -3,7 +3,7 @@ const router = new Router();
 const app = require('../app/app');
 const connection = require('../app/db');
 const medicineValidation = require('../app/medicine-validation');
-const takeTimeValidation = require('../app/take_time_validation');
+const takeTimeValidation = require('../app/take-time-validation');
 /* session
 register_denied_request: 薬登録失敗時、送信された登録情報をHTMLのformのvalueに設定して表示
 register_denied_error: 薬登録失敗時のエラーメッセージ　

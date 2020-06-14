@@ -2,7 +2,7 @@ const Router = require('koa-router');
 const router = new Router();
 const connection = require('../app/db');
 const medicineValidation = require('../app/medicine-validation');
-const takeTimeValidation = require('../app/take_time_validation');
+const takeTimeValidation = require('../app/take-time-validation');
 const getMedicine = require('../app/get-medicine');
 
 /* session
