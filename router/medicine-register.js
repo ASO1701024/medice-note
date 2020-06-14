@@ -119,8 +119,8 @@ router.post('/medicine-register', async (ctx) => {
         if (Array.isArray(medicineType) && medicineType.length < 0) session.old.medicine_type = medicineType;
         if (description !== '') session.old.description = description;
 
-        if (!validationTakeTime) session.error_take_time = '飲む時間が正しく選択されていません';
-        if (!validationMedicineType) session.error_medicine_type = '種類が正しく選択されていません';
+        if (!validationTakeTime) session.error.take_time = '飲む時間が正しく選択されていません';
+        if (!validationMedicineType) session.error.medicine_type = '種類が正しく選択されていません';
 
         session.error_message = '薬情報登録に失敗しました';
     }

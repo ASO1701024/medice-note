@@ -69,16 +69,16 @@ module.exports = {
             // 検証拒否時処理
             result.result = false;
             if (requestValidate.errors.first('medicineName')) {
-                result.error.medicineName = requestValidate.errors.first('medicineName');
+                result.error.medicine_name = requestValidate.errors.first('medicineName');
             }
             if (requestValidate.errors.first('hospitalName')) {
-                result.error.hospitalName = requestValidate.errors.first('hospitalName');
+                result.error.hospital_name = requestValidate.errors.first('hospitalName');
             }
             if (requestValidate.errors.first('number')) {
                 result.error.number = requestValidate.errors.first('number');
             }
             if (requestValidate.errors.first('startsDate')) {
-                result.error.startsYear = requestValidate.errors.first('startsDate');
+                result.error.starts_date = requestValidate.errors.first('startsDate');
             }
             if (requestValidate.errors.first('period')) {
                 result.error.period = requestValidate.errors.first('period');

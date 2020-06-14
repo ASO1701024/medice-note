@@ -31,15 +31,33 @@
                 <div class="col-12 col-md-6 col-lg-6">
                     <div class="form-group">
                         <label>薬の名前</label>
-                        <input type="text" class="form-control" name="medicine_name">
+                        <input type="text" class="form-control"
+                               name="medicine_name" <% if (typeof data.old.medicine_name !== "undefined") { %> value="<%= data.old.medicine_name %>" <% } %>>
+                        <span class="form-error">
+                            <% if (typeof data.error.medicine_name !== "undefined") { %>
+                                <%= data.error.medicine_name %>
+                            <% } %>
+                        </span>
                     </div>
                     <div class="form-group">
                         <label>病院名</label>
-                        <input type="text" class="form-control" name="hospital_name">
+                        <input type="text" class="form-control"
+                               name="hospital_name" <% if (typeof data.old.hospital_name !== "undefined") { %> value="<%= data.old.hospital_name %>" <% } %>>
+                        <span class="form-error">
+                            <% if (typeof data.error.hospital_name !== "undefined") { %>
+                                <%= data.error.hospital_name %>
+                            <% } %>
+                        </span>
                     </div>
                     <div class="form-group">
                         <label>飲む個数</label>
-                        <input type="number" class="form-control" name="number" value="1">
+                        <input type="number" class="form-control"
+                               name="number" <% if (typeof data.old.hospital_name !== "undefined") { %> value="<%= data.old.hospital_name %>" <% } else { %> value="1" <% } %>>
+                        <span class="form-error">
+                            <% if (typeof data.error.number !== "undefined") { %>
+                                <%= data.error.number %>
+                            <% } %>
+                        </span>
                     </div>
                     <div class="form-group">
                         <label>飲む時間</label>
@@ -52,14 +70,31 @@
                                 }
                             } %>
                         </select>
+                        <span class="form-error">
+                            <% if (typeof data.error.take_time !== "undefined") { %>
+                                <%= data.error.take_time %>
+                            <% } %>
+                        </span>
                     </div>
                     <div class="form-group">
                         <label>処方日</label>
-                        <input type="date" class="form-control" name="starts_date">
+                        <input type="date" class="form-control"
+                               name="starts_date" <% if (typeof data.old.starts_date !== "undefined") { %> value="<%= data.old.starts_date %>" <% } %>>
+                        <span class="form-error">
+                            <% if (typeof data.error.starts_date !== "undefined") { %>
+                                <%= data.error.starts_date %>
+                            <% } %>
+                        </span>
                     </div>
                     <div class="form-group">
                         <label>処方期間</label>
-                        <input type="number" class="form-control" name="period" value="1">
+                        <input type="number" class="form-control"
+                               name="period" <% if (typeof data.old.number !== "undefined") { %> value="<%= data.old.number %>" <% } else { %> value="1" <% } %>>
+                        <span class="form-error">
+                            <% if (typeof data.error.period !== "undefined") { %>
+                                <%= data.error.period %>
+                            <% } %>
+                        </span>
                     </div>
                     <div class="form-group">
                         <label>種類</label>
@@ -72,6 +107,11 @@
                                 }
                             } %>
                         </select>
+                        <span class="form-error">
+                            <% if (typeof data.error.medicine_type !== "undefined") { %>
+                                <%= data.error.medicine_type %>
+                            <% } %>
+                        </span>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-lg-6">
@@ -85,10 +125,10 @@
                     </div>
                     <div class="form-group">
                         <label>説明</label>
-                        <textarea class="form-control" name="description"></textarea>
+                        <textarea class="form-control" name="description"><% if (typeof data.old.description !== "undefined") { %> <%= data.old.description %> <% } %></textarea>
                         <span class="form-error">
-                            <% if (typeof data.error_description !== "undefined") { %>
-                                <%= data.error_description %>
+                            <% if (typeof data.error.description !== "undefined") { %>
+                                <%= data.error.description %>
                             <% } %>
                         </span>
                     </div>
