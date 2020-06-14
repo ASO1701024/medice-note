@@ -1,0 +1,16 @@
+<main>
+    <form action="/account-update/userName" method="post">
+        <% if (typeof data.errorMsg !== "undefined" && data.errorMsg.userName !== false) { %>
+            <p class="account_update_error_message"><%= data.errorMsg.userName %></p>
+        <% } %>
+        ユーザー名：<input type="text" name="userName" value="<%= data.request.userName %>">
+        <input type="submit" value="編集"><br>
+    </form>
+    <form action="/account-update/mail" method="post">
+        <% if (typeof data.errorMsg !== "undefined" && data.errorMsg.mail !== false) { %>
+            <p class="account_update_error_message"><%= data.errorMsg.mail %></p>
+        <% } %>
+        メール：<input type="text" name="mail" value="<%= data.request.mail %>">
+        <input type="submit" value="編集"><br>
+    </form>
+</main>
