@@ -1,15 +1,15 @@
 //薬idから薬の情報を取得する。
 //所有者ではないor存在しないmedicineIdの指定の場合はfalseを返す。
-async function getMedicine(medicineId,authId) {
+async function getMedicine(medicineId, authId) {
     const app = require('../app/app');
     const connection = require('../app/db');
-    //medicineテーブルのmedicine_id以外を取得
+    //medicineテーブルの情報を取得
     let sql =
-        'SELECT medicine_name as medicineName,' +
+        'SELECT ' +
+        'medicine_id as medicineId,' +
+        'medicine_name as medicineName,' +
         'hospital_name as hospitalName,' +
         'number,' +
-        'take_time as takeTime,' +
-        'adjustment_time as adjustmentTime,' +
         'DATE_FORMAT(starts_date, "%Y-%m-%d") as startsDate,' +
         'period,' +
         'type_id as medicineType,' +
@@ -26,7 +26,20 @@ async function getMedicine(medicineId,authId) {
     if (typeof medicineResult === 'undefined') {
         return false;
     } else {
-        return medicineResult;
+        //medicine_take_timeテーブルの情報を取得
+        let sql =
+            'SELECT take_time_id as medicineTakeTime ' +
+            'FROM medicine_take_time ' +
+            'WHERE medicine_id = ? ' +
+            'ORDER BY take_time_id;'
+        let takeTimeResult = (await connection.query(sql, [medicineResult['medicineId']]))[0];
+        let takeTimeArray = [];
+        for (let row of takeTimeResult) {
+            takeTimeArray.push(String(row['medicineTakeTime']));
+        }
+
+        return [medicineResult, takeTimeArray];
     }
 }
+
 module.exports = getMedicine;

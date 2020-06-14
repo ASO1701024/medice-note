@@ -25,17 +25,40 @@
         <% } %>
 
         <% if (typeof data.errorMsg !== "undefined" && data.errorMsg.takeTime !== false) { %>
-            <p class="medicine_update_error_message"><%= data.errorMsg.takeTime %></p>
+            <% for (var key in data.errorMsg.takeTime) { %>
+                <% if(data.errorMsg.takeTime.hasOwnProperty(key) && key !== false){ %>
+                    <p class="medicine_register_error_message"><%= data.errorMsg.takeTime[key] %></p>
+                    <% break; %>
+                <% } %>
+            <% } %>
         <% } %>
-        <% if (typeof data.request !== "undefined" ) { %>
-            飲む時間 <input type="time" name="takeTime" value="<%= data.request.takeTime %>"><br>
+        <% if (typeof data.request !== "undefined" && Object.keys(data.request.takeTime).filter((key) => {
+            return data.request.takeTime[key] === '1'
+        }).length > 0) { %>
+            飲む時間  朝<input type="checkbox" name="takeTime[]" value="1" checked="checked">
+        <% }else{ %>
+            飲む時間  朝<input type="checkbox" name="takeTime[]" value="1">
         <% } %>
-
-        <% if (typeof data.errorMsg !== "undefined" && data.errorMsg.adjustmentTime !== false) { %>
-            <p class="medicine_update_error_message"><%= data.errorMsg.adjustmentTime %></p>
+        <% if (typeof data.request !== "undefined" && Object.keys(data.request.takeTime).filter((key) => {
+            return data.request.takeTime[key] === '2'
+        }).length > 0) { %>
+            昼<input type="checkbox" name="takeTime[]" value="2" checked="checked">
+        <% }else{ %>
+            昼<input type="checkbox" name="takeTime[]" value="2">
         <% } %>
-        <% if (typeof data.request !== "undefined" ) { %>
-            調整時間 <input type="text" name="adjustmentTime" value="<%= data.request.adjustmentTime %>"><br>
+        <% if (typeof data.request !== "undefined" && Object.keys(data.request.takeTime).filter((key) => {
+            return data.request.takeTime[key] === '3'
+        }).length > 0) { %>
+            食前<input type="checkbox" name="takeTime[]" value="3" checked="checked">
+        <% }else{ %>
+            食前<input type="checkbox" name="takeTime[]" value="3">
+        <% } %>
+        <% if (typeof data.request !== "undefined" && Object.keys(data.request.takeTime).filter((key) => {
+            return data.request.takeTime[key] === '4'
+        }).length > 0) { %>
+            食前<input type="checkbox" name="takeTime[]" value="4" checked="checked"><br>
+        <% }else{ %>
+            食前<input type="checkbox" name="takeTime[]" value="4"><br>
         <% } %>
 
         <% if (typeof data.errorMsg !== "undefined" && data.errorMsg.startsDate !== false) { %>
