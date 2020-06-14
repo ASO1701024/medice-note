@@ -2,12 +2,6 @@ const Router = require('koa-router');
 const router = new Router();
 const app = require('../app/app');
 const connection = require('../app/db');
-const medicineValidation = require('../app/medicine-validation');
-
-/* session
-register_denied_request: 薬登録失敗時、送信された登録情報をHTMLのformのvalueに設定して表示
-register_denied_error: 薬登録失敗時のエラーメッセージ　
-*/
 
 router.get('/medicine-register', async (ctx) => {
     let session = ctx.session;
@@ -16,13 +10,38 @@ router.get('/medicine-register', async (ctx) => {
     }
 
     let result = {};
-    if (session.register_denied_error) {
-        result['data'] = {};
-        result['data']['errorMsg'] = session.register_denied_error;
-        result['data']['request'] = session.register_denied_request;
+    result['data'] = {};
+    result['data']['old'] = {};
+    result['data']['error'] = {};
+    result['meta'] = {};
+
+    let sql = 'SELECT type_id, type_name FROM medicine_type';
+    let [medicineType] = await connection.query(sql);
+    result['meta']['medicine_type'] = medicineType;
+
+    sql = 'SELECT take_time_id, take_time_name FROM take_time';
+    let [takeTime] = await connection.query(sql);
+    result['meta']['take_time'] = takeTime;
+
+    if (session.error_message !== undefined) {
+        result['data']['error_message'] = session.error_message;
+        session.error_message = undefined;
     }
-    session.register_denied_error = null;
-    session.register_denied_request = null;
+
+    if (session.success_message !== undefined) {
+        result['data']['success_message'] = session.success_message;
+        session.success_message = undefined;
+    }
+
+    if (session.old !== undefined) {
+        result['data']['old'] = session.old;
+        session.old = undefined;
+    }
+
+    if (session.error !== undefined) {
+        result['data']['error'] = session.error;
+        session.error = undefined;
+    }
 
     await ctx.render('/medicine-register', result);
 })
@@ -34,38 +53,79 @@ router.post('/medicine-register', async (ctx) => {
     }
 
     // 必須項目
-    let medicineName = ctx.request.body.medicineName;
-    let hospitalName = ctx.request.body.hospitalName;
-    let number = ctx.request.body.number;
-    let takeTime = ctx.request.body.takeTime;
-    let adjustmentTime = ctx.request.body.adjustmentTime;
-    let startsDate = ctx.request.body.startsDate;
-    let period = ctx.request.body.period;
-    let medicineType = ctx.request.body.medicineType;
+    let medicineName = ctx.request.body['medicine_name'];
+    let hospitalName = ctx.request.body['hospital_name'];
+    let number = ctx.request.body['number'];
+    let takeTime = ctx.request.body['take_time'];
+    let startsDate = ctx.request.body['starts_date'];
+    let period = ctx.request.body['period'];
+    let medicineType = ctx.request.body['medicine_type'];
 
     // 任意項目
-    let image = "";
+    let medicineImage = "";
     let description = ctx.request.body.description || '';
 
-    // 現在はグループ指定機能が存在しないので、削除不能の初期グループに追加する。
-    let sql = 'SELECT group_id FROM medicine_group WHERE user_id = ? AND is_deletable = 1;';
+    // デフォルトグループ検索
     let userId = await app.getUserId(session.auth_id);
-    let group_id = (await connection.query(sql, [userId]))[0][0].group_id;
+    let groupId = await app.getDefaultGroup(userId);
+    if (!groupId) {
+        session.error_message = 'システムエラーが発生しました';
 
-    let requestArray = [medicineName, hospitalName, number, takeTime, adjustmentTime,
-        startsDate, period, medicineType, image, description, group_id];
-
-    // 検証パス時は値をDBに保存し、検証拒否時はエラーメッセージを表示
-    let result = await medicineValidation(requestArray)
-    if (result.is_success) {
-        let sql = 'INSERT INTO medicine VALUES(0,?,?,?,?,?,?,?,?,?,?,?)';
-        await connection.query(sql, requestArray);
-        return ctx.redirect('/medicine-register');
-    } else {
-        session.register_denied_request = result.request;
-        session.register_denied_error = result.errors;
-        return ctx.redirect('/medicine-register');
+        return ctx.redirect('/medicine-register')
     }
+
+    let validationMedicine = await app.validationMedicine([
+        medicineName,
+        hospitalName,
+        number,
+        startsDate,
+        period,
+        description
+    ]);
+    let validationTakeTime = await app.validationTakeTime(takeTime);
+    let validationMedicineType = await app.validationMedicineType(medicineType);
+
+    if (validationMedicine.result || validationTakeTime || validationMedicineType) {
+        let sql = 'INSERT INTO medicine' +
+            '(medicine_name, hospital_name, number, starts_date, period, type_id, image, description, group_id)' +
+            'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        let [medicine] = await connection.query(sql, [
+            medicineName,
+            hospitalName,
+            number,
+            startsDate,
+            period,
+            medicineType[0],
+            medicineImage,
+            description,
+            groupId
+        ]);
+        let medicineId = medicine.insertId;
+        for (const item of takeTime) {
+            let sql = 'INSERT INTO medicine_take_time (medicine_id, take_time_id) VALUES (?, ?)';
+            await connection.query(sql, [medicineId, item]);
+        }
+
+        session.success_message = '薬情報を登録しました';
+    } else {
+        session.old = {};
+        session.error = validationMedicine.error;
+        if (medicineName !== '') session.old.medicine_name = medicineName;
+        if (hospitalName !== '') session.old.hospital_name = hospitalName;
+        if (number !== '') session.old.number = number;
+        if (Array.isArray(takeTime) && takeTime.length < 0) session.old.take_time = takeTime;
+        if (startsDate !== '') session.old.starts_date = startsDate;
+        if (period !== '') session.old.period = period;
+        if (Array.isArray(medicineType) && medicineType.length < 0) session.old.medicine_type = medicineType;
+        if (description !== '') session.old.description = description;
+
+        if (!validationTakeTime) session.error_take_time = '飲む時間が正しく選択されていません';
+        if (!validationMedicineType) session.error_medicine_type = '種類が正しく選択されていません';
+
+        session.error_message = '薬情報登録に失敗しました';
+    }
+
+    return ctx.redirect('/medicine-register');
 })
 
 module.exports = router;
