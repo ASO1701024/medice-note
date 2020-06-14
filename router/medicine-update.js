@@ -54,7 +54,7 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
     let medicineData = getMedicine(medicineId, session.auth_id);
     // 更新権限の有無の確認。間違えて使わないように確認後はnullで初期化。
     if (medicineData === false) {
-        //薬一覧に遷移するように後で変更する。
+        // 薬一覧に遷移するように後で変更する。
         return ctx.redirect('/');
     }
     medicineData = null;
@@ -88,14 +88,14 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
             'WHERE medicine_id = ?';
         await connection.query(sql, medicineArray);
 
-        //現在のtake_timeテーブルに登録されている情報を取得
+        // 現在のtake_timeテーブルに登録されている情報を取得
         let currentTakeTimeSQL = 'SELECT take_time_id as takeTimeId FROM medicine_take_time WHERE medicine_id = ?;';
         let currentTakeTimeResult = (await connection.query(currentTakeTimeSQL, [medicineId]))[0];
         let currentTakeTimeArray = [];
         for (let row of currentTakeTimeResult) {
             currentTakeTimeArray.push(row['takeTimeId']);
         }
-        //削除する項目の判定
+        // 削除する項目の判定
         let updateTakeTime = [[], []]
         for (let row of currentTakeTimeArray) {
             updateTakeTime[0].push(row);
@@ -105,7 +105,7 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
                 updateTakeTime[1].push('NO_CHANGE');
             }
         }
-        //追加すべき項目の判定
+        // 追加すべき項目の判定
         for (let row of takeTimeArray) {
             if (currentTakeTimeArray.indexOf(row) < 0) {
                 updateTakeTime[0].push(row);

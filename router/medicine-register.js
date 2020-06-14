@@ -67,9 +67,9 @@ router.post('/medicine-register', async (ctx) => {
         let medicineSQL = 'INSERT INTO medicine VALUES(0,?,?,?,?,?,?,?,?,?);';
         let medicineInsertResult = await connection.query(medicineSQL, medicineArray);
         let insertId = medicineInsertResult[0].insertId;
-        //medicine_take_timeを登録
+        // medicine_take_timeを登録
         let takeTimeSQL = 'INSERT INTO medicine_take_time VALUES(?,?);';
-        //1行ずつコミットしないとエラーが出るので、毎回awaitしてます。本来はtransactionとか使うそうな。
+        // 1行ずつコミットしないとエラーが出るので、毎回awaitしてます。本来はtransactionとか使うそうな。
         for (let takeTime of takeTimeArray) {
             await connection.query(takeTimeSQL, [insertId, takeTime]);
         }

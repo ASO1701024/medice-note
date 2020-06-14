@@ -12,7 +12,7 @@ async function validationTakeTime(items) {
         medicine8: items[7],
         medicine9: items[8],
     };
-    //validationのルール
+    // validationのルール
     let rules = {
         array: 'required',
         medicine1: ['numeric', {'in': ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}],
@@ -25,22 +25,22 @@ async function validationTakeTime(items) {
         medicine8: ['numeric', {'in': ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}],
         medicine9: ['numeric', {'in': ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}],
     };
-    //エラーメッセージ
+    // エラーメッセージ
     let errorMessage = {
         'required': "飲む時間は必須項目です",
         'numeric': "飲む時間はチェックボックスから選択して下さい",
         'in': "飲む時間はチェックボックスから選択して下さい",
     }
-    //validation実行
+    // validation実行
     let requestValidate = new validator(requests, rules, errorMessage);
 
-    //validationの結果を取り出してresultに代入
+    // validationの結果を取り出してresultに代入
     let result = {errors: {}, is_success: false, request: {}};
     await requestValidate.checkAsync(() => {
-        //検証成功時処理
+        // 検証成功時処理
         result.is_success = true;
     }, () => {
-        //検証拒否時処理
+        // 検証拒否時処理
         result.is_success = false;
         result.errors.array = requestValidate.errors.first('array');
         result.errors.medicine1 = requestValidate.errors.first('medicine1');
