@@ -40,7 +40,6 @@ router.get('/medicine-update/:medicine_id', async (ctx) => {
             result['data']['request'][key] = medicineData[0][key];
         }
     }
-
     await ctx.render('/medicine-update', result);
 })
 
@@ -137,8 +136,8 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
     } else {
         validationResultArray[0].errors.takeTime = validationResultArray[1].errors;
         validationResultArray[0].request.takeTime = takeTimeArray;
-        session.register_denied_request = validationResultArray[0].request;
-        session.register_denied_error = validationResultArray[0].errors;
+        session.update_denied_request = validationResultArray[0].request;
+        session.update_denied_error = validationResultArray[0].errors;
         return ctx.redirect('/medicine-update/' + medicineId);
     }
 })
