@@ -33,7 +33,7 @@ router.get('/medicine-update/:medicine_id', async (ctx) => {
 
     // renderに渡す為にデータを成形
     result['data']['request'] = {};
-    result['data']['request']['medicineID'] = medicineId;
+    result['data']['request']['medicineId'] = medicineId;
     result['data']['request']['takeTime'] = [];
     result['data']['request']['takeTime'] = medicineData[1];
     for (let key in medicineData[0]) {

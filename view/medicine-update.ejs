@@ -1,6 +1,6 @@
 <main>
     <h1>変更テスト</h1>
-    <form action="/medicine-update/<%= data.request.medicineID %>" method="post">
+    <form action="/medicine-update/<%= data.request.medicineId %>" method="post">
         <% if (typeof data.errorMsg !== "undefined" && data.errorMsg.medicineName !== false) { %>
             <p class="medicine_update_error_message"><%= data.errorMsg.medicineName %></p>
         <% } %>
