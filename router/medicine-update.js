@@ -1,13 +1,14 @@
-/*session
-update_medicine_id: 更新する薬情報の薬ID
-update_denied_error: 薬情報変更失敗時のエラーメッセージ　
-*/
 const Router = require('koa-router');
 const router = new Router();
 const connection = require('../app/db');
-const medicineValidation = require('../app/medicine-validation.js');
+const medicineValidation = require('../app/medicine-validation');
 const takeTimeValidation = require('../app/take_time_validation');
-const getMedicine = require('../app/get_medicine');
+const getMedicine = require('../app/get-medicine');
+
+/* session
+update_medicine_id: 更新する薬情報の薬ID
+update_denied_error: 薬情報変更失敗時のエラーメッセージ　
+*/
 
 router.get('/medicine-update/:medicine_id', async (ctx) => {
     let session = ctx.session;
@@ -26,11 +27,11 @@ router.get('/medicine-update/:medicine_id', async (ctx) => {
 
     let medicineData = await getMedicine(medicineId, session.auth_id);
     if (medicineData === false) {
-        //薬一覧に遷移するように後で変更する。
+        // 薬一覧に遷移するように後で変更する。
         return ctx.redirect('/');
     }
 
-    //renderに渡す為にデータを成形
+    // renderに渡す為にデータを成形
     result['data']['request'] = {};
     result['data']['request']['medicineID'] = medicineId;
     result['data']['request']['takeTime'] = [];
@@ -51,14 +52,14 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
     }
 
     let medicineData = getMedicine(medicineId, session.auth_id);
-    //更新権限の有無の確認。間違えて使わないように確認後はnullで初期化。
+    // 更新権限の有無の確認。間違えて使わないように確認後はnullで初期化。
     if (medicineData === false) {
         //薬一覧に遷移するように後で変更する。
         return ctx.redirect('/');
     }
     medicineData = null;
 
-    //必須項目
+    // 必須項目
     let medicineName = ctx.request.body['medicineName'];
     let hospitalName = ctx.request.body['hospitalName'];
     let number = ctx.request.body['number'];
@@ -67,14 +68,14 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
     let medicineType = ctx.request.body['medicineType'];
     let takeTimeArray = ctx.request.body['takeTime'] || [];
 
-    //任意項目
+    // 任意項目
     let image = "";
     let description = ctx.request.body['description'] || '';
 
     let medicineArray = [medicineName, hospitalName, number,
         startsDate, period, medicineType, image, description, medicineId];
 
-    //検証パス時は値をDBに保存し、検証拒否時はエラーメッセージを表示
+    // 検証パス時は値をDBに保存し、検証拒否時はエラーメッセージを表示
     let validationPromise = [];
     let validationResultArray = [];
     validationPromise[0] = medicineValidation(medicineArray).then(result => validationResultArray[0] = result);
@@ -132,7 +133,6 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
             }
         }
         return ctx.redirect('/medicine-update/' + medicineId);
-
     } else {
         validationResultArray[0].errors.takeTime = validationResultArray[1].errors;
         validationResultArray[0].request.takeTime = takeTimeArray;
@@ -141,4 +141,5 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
         return ctx.redirect('/medicine-update/' + medicineId);
     }
 })
+
 module.exports = router;
