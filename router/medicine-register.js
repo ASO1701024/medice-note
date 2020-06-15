@@ -123,7 +123,7 @@ router.post('/medicine-register', async (ctx) => {
             number,
             startsDate,
             period,
-            medicineType[0],
+            medicineType,
             medicineImage,
             description,
             groupId

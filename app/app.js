@@ -106,21 +106,10 @@ module.exports = {
         }
         return result;
     },
-    validationMedicineType: async (array) => {
-        if (!Array.isArray(array) || array.length === 0) return false;
-
-        let result = true;
-        for (const item in array) {
-            if (array.hasOwnProperty(item)) {
-                let sql = 'SELECT type_id FROM medicine_type WHERE type_id = ?';
-                let [data] = await connection.query(sql, [item]);
-                if (data.length === 0) {
-                    result = false;
-                    return false;
-                }
-            }
-        }
-        return result;
+    validationMedicineType: async (item) => {
+        let sql = 'SELECT type_id FROM medicine_type WHERE type_id = ?';
+        let [data] = await connection.query(sql, [item]);
+        return data.length !== 0;
     },
     getExt: (filename) => {
         let pos = filename.lastIndexOf('.');
