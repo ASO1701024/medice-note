@@ -84,4 +84,8 @@ const accountSetting = require('./router/account-setting');
 app.use(accountSetting.routes());
 app.use(accountSetting.allowedMethods());
 
+const accountEdit = require('./router/account-edit');
+app.use(accountEdit.routes());
+app.use(accountEdit.allowedMethods());
+
 app.listen(5000);
