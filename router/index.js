@@ -25,6 +25,21 @@ router.get('/', async (ctx) => {
 
     let [data] = await connection.query(sql, [userId]);
     result['data'] = data;
+    result['data']['success'] = {};
+    result['data']['error'] = {};
+
+    session.success = {};
+    session.error = {};
+
+    if (session.success.message !== undefined) {
+        result['data']['success']['message'] = session.success.message;
+        session.success.message = undefined;
+    }
+
+    if (session.error.message !== undefined) {
+        result['data']['error']['message'] = session.error.message;
+        session.error.message = undefined;
+    }
 
     await ctx.render('medicine-list', result);
 })

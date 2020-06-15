@@ -80,6 +80,10 @@ const medicineUpdateRouter = require('./router/medicine-update');
 app.use(medicineUpdateRouter.routes());
 app.use(medicineUpdateRouter.allowedMethods());
 
+const medicineDeleteRouter = require('./router/medicine-delete');
+app.use(medicineDeleteRouter.routes());
+app.use(medicineDeleteRouter.allowedMethods());
+
 const accountSetting = require('./router/account-setting');
 app.use(accountSetting.routes());
 app.use(accountSetting.allowedMethods());
