@@ -37,6 +37,7 @@ router.post('/login', async (ctx, next) => {
     let mail = ctx.request.body['mail'];
     let password = ctx.request.body['password'];
 
+    // Login Log
     let sql = 'INSERT INTO user_login_log (mail, user_agent, ip_address, login_at) VALUES (?, ?, ?, ?)';
     await connection.query(sql, [
         mail,
@@ -45,6 +46,7 @@ router.post('/login', async (ctx, next) => {
         new Date()
     ]);
 
+    // Lookup Account
     sql = 'SELECT user_id, password, is_enable FROM user WHERE mail = ? AND deleted_at IS NULL';
     let [user] = await connection.query(sql, [mail]);
     if (user.length === 0) {
@@ -52,6 +54,7 @@ router.post('/login', async (ctx, next) => {
 
         return ctx.redirect('/login');
     }
+
     user = user[0];
     if (user['is_enable'] === false) {
         session.error.message = 'メールアドレスが認証されていません';
