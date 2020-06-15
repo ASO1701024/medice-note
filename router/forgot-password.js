@@ -22,7 +22,7 @@ router.get('/forgot-password', async (ctx) => {
 
     if (session.success !== undefined) {
         result['data']['success'] = session.success;
-        session.success.message = undefined;
+        session.success = undefined;
     }
 
     if (session.error.message !== undefined) {
