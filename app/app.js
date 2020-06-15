@@ -164,5 +164,8 @@ module.exports = {
         if (session.success === undefined) {
             session.success = {};
         }
+        if (session.old === undefined) {
+            session.old = {};
+        }
     }
 }
