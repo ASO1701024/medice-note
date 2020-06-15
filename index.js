@@ -81,7 +81,7 @@ app.use(medicineUpdateRouter.routes());
 app.use(medicineUpdateRouter.allowedMethods());
 
 const accountSetting = require('./router/account-setting');
-app.use(accountSetting.routes())
-app.use(accountSetting.allowedMethods())
+app.use(accountSetting.routes());
+app.use(accountSetting.allowedMethods());
 
 app.listen(5000);
