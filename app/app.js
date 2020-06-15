@@ -121,5 +121,10 @@ module.exports = {
             }
         }
         return result;
+    },
+    getExt: (filename) => {
+        let pos = filename.lastIndexOf('.');
+        if (pos === -1) return '';
+        return filename.slice(pos + 1);
     }
 }

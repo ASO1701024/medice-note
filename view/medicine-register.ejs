@@ -25,7 +25,7 @@
 <% } %>
 
 <div class="card">
-    <form action="/medicine-register" method="post">
+    <form action="/medicine-register" method="post" enctype="multipart/form-data">
         <div class="card-body pb-0">
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-6">
@@ -119,8 +119,13 @@
                         <label>薬画像</label>
                         <div class="custom-file">
                             <input type="file" name="medicine_image" class="custom-file-input" id="medicine-image">
-                            <label class="custom-file-label">ファイルを選択</label>
+                            <label class="custom-file-label" id="medicine-image-label">ファイルを選択</label>
                         </div>
+                        <span class="form-error">
+                            <% if (typeof data.error.medicine_image !== "undefined") { %>
+                                <%= data.error.medicine_image %>
+                            <% } %>
+                        </span>
                         <div class="form-text text-muted">1MB以内のJPEG・PNGファイルを選択</div>
                     </div>
                     <div class="form-group">
@@ -140,3 +145,17 @@
         </div>
     </form>
 </div>
+
+<script>
+    $(() => {
+        let medicineImage = $('#medicine-image');
+        let medicineImageLabel = $('#medicine-image-label');
+        medicineImage.change(() => {
+            if (medicineImage.prop('files')[0].name === '') {
+                medicineImageLabel.text('ファイルを選択');
+            } else {
+                medicineImageLabel.text(medicineImage.prop('files')[0].name);
+            }
+        })
+    })
+</script>

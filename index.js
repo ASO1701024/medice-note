@@ -1,10 +1,22 @@
 const path = require('path');
+const fs = require('fs');
 const Koa = require('koa');
 const server = require('koa-static');
 const render = require('koa-ejs');
-const bodyParser = require('koa-bodyparser');
+// const bodyParser = require('koa-bodyparser');
+const koaBody = require('koa-body');
 const session = require('koa-generic-session');
 const SQLite3Store = require('koa-sqlite3-session');
+
+let uploadCache = path.join(__dirname, '/upload_cache')
+if (!fs.existsSync(uploadCache)) {
+    fs.mkdir(uploadCache, () => { });
+}
+
+let uploadFolder = path.join(__dirname, '/public/upload')
+if (!fs.existsSync(uploadFolder)) {
+    fs.mkdir(uploadFolder, () => { });
+}
 
 const app = new Koa();
 render(app, {
@@ -15,7 +27,14 @@ render(app, {
     debug: false
 });
 app.use(server('./public'));
-app.use(bodyParser());
+// app.use(bodyParser());
+app.use(koaBody({
+    multipart: true,
+    formidable: {
+        uploadDir: path.join(__dirname, '/upload_cache'),
+        keepExtensions: true
+    }
+}));
 app.keys = ['SECRET_KEY'];
 app.use(session({
     store: new SQLite3Store('session.db', {}),

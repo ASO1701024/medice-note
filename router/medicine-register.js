@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+const { v4: uuid } = require('uuid');
 const Router = require('koa-router');
 const router = new Router();
 const app = require('../app/app');
@@ -65,6 +68,31 @@ router.post('/medicine-register', async (ctx) => {
     let medicineImage = "";
     let description = ctx.request.body.description || '';
 
+    let uploadImage = ctx.request.files['medicine_image'];
+    let uploadImageFlag = true;
+    if (uploadImage['size'] !== 0) {
+        if (1048576 < uploadImage['size']) {
+            uploadImageFlag = false;
+        }
+
+        switch (app.getExt(uploadImage['name'])) {
+            case 'jpeg':
+            case 'jpg':
+            case 'png':
+                break;
+            default:
+                uploadImageFlag = false;
+                break;
+        }
+
+        if (!uploadImageFlag) {
+            fs.unlinkSync(uploadImage['path']);
+        } else {
+            medicineImage = uuid().split('-').join('') + uuid().split('-').join('') + '.' + app.getExt(uploadImage['name']);
+            fs.renameSync(uploadImage['path'], path.join(__dirname, '../public/upload/', medicineImage));
+        }
+    }
+
     // デフォルトグループ検索
     let userId = await app.getUserId(session.auth_id);
     let groupId = await app.getDefaultGroup(userId);
@@ -85,7 +113,7 @@ router.post('/medicine-register', async (ctx) => {
     let validationTakeTime = await app.validationTakeTime(takeTime);
     let validationMedicineType = await app.validationMedicineType(medicineType);
 
-    if (validationMedicine.result || validationTakeTime || validationMedicineType) {
+    if (validationMedicine.result && validationTakeTime && validationMedicineType && uploadImageFlag) {
         let sql = 'INSERT INTO medicine' +
             '(medicine_name, hospital_name, number, starts_date, period, type_id, image, description, group_id)' +
             'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
@@ -118,6 +146,7 @@ router.post('/medicine-register', async (ctx) => {
         if (period !== '') session.old.period = period;
         if (Array.isArray(medicineType) && medicineType.length < 0) session.old.medicine_type = medicineType;
         if (description !== '') session.old.description = description;
+        if (!uploadImageFlag) session.error.medicine_image = '1MB以内のJPEG・JPG・PNG・ファイルを選択してください';
 
         if (!validationTakeTime) session.error.take_time = '飲む時間が正しく選択されていません';
         if (!validationMedicineType) session.error.medicine_type = '種類が正しく選択されていません';
