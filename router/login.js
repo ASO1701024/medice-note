@@ -23,9 +23,14 @@ router.get('/login', async (ctx, next) => {
     let result = app.initializeRenderResult();
     result['data']['meta']['site_title'] = 'お問い合わせ - Medice Note';
 
-    if (session.error.message !== undefined) {
-        result['data']['error']['message'] = session.error.message;
-        session.error.message = undefined;
+    if (session.success !== undefined) {
+        result['data']['success'] = session.success;
+        session.success = undefined;
+    }
+
+    if (session.error !== undefined) {
+        result['data']['error'] = session.error;
+        session.error = undefined;
     }
 
     await ctx.render('login', result);
