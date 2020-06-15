@@ -67,8 +67,22 @@ router.post('/account-update/:updateFlg', async (ctx) => {
         }
         // mailを編集する場合
         case 'mail': {
+            let mail = ctx.request.body['mail'];
+            // 重複確認
+            sql = 'SELECT user_id FROM user WHERE mail = ?;';
+            let result = (await connection.query(sql,[mail]))[0];
+            if(result.length !== 0){
+                is_success = false;
+                let userId = await app.getUserId(session.auth_id);
+                if(result[0]['user_id'] !== userId) {
+                    session.error_update_mail = "ご指定のメールアドレスは登録済みです";
+                    return ctx.redirect('/account-update');
+                }
+                break;
+            }
+
             let mailValidate = new validator({
-                mail: ctx.request.body['mail']
+                mail: mail,
             }, {
                 mail: 'required|email|max:100'
             }, {
@@ -77,8 +91,8 @@ router.post('/account-update/:updateFlg', async (ctx) => {
                 max: "メールアドレスは100字以下のアドレスをご指定下さい",
             });
             await mailValidate.checkAsync(() => {
-                sql = 'UPDATE user SET mail = ? WHERE user_id = ?;'
-                arg = [ctx.request.body['mail']];
+                sql = 'UPDATE user SET mail = ? WHERE user_id = ?;';
+                arg = mail;
                 is_success = true;
             }, () => {
                 session.error_update_mail = mailValidate.errors.first('mail');
@@ -90,8 +104,8 @@ router.post('/account-update/:updateFlg', async (ctx) => {
 
     // 更新項目のvalidate成功時、更新処理を行う。
     if (is_success) {
-        let userId = await app.getUserId(session.auth_id);
-        await connection.query(sql, [arg, userId]);
+        console.log([arg, await app.getUserId(session.auth_id)])
+        await connection.query(sql, [arg, await app.getUserId(session.auth_id)]);
     }
 
     return ctx.redirect('/account-update');
