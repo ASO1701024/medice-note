@@ -62,11 +62,13 @@ router.post('/forgot-password', async (ctx, next) => {
             'https://www.medice-note.vxx0.com/auth-password/' + authKey
     }).then(() => {
         session.success.message = '認証メールを送信しました';
+
+        ctx.redirect('/forgot-password');
     }).catch(() => {
         session.error.message = '認証メールの送信に失敗しました';
-    });
 
-    return ctx.redirect('/forgot-password');
+        ctx.redirect('/forgot-password');
+    });
 });
 
 module.exports = router;
