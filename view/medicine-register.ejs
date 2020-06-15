@@ -52,7 +52,7 @@
                     <div class="form-group">
                         <label>飲む個数</label>
                         <input type="number" class="form-control"
-                               name="number" <% if (typeof data.old.hospital_name !== "undefined") { %> value="<%= data.old.hospital_name %>" <% } else { %> value="1" <% } %>>
+                               name="number" <% if (typeof data.old.number !== "undefined") { %> value="<%= data.old.number %>" <% } else { %> value="1" <% } %>>
                         <span class="form-error">
                             <% if (typeof data.error.number !== "undefined") { %>
                                 <%= data.error.number %>
