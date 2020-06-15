@@ -1,6 +1,7 @@
 const Router = require('koa-router');
 const router = new Router();
 const validator = require('validatorjs');
+const app = require('../app/app');
 const transporter = require('../app/mail');
 const config = require('../config.json');
 
@@ -9,6 +10,8 @@ router.get('/contact', async (ctx, next) => {
 
     let result = {};
     result['data'] = {};
+    result['meta'] = {};
+    result['meta']['login_status'] = await app.getUserId(session.auth_id);
 
     if (session.error_mail !== undefined) {
         result['data']['error_mail'] = session.error_mail;

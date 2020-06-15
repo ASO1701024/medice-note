@@ -8,7 +8,7 @@ const connection = require('../app/db');
 
 router.get('/medicine-register', async (ctx) => {
     let session = ctx.session;
-    if (!session.auth_id) {
+    if (!session.auth_id || !await app.getUserId(session.auth_id)) {
         return ctx.redirect('/login');
     }
 
@@ -25,6 +25,8 @@ router.get('/medicine-register', async (ctx) => {
     sql = 'SELECT take_time_id, take_time_name FROM take_time';
     let [takeTime] = await connection.query(sql);
     result['meta']['take_time'] = takeTime;
+
+    result['meta']['login_status'] = await app.getUserId(session.auth_id);
 
     if (session.error_message !== undefined) {
         result['data']['error_message'] = session.error_message;

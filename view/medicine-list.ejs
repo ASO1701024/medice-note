@@ -1,1 +1,42 @@
-<p>test</p>
+<div class="section-header">
+    <h1>薬一覧</h1>
+</div>
+
+<div class="card">
+    <div class="card-body pb-0">
+        <% if (typeof data !== "undefined") { %>
+        <div class="table-responsive">
+            <table class="table table-bordered table-md">
+                <tbody>
+                    <tr class="text-center">
+                        <th>ID</th>
+                        <th>薬名</th>
+                        <th>病院名</th>
+                        <th>個数</th>
+                        <th>処方日</th>
+                        <th>期間</th>
+                        <th>種類</th>
+                        <th>画像</th>
+                        <th>説明</th>
+                        <th></th>
+                    </tr>
+                    <% for (var i = 0; i < data.length; i++) { %>
+                        <tr>
+                            <td><%= data[i]['medicine_id'] %></td>
+                            <td><%= data[i]['medicine_name'] %></td>
+                            <td><%= data[i]['hospital_name'] %></td>
+                            <td><%= data[i]['number'] %></td>
+                            <td><%= data[i]['starts_date'] %></td>
+                            <td><%= data[i]['period'] %></td>
+                            <td><%= data[i]['type_name'] %></td>
+                            <td><%= data[i]['image'] %></td>
+                            <td><%= data[i]['description'] %></td>
+                            <td><a href="#" class="btn btn-secondary">詳細</a></td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+        <% } %>
+    </div>
+</div>
