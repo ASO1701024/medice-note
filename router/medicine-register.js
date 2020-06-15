@@ -61,7 +61,7 @@ router.post('/medicine-register', async (ctx) => {
     let validationResultArray = [];
     validationPromise[0] = medicineValidation(medicineArray).then(result => validationResultArray[0] = result);
     validationPromise[1] = takeTimeValidation(takeTimeArray).then(result => validationResultArray[1] = result);
-    await Promise.all(validationResultArray);
+    await Promise.all(validationPromise);
 
     if (validationResultArray[0].is_success && validationResultArray[1].is_success) {
         // medicineを登録し、medicine_idを取得
