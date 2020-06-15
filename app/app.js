@@ -156,5 +156,13 @@ module.exports = {
         result['data']['meta'] = {};
 
         return result;
+    },
+    initializeSession: (session) => {
+        if (session.error === undefined) {
+            session.error = {};
+        }
+        if (session.success === undefined) {
+            session.success = {};
+        }
     }
 }
