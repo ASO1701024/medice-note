@@ -47,9 +47,9 @@
                             <td><%= data[i]['medicine_id'] %></td>
                             <td><%= data[i]['medicine_name'] %></td>
                             <td><%= data[i]['hospital_name'] %></td>
-                            <td><%= data[i]['number'] %></td>
+                            <td><%= data[i]['number'] %>個</td>
                             <td><%= data[i]['starts_date'] %></td>
-                            <td><%= data[i]['period'] %></td>
+                            <td><%= data[i]['period'] %>日</td>
                             <td><%= data[i]['type_name'] %></td>
                             <td><%= data[i]['image'] %></td>
                             <td><%= data[i]['description'] %></td>
@@ -60,11 +60,11 @@
                                             aria-haspopup="true" aria-expanded="false">アクション
                                     </button>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item has-icon" href="#">
+                                        <a class="dropdown-item has-icon" href="/">
                                             <i class="fas fa-info-circle"></i>
                                             詳細
                                         </a>
-                                        <a class="dropdown-item has-icon" href="#">
+                                        <a class="dropdown-item has-icon" href="/medicine-update/<%= data[i]['medicine_id'] %>">
                                             <i class="far fa-edit"></i>
                                             編集
                                         </a>
