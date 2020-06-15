@@ -26,8 +26,6 @@ router.get('/', async (ctx) => {
     let [data] = await connection.query(sql, [userId]);
     result['data'] = data;
 
-    console.log(result);
-
     await ctx.render('medicine-list', result);
 })
 
