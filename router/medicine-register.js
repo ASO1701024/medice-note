@@ -139,6 +139,8 @@ router.post('/medicine-register', async (ctx) => {
         }
 
         session.success_message = '薬情報を登録しました';
+
+        return ctx.redirect('/');
     } else {
         session.old = {};
         session.error = validationMedicine.error;
@@ -156,9 +158,9 @@ router.post('/medicine-register', async (ctx) => {
         if (!validationMedicineType) session.error.medicine_type = '種類が正しく選択されていません';
 
         session.error_message = '薬情報登録に失敗しました';
-    }
 
-    return ctx.redirect('/medicine-register');
+        return ctx.redirect('/medicine-register');
+    }
 })
 
 module.exports = router;
