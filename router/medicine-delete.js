@@ -13,16 +13,13 @@ router.get('/medicine-delete/:medicine_id', async (ctx) => {
     }
     let userId = await app.getUserId(authId);
 
-    let sql = 'SELECT medicine_id FROM medicine WHERE medicine_id = ? ' +
-        'AND group_id in (SELECT group_id FROM medicine_group WHERE user_id = ?)';
-    let [medicine] = await connection.query(sql, [medicineId, userId]);
-    if (medicine.length === 0) {
+    if (!await app.isHaveMedicine(medicineId, userId)) {
         session.error.message = '薬情報が見つかりませんでした';
 
         return ctx.redirect('/');
     }
 
-    sql = 'DELETE FROM medicine_take_time WHERE medicine_id = ?';
+    let sql = 'DELETE FROM medicine_take_time WHERE medicine_id = ?';
     await connection.query(sql, [medicineId]);
 
     sql = 'DELETE FROM medicine WHERE medicine_id = ?';
