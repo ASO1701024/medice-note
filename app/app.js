@@ -113,5 +113,11 @@ module.exports = {
         let pos = filename.lastIndexOf('.');
         if (pos === -1) return '';
         return filename.slice(pos + 1);
+    },
+    isHaveMedicine: async (medicineId, userId) => {
+        let sql = 'SELECT medicine_id FROM medicine WHERE medicine_id = ? ' +
+            'AND group_id in (SELECT group_id FROM medicine_group WHERE user_id = ?)';
+        let [medicine] = await connection.query(sql, [medicineId, userId]);
+        return medicine.length !== 0;
     }
 }
