@@ -91,6 +91,8 @@ router.post('/medicine-register', async (ctx) => {
             medicineImage = uuid().split('-').join('') + uuid().split('-').join('') + '.' + app.getExt(uploadImage['name']);
             fs.renameSync(uploadImage['path'], path.join(__dirname, '../public/upload/', medicineImage));
         }
+    } else {
+        fs.unlinkSync(uploadImage['path']);
     }
 
     // デフォルトグループ検索
