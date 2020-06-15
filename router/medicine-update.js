@@ -6,8 +6,9 @@ const takeTimeValidation = require('../app/take-time-validation');
 const getMedicine = require('../app/get-medicine');
 
 /* session
-update_medicine_id: 更新する薬情報の薬ID
-update_denied_error: 薬情報変更失敗時のエラーメッセージ　
+    update_medicine_id: 更新する薬情報の薬ID
+    update_denied_error: 薬情報変更失敗時のエラーメッセージ　
+    update_denied_request: 薬情報変更失敗時のリクエスト内容
 */
 
 router.get('/medicine-update/:medicine_id', async (ctx) => {
