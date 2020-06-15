@@ -4,15 +4,35 @@ const connection = require('../app/db');
 const validator = require('validatorjs');
 const bcrypt = require('bcrypt');
 const { v4: uuid } = require('uuid');
+const app = require('../app/app');
 const transporter = require('../app/mail');
 const config = require('../config.json');
 
 router.get('/signup', async (ctx, next) => {
     let session = ctx.session;
+    app.initializeSession(session);
 
-    let result = {};
-    result['data'] = {};
+    let authId = session.auth_id;
+    let userId = await app.getUserId(authId);
+    if (authId && userId) {
+        return ctx.redirect('/login');
+    }
 
+    let result = app.initializeRenderResult();
+    result['data']['meta']['login_status'] = false;
+    result['data']['meta']['site_title'] = 'アカウント登録 - Medice Note';
+
+    if (session.success !== undefined) {
+        result['data']['success'] = session.success;
+        session.success = undefined;
+    }
+
+    if (session.error !== undefined) {
+        result['data']['error'] = session.error;
+        session.error = undefined;
+    }
+
+    /*
     if (session.success_message !== undefined) {
         result['data']['success_message'] = session.success_message;
         session.success_message = undefined;
@@ -37,16 +57,18 @@ router.get('/signup', async (ctx, next) => {
         result['data']['error_password'] = session.error_password;
         session.error_password = undefined;
     }
+    */
 
     await ctx.render('signup', result);
 })
 
 router.post('/signup', async (ctx, next) => {
     let session = ctx.session;
+    app.initializeSession(session);
 
-    let userName = ctx.request.body.user_name;
-    let mail = ctx.request.body.mail;
-    let password = ctx.request.body.password;
+    let userName = ctx.request.body['user_name'];
+    let mail = ctx.request.body['mail'];
+    let password = ctx.request.body['password'];
 
     // Validation
     let userNameValidate = new validator({
@@ -65,9 +87,9 @@ router.post('/signup', async (ctx, next) => {
         password: 'required|string|min:5|max:100'
     });
     if (userNameValidate.fails() || mailValidate.fails() || passwordValidate.fails()) {
-        if (userNameValidate.fails()) session.error_user_name = '1文字以上20文字以下で入力';
-        if (mailValidate.fails()) session.error_mail = '100文字以下のメールアドレスを入力';
-        if (passwordValidate.fails()) session.error_password = '5文字以上100文字以下で入力';
+        if (userNameValidate.fails()) session.error.user_name = '1文字以上20文字以下で入力';
+        if (mailValidate.fails()) session.error.mail = '100文字以下のメールアドレスを入力';
+        if (passwordValidate.fails()) session.error.password = '5文字以上100文字以下で入力';
 
         return ctx.redirect('/signup');
     }
@@ -77,7 +99,7 @@ router.post('/signup', async (ctx, next) => {
     let [result] = await connection.query(sql, [mail]);
 
     if (result.length !== 0) {
-        session.error_mail = '既に登録されているメールアドレスです';
+        session.error.mail = '既に登録されているメールアドレスです';
 
         return ctx.redirect('/signup');
     }
@@ -103,12 +125,14 @@ router.post('/signup', async (ctx, next) => {
             'アカウントを有効化するには下記のURLにアクセスしメールアドレスを認証してください\n' +
             'https://www.medice-note.vxx0.com/auth-mail/' + authKey
     }).then(() => {
-        session.success_message = '認証メールを送信しました';
-    }).catch(() => {
-        session.error_message = '認証メールの送信に失敗しました';
-    });
+        session.success.message = '認証メールを送信しました';
 
-    ctx.redirect('/signup')
+        ctx.redirect('/signup');
+    }).catch(() => {
+        session.error.message = '認証メールの送信に失敗しました';
+
+        ctx.redirect('/signup');
+    });
 })
 
 module.exports = router;
