@@ -1,0 +1,26 @@
+<div class="section-header">
+    <h1>アカウント設定</h1>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-title">アカウント情報</h4>
+    </div>
+    <div class="card-body">
+        <h6 class="card-title">ユーザー名</h6>
+        <p class="card-text"><%= data.account.user_name %></p>
+        <h6 class="card-title">メールアドレス</h6>
+        <p class="card-text"><%= data.account.mail %></p>
+        <a href="/account-edit" class="card-link">アカウント情報変更</a>
+    </div>
+</div>
+
+<div class="card card-danger">
+    <div class="card-header">
+        <h4 class="card-title">アカウント削除</h4>
+    </div>
+    <div class="card-body">
+        <p class="card-text">アカウントを削除する場合はこちらから</p>
+        <a href="/contact" class="card-link">アカウント削除</a>
+    </div>
+</div>
