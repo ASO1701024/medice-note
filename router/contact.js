@@ -15,31 +15,6 @@ router.get('/contact', async (ctx, next) => {
     result['data']['meta']['login_status'] = Boolean(userId);
     result['data']['meta']['site_title'] = 'お問い合わせ - Medice Note';
 
-    // if (session.error.mail !== undefined) {
-    //     result['data']['error']['mail'] = session.error.mail;
-    //     session.error.mail = undefined;
-    // }
-    //
-    // if (session.error.subject !== undefined) {
-    //     result['data']['error']['subject'] = session.error.subject;
-    //     session.error.subject = undefined;
-    // }
-    //
-    // if (session.error.detail !== undefined) {
-    //     result['data']['error']['detail'] = session.error.detail;
-    //     session.error.detail = undefined;
-    // }
-
-    // if (session.success.message !== undefined) {
-    //     result['data']['success']['message'] = session.success.message;
-    //     session.success.message = undefined;
-    // }
-
-    // if (session.error.message !== undefined) {
-    //     result['data']['error']['message'] = session.error.message;
-    //     session.error.message = undefined;
-    // }
-
     if (session.success !== undefined) {
         result['data']['success'] = session.success;
         session.success = undefined;
