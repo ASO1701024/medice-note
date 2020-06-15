@@ -76,7 +76,11 @@ router.post('/medicine-register', async (ctx) => {
         }
         return ctx.redirect('/medicine-register');
     } else {
-        validationResultArray[0].errors.takeTime = validationResultArray[1].errors;
+        if (validationResultArray[1].errors.array === '') {
+            validationResultArray[0].errors.takeTime = validationResultArray[1].errors.items[0];
+        } else {
+            validationResultArray[0].errors.takeTime = validationResultArray[1].errors.array;
+        }
         validationResultArray[0].request.takeTime = takeTimeArray;
         session.register_denied_request = validationResultArray[0].request;
         session.register_denied_error = validationResultArray[0].errors;

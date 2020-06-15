@@ -134,7 +134,11 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
         }
         return ctx.redirect('/medicine-update/' + medicineId);
     } else {
-        validationResultArray[0].errors.takeTime = validationResultArray[1].errors;
+        if (validationResultArray[1].errors.array === '') {
+            validationResultArray[0].errors.takeTime = validationResultArray[1].errors.items[0];
+        } else {
+            validationResultArray[0].errors.takeTime = validationResultArray[1].errors.array;
+        }
         validationResultArray[0].request.takeTime = takeTimeArray;
         session.update_denied_request = validationResultArray[0].request;
         session.update_denied_error = validationResultArray[0].errors;

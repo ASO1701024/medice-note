@@ -1,4 +1,5 @@
 const validator = require('validatorjs');
+const connection = require('../app/db');
 
 // 受け取った薬情報を検証する。
 // 登録時と変更時に検証を行うため、外部ファイルから利用。
@@ -15,6 +16,13 @@ async function validation(items) {
         description: items[7],
         groupId: items[8]
     };
+    // 存在するmedicineTypeIdをDBから取得。
+    let sql = 'SELECT type_id FROM medicine_type;';
+    let typeListResult = (await connection.query(sql))[0];
+    let typeList = [];
+    for(let row of typeListResult){
+        typeList.push(String(row['type_id']));
+    }
     // validationのルール
     let rules = {
         medicineName: 'required',
@@ -22,7 +30,7 @@ async function validation(items) {
         number: 'required|numeric',
         startsDate: 'required', // HH:MMの形。後で考える。
         period: 'required|numeric|min:0',
-        medicineType: 'required|numeric',
+        medicineType: ['required', 'numeric', {'in': typeList}],
         image: 'max:100',
         description: 'max:255',
         groupId: 'numeric'
@@ -43,6 +51,7 @@ async function validation(items) {
         'max.description': "説明は250文字以下で入力して下さい",
         'min.startsDate': "処方日は日付の形式で入力して下さい",
         'min.period': "何日分は1以上の数字を入力して下さい",
+        'in.medicineType': "種類はリストから選択して下さい"
     }
     // validation実行
     let requestValidate = new validator(requests, rules, errorMessage);

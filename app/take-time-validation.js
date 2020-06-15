@@ -1,59 +1,55 @@
-async function validationTakeTime(items) {
-    const validator = require('validatorjs');
-    let requests = {
-        array: items,
-        medicine1: items[0],
-        medicine2: items[1],
-        medicine3: items[2],
-        medicine4: items[3],
-        medicine5: items[4],
-        medicine6: items[5],
-        medicine7: items[6],
-        medicine8: items[7],
-        medicine9: items[8],
-    };
-    // validationのルール
-    let rules = {
-        array: 'required',
-        medicine1: ['numeric', {'in': ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}],
-        medicine2: ['numeric', {'in': ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}],
-        medicine3: ['numeric', {'in': ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}],
-        medicine4: ['numeric', {'in': ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}],
-        medicine5: ['numeric', {'in': ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}],
-        medicine6: ['numeric', {'in': ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}],
-        medicine7: ['numeric', {'in': ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}],
-        medicine8: ['numeric', {'in': ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}],
-        medicine9: ['numeric', {'in': ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}],
-    };
-    // エラーメッセージ
-    let errorMessage = {
-        'required': "飲む時間は必須項目です",
-        'numeric': "飲む時間はチェックボックスから選択して下さい",
-        'in': "飲む時間はチェックボックスから選択して下さい",
-    }
-    // validation実行
-    let requestValidate = new validator(requests, rules, errorMessage);
+const connection = require('../app/db');
+const validator = require('validatorjs');
 
-    // validationの結果を取り出してresultに代入
-    let result = {errors: {}, is_success: false, request: {}};
-    await requestValidate.checkAsync(() => {
+async function validationTakeTime(items) {
+    let result = {errors: {array:"", items:[]}, is_success: false, request: []};
+    // 配列が空でないか確認
+    let arrayRequest = {array:items};
+    let arrayRules = {array: 'required'};
+    let arrayErrorMessage = {'required': "飲む時間は必須項目です"};
+    let arrayValidate = new validator(arrayRequest, arrayRules, arrayErrorMessage);
+    await arrayValidate.checkAsync(() => {
         // 検証成功時処理
         result.is_success = true;
     }, () => {
         // 検証拒否時処理
         result.is_success = false;
-        result.errors.array = requestValidate.errors.first('array');
-        result.errors.medicine1 = requestValidate.errors.first('medicine1');
-        result.errors.medicine2 = requestValidate.errors.first('medicine2');
-        result.errors.medicine3 = requestValidate.errors.first('medicine3');
-        result.errors.medicine4 = requestValidate.errors.first('medicine4');
-        result.errors.medicine5 = requestValidate.errors.first('medicine5');
-        result.errors.medicine6 = requestValidate.errors.first('medicine6');
-        result.errors.medicine7 = requestValidate.errors.first('medicine7');
-        result.errors.medicine8 = requestValidate.errors.first('medicine8');
-        result.errors.medicine9 = requestValidate.errors.first('medicine9');
-        result.request = requests;
+        result.errors.array = arrayValidate.errors.first('array');
+        result.request = items;
     })
+    // 配列が空の場合は拒否
+    if(result.is_success === false){
+        return result
+    }
+
+    // 存在するtakeTimeIdをDBから取得。
+    let sql = 'SELECT take_time_id FROM take_time;';
+    let typeListResult = (await connection.query(sql))[0];
+    let typeList = [];
+    for(let row of typeListResult){
+        typeList.push(String(row['take_time_id']));
+    }
+
+    let itemValidatorList = [];
+    for(let row of items){
+        let itemRequest = {item: row};
+        let itemRules = {item: ['numeric', {'in': typeList}]};
+        let itemErrorMessage = {
+            'numeric': "飲む時間はチェックボックスから選択して下さい",
+            'in': "飲む時間はチェックボックスから選択して下さい",
+        }
+        itemValidatorList.push(new validator(itemRequest,itemRules,itemErrorMessage));
+    }
+    for(let row of itemValidatorList){
+        await row.checkAsync( () => {
+        }, () => {
+            result.is_success = false;
+            result.errors.items.push(row.errors.first('item'));
+            if(result.request.length === 0){
+                result.request = items;
+            }
+        });
+    }
     return result;
 }
 

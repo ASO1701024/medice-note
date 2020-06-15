@@ -25,12 +25,7 @@
         <% } %>
 
         <% if (typeof data.errorMsg !== "undefined" && data.errorMsg.takeTime !== false) { %>
-            <% for (var key in data.errorMsg.takeTime) { %>
-                <% if(data.errorMsg.takeTime.hasOwnProperty(key) && key !== false){ %>
-                    <p class="medicine_register_error_message"><%= data.errorMsg.takeTime[key] %></p>
-                    <% break; %>
-                <% } %>
-            <% } %>
+            <p class="medicine_register_error_message"><%= data.errorMsg.takeTime %></p>
         <% } %>
         <% if (typeof data.request !== "undefined" && Object.keys(data.request.takeTime).filter((key) => {
             return data.request.takeTime[key] === '1'
