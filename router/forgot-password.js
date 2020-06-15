@@ -6,7 +6,7 @@ const transporter = require('../app/mail');
 const app = require('../app/app');
 const config = require('../config.json');
 
-router.get('/forgot-password', async (ctx, next) => {
+router.get('/forgot-password', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
 
@@ -33,7 +33,7 @@ router.get('/forgot-password', async (ctx, next) => {
     await ctx.render('forgot-password', result);
 });
 
-router.post('/forgot-password', async (ctx, next) => {
+router.post('/forgot-password', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
 
