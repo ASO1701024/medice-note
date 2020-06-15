@@ -71,4 +71,12 @@ const accountUpdateRouter = require('./router/accouont-update');
 app.use(accountUpdateRouter.routes());
 app.use(accountUpdateRouter.allowedMethods());
 
+const medicineListRouter = require('./router/medicine-list');
+app.use(medicineListRouter.routes());
+app.use(medicineListRouter.allowedMethods());
+
+const medicineRouter = require('./router/medicine');
+app.use(medicineRouter.routes());
+app.use(medicineRouter.allowedMethods());
+
 app.listen(5000);
