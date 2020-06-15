@@ -13,4 +13,11 @@
         メール：<input type="text" name="mail" value="<%= data.request.mail %>">
         <input type="submit" value="編集"><br>
     </form>
+    <form action="/account-update/password" method="post">
+        <% if (typeof data.errorMsg !== "undefined" && data.errorMsg.password !== false) { %>
+            <p class="account_update_error_message"><%= data.errorMsg.password %></p>
+        <% } %>
+        メール：<input type="text" name="password" value="<%= data.request.password %>">
+        <input type="submit" value="編集"><br>
+    </form>
 </main>
