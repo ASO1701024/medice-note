@@ -12,21 +12,23 @@ router.get('/medicine-register', async (ctx) => {
         return ctx.redirect('/login');
     }
 
-    let result = {};
-    result['data'] = {};
-    result['data']['old'] = {};
-    result['data']['error'] = {};
-    result['meta'] = {};
+    let result = app.initializeRenderResult();
+    // result['data'] = {};
+    // result['data']['old'] = {};
+    // result['data']['error'] = {};
+    // result['meta'] = {};
+
+    console.log(result);
 
     let sql = 'SELECT type_id, type_name FROM medicine_type';
     let [medicineType] = await connection.query(sql);
-    result['meta']['medicine_type'] = medicineType;
+    result['data']['meta']['medicine_type'] = medicineType;
 
     sql = 'SELECT take_time_id, take_time_name FROM take_time';
     let [takeTime] = await connection.query(sql);
-    result['meta']['take_time'] = takeTime;
+    result['data']['meta']['take_time'] = takeTime;
 
-    result['meta']['login_status'] = await app.getUserId(session.auth_id);
+    result['data']['meta']['login_status'] = Boolean(await app.getUserId(session.auth_id));
 
     if (session.error_message !== undefined) {
         result['data']['error_message'] = session.error_message;

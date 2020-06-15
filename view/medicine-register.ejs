@@ -62,10 +62,10 @@
                     <div class="form-group">
                         <label>飲む時間</label>
                         <select class="form-control select2" multiple="" name="take_time">
-                            <% if (typeof meta.take_time != "undefined") {
-                                for (var tt = 0; tt < meta.take_time.length; tt++) {
+                            <% if (typeof data.meta.take_time != "undefined") {
+                                for (var tt = 0; tt < data.meta.take_time.length; tt++) {
                                     %>
-                                    <option value="<%= meta.take_time[tt]['take_time_id'] %>"><%= meta.take_time[tt]['take_time_name'] %></option>
+                                    <option value="<%= data.meta.take_time[tt]['take_time_id'] %>"><%= data.meta.take_time[tt]['take_time_name'] %></option>
                                     <%
                                 }
                             } %>
@@ -99,10 +99,10 @@
                     <div class="form-group">
                         <label>種類</label>
                         <select class="form-control select2" name="medicine_type">
-                            <% if (typeof meta.medicine_type != "undefined") {
-                                for (var mt = 0; mt < meta.medicine_type.length; mt++) {
+                            <% if (typeof data.meta.medicine_type != "undefined") {
+                                for (var mt = 0; mt < data.meta.medicine_type.length; mt++) {
                                     %>
-                                    <option value="<%= meta.medicine_type[mt]['type_id'] %>"><%= meta.medicine_type[mt]['type_name'] %></option>
+                                    <option value="<%= data.meta.medicine_type[mt]['type_id'] %>"><%= data.meta.medicine_type[mt]['type_name'] %></option>
                                     <%
                                 }
                             } %>

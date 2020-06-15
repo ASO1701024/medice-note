@@ -3,6 +3,7 @@ const validator = require('validatorjs');
 
 module.exports = {
     getUserId: async (authId) => {
+        if (authId === undefined) return false;
         let sql = 'SELECT user_id FROM session WHERE session_id = ? AND expired_at >= ?';
         let [auth] = await connection.query(sql, [authId, new Date()]);
         if (auth.length === 0) {
@@ -119,5 +120,41 @@ module.exports = {
             'AND group_id in (SELECT group_id FROM medicine_group WHERE user_id = ?)';
         let [medicine] = await connection.query(sql, [medicineId, userId]);
         return medicine.length !== 0;
+    },
+    getMedicineFromMedicineId: async (medicineId) => {
+        let sql = 'SELECT medicine_id, medicine_name, hospital_name, number, ' +
+            'date_format(starts_date, \'%Y-%m-%d\') as starts_date, period, type_id, image, description FROM medicine';
+        let [medicine] = await connection.query(sql, [medicineId]);
+        if (medicine.length === 0) {
+            return false;
+        }
+        sql = 'SELECT take_time_id FROM medicine_take_time WHERE medicine_id = ?';
+        let [takeTime] = await connection.query(sql, [medicineId]);
+        let array = [];
+        for (let i = 0; i < takeTime.length; i++) {
+            array.push(takeTime[i]['take_time_id']);
+        }
+        return {
+            medicine_id: medicine[0]['medicine_id'],
+            medicine_name: medicine[0]['medicine_name'],
+            hospital_name: medicine[0]['hospital_name'],
+            number: medicine[0]['number'],
+            starts_date: medicine[0]['starts_date'],
+            period: medicine[0]['period'],
+            type_id: medicine[0]['type_id'],
+            image: medicine[0]['period'],
+            description: medicine[0]['description'],
+            take_time: array
+        };
+    },
+    initializeRenderResult: () => {
+        let result = {};
+        result['data'] = {};
+        result['data']['old'] = {};
+        result['data']['success'] = {};
+        result['data']['error'] = {};
+        result['data']['meta'] = {};
+
+        return result;
     }
 }

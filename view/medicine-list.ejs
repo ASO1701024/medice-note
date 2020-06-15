@@ -26,7 +26,7 @@
 
 <div class="card">
     <div class="card-body pb-0">
-        <% if (typeof data !== "undefined") { %>
+        <% if (typeof data.medicine_list !== "undefined") { %>
         <div class="table-responsive">
             <table class="table table-bordered table-md">
                 <tbody>
@@ -42,17 +42,17 @@
                         <th>説明</th>
                         <th></th>
                     </tr>
-                    <% for (var i = 0; i < data.length; i++) { %>
+                    <% for (var i = 0; i < data.medicine_list.length; i++) { %>
                         <tr>
-                            <td><%= data[i]['medicine_id'] %></td>
-                            <td><%= data[i]['medicine_name'] %></td>
-                            <td><%= data[i]['hospital_name'] %></td>
-                            <td><%= data[i]['number'] %>個</td>
-                            <td><%= data[i]['starts_date'] %></td>
-                            <td><%= data[i]['period'] %>日</td>
-                            <td><%= data[i]['type_name'] %></td>
-                            <td><%= data[i]['image'] %></td>
-                            <td><%= data[i]['description'] %></td>
+                            <td><%= data.medicine_list[i]['medicine_id'] %></td>
+                            <td><%= data.medicine_list[i]['medicine_name'] %></td>
+                            <td><%= data.medicine_list[i]['hospital_name'] %></td>
+                            <td><%= data.medicine_list[i]['number'] %>個</td>
+                            <td><%= data.medicine_list[i]['starts_date'] %></td>
+                            <td><%= data.medicine_list[i]['period'] %>日</td>
+                            <td><%= data.medicine_list[i]['type_name'] %></td>
+                            <td><%= data.medicine_list[i]['image'] %></td>
+                            <td><%= data.medicine_list[i]['description'] %></td>
                             <td>
                                 <div class="dropdown d-inline">
                                     <button class="btn btn-primary dropdown-toggle" type="button"
@@ -64,11 +64,11 @@
                                             <i class="fas fa-info-circle"></i>
                                             詳細
                                         </a>
-                                        <a class="dropdown-item has-icon" href="/medicine-update/<%= data[i]['medicine_id'] %>">
+                                        <a class="dropdown-item has-icon" href="/medicine-update/<%= data.medicine_list[i]['medicine_id'] %>">
                                             <i class="far fa-edit"></i>
                                             編集
                                         </a>
-                                        <a class="dropdown-item has-icon" href="javascript:medicineDelete(<%= data[i]['medicine_id'] %>)">
+                                        <a class="dropdown-item has-icon" href="javascript:medicineDelete(<%= data.medicine_list[i]['medicine_id'] %>)">
                                             <i class="fas fa-trash"></i>
                                             削除
                                         </a>
