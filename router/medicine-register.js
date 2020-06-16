@@ -7,18 +7,20 @@ const app = require('../app/app');
 const connection = require('../app/db');
 
 router.get('/medicine-register', async (ctx) => {
+    // Session
     let session = ctx.session;
-    if (!session.auth_id || !await app.getUserId(session.auth_id)) {
+    app.initializeSession(session);
+
+    // Login Check
+    let authId = session.auth_id;
+    let userId = await app.getUserId(authId);
+    if (!authId || !userId) {
         return ctx.redirect('/login');
     }
 
     let result = app.initializeRenderResult();
-    // result['data'] = {};
-    // result['data']['old'] = {};
-    // result['data']['error'] = {};
-    // result['meta'] = {};
-
-    console.log(result);
+    result['data']['meta']['login_status'] = true;
+    result['data']['meta']['site_title'] = '薬情報登録 - Medice Note';
 
     let sql = 'SELECT type_id, type_name FROM medicine_type';
     let [medicineType] = await connection.query(sql);
@@ -28,16 +30,14 @@ router.get('/medicine-register', async (ctx) => {
     let [takeTime] = await connection.query(sql);
     result['data']['meta']['take_time'] = takeTime;
 
-    result['data']['meta']['login_status'] = Boolean(await app.getUserId(session.auth_id));
-
-    if (session.error_message !== undefined) {
-        result['data']['error_message'] = session.error_message;
-        session.error_message = undefined;
+    if (session.error !== undefined) {
+        result['data']['error'] = session.error;
+        session.error = undefined;
     }
 
-    if (session.success_message !== undefined) {
-        result['data']['success_message'] = session.success_message;
-        session.success_message = undefined;
+    if (session.success !== undefined) {
+        result['data']['success'] = session.success;
+        session.success = undefined;
     }
 
     if (session.old !== undefined) {
@@ -45,21 +45,22 @@ router.get('/medicine-register', async (ctx) => {
         session.old = undefined;
     }
 
-    if (session.error !== undefined) {
-        result['data']['error'] = session.error;
-        session.error = undefined;
-    }
-
     await ctx.render('/medicine-register', result);
 })
 
 router.post('/medicine-register', async (ctx) => {
+    // Session
     let session = ctx.session;
-    if (!session.auth_id) {
+    app.initializeSession(session);
+
+    // Login Check
+    let authId = session.auth_id;
+    let userId = await app.getUserId(authId);
+    if (!authId || !userId) {
         return ctx.redirect('/login');
     }
 
-    // 必須項目
+    // Required
     let medicineName = ctx.request.body['medicine_name'];
     let hospitalName = ctx.request.body['hospital_name'];
     let number = ctx.request.body['number'];
@@ -68,7 +69,7 @@ router.post('/medicine-register', async (ctx) => {
     let period = ctx.request.body['period'];
     let medicineType = ctx.request.body['medicine_type'];
 
-    // 任意項目
+    // Any
     let medicineImage = "";
     let description = ctx.request.body.description || '';
 
@@ -99,15 +100,15 @@ router.post('/medicine-register', async (ctx) => {
         fs.unlinkSync(uploadImage['path']);
     }
 
-    // デフォルトグループ検索
-    let userId = await app.getUserId(session.auth_id);
+    // Default Group Search
     let groupId = await app.getDefaultGroup(userId);
     if (!groupId) {
-        session.error_message = 'システムエラーが発生しました';
+        session.error.message = 'システムエラーが発生しました';
 
         return ctx.redirect('/medicine-register')
     }
 
+    // Validation
     let validationMedicine = await app.validationMedicine([
         medicineName,
         hospitalName,
@@ -140,7 +141,7 @@ router.post('/medicine-register', async (ctx) => {
             await connection.query(sql, [medicineId, item]);
         }
 
-        session.success_message = '薬情報を登録しました';
+        session.success.message = '薬情報を登録しました';
 
         return ctx.redirect('/');
     } else {
@@ -159,7 +160,7 @@ router.post('/medicine-register', async (ctx) => {
         if (!validationTakeTime) session.error.take_time = '飲む時間が正しく選択されていません';
         if (!validationMedicineType) session.error.medicine_type = '種類が正しく選択されていません';
 
-        session.error_message = '薬情報登録に失敗しました';
+        session.error.message = '薬情報登録に失敗しました';
 
         return ctx.redirect('/medicine-register');
     }

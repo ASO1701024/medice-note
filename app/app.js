@@ -28,7 +28,7 @@ module.exports = {
             period: array[4],
             description: array[5]
         };
-        // validationのルール
+        // Rule
         let rules = {
             medicineName: 'required|max:200',
             hospitalName: 'required|max:100',
@@ -37,7 +37,7 @@ module.exports = {
             period: 'required|numeric|min:0|max:1000',
             description: 'max:255'
         };
-        // エラーメッセージ
+        // Message
         let errorMessage = {
             'required.medicineName': "200文字以内で入力してください",
             'max.medicineName': "200文字以内で入力してください",
@@ -55,19 +55,18 @@ module.exports = {
             'max.period': "0以上で1000以内の数字で入力してください",
             'max.description': "255文字以内で入力してください"
         }
-        // validation実行
+        // Validation
         let requestValidate = new validator(requests, rules, errorMessage);
 
-        // validationの結果を取り出してresultに代入
         let result = {
             error: {},
             result: false
         };
         await requestValidate.checkAsync(() => {
-            // 検証成功時処理
+            // Success
             result.result = true;
         }, () => {
-            // 検証拒否時処理
+            // Error
             result.result = false;
             if (requestValidate.errors.first('medicineName')) {
                 result.error.medicine_name = requestValidate.errors.first('medicineName');

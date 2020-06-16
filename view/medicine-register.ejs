@@ -1,25 +1,25 @@
 <div class="section-header">
-    <h1>薬登録</h1>
+    <h1>薬情報登録</h1>
 </div>
 
-<% if (typeof data.success_message !== "undefined") { %>
+<% if (typeof data.success.message !== "undefined") { %>
     <div class="alert alert-success alert-dismissible show fade">
         <div class="alert-body">
             <button class="close" data-dismiss="alert">
                 <span>×</span>
             </button>
-            <%= data.success_message %>
+            <%= data.success.message %>
         </div>
     </div>
 <% } %>
 
-<% if (typeof data.error_message !== "undefined") { %>
+<% if (typeof data.error.message !== "undefined") { %>
     <div class="alert alert-danger alert-dismissible show fade">
         <div class="alert-body">
             <button class="close" data-dismiss="alert">
                 <span>×</span>
             </button>
-            <%= data.error_message %>
+            <%= data.error.message %>
         </div>
     </div>
 <% } %>
@@ -130,7 +130,7 @@
                     </div>
                     <div class="form-group">
                         <label>説明</label>
-                        <textarea class="form-control" name="description"><% if (typeof data.old.description !== "undefined") { %> <%= data.old.description %> <% } %></textarea>
+                        <textarea class="form-control" name="description"><% if (typeof data.old.description !== "undefined") { %><%= data.old.description %><% } %></textarea>
                         <span class="form-error">
                             <% if (typeof data.error.description !== "undefined") { %>
                                 <%= data.error.description %>
