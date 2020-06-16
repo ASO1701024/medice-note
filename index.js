@@ -96,4 +96,8 @@ const accountEdit = require('./router/account-edit');
 app.use(accountEdit.routes());
 app.use(accountEdit.allowedMethods());
 
+const accountDeleteRouter = require('./router/account-delete');
+app.use(accountDeleteRouter.routes());
+app.use(accountDeleteRouter.allowedMethods());
+
 app.listen(5000);
