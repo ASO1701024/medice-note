@@ -5,18 +5,17 @@ const connection = require('../app/db');
 
 router.get('/account-setting', async (ctx, next) => {
     let session = ctx.session;
+    app.initializeSession(session);
 
     let authId = session.auth_id;
-    if (!authId || !await app.getUserId(session.auth_id)) {
-        return ctx.redirect('/login');
+    let userId = await app.getUserId(authId);
+    if (!authId || !userId) {
+        return ctx.redirect('/');
     }
 
-    let userId = await app.getUserId(authId);
-
-    let result = {};
-    result['data'] = {};
-    result['meta'] = {};
-    result['meta']['login_status'] = Boolean(userId);
+    let result = app.initializeRenderResult();
+    result['data']['meta']['login_status'] = true;
+    result['data']['meta']['site_title'] = 'アカウント設定 - Medice Note';
 
     let sql = 'SELECT user_name, mail FROM user WHERE user_id = ?';
     let [user] = await connection.query(sql, [userId]);
