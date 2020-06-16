@@ -73,21 +73,28 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
     let image = "";
     let description = ctx.request.body['description'] || '';
 
-    let medicineArray = [medicineName, hospitalName, number,
+    let getGroupId = 'SELECT group_id as groupId FROM medicine WHERE medicine_id = ?;';
+    let groupId = (await connection.query(getGroupId, [medicineId]))[0][0]['groupId'];
+
+    let validationArray = [medicineName, hospitalName, number,
+        startsDate, period, medicineType, image, description, String(groupId)];
+    let updateArgs = [medicineName, hospitalName, number,
         startsDate, period, medicineType, image, description, medicineId];
 
     // 検証パス時は値をDBに保存し、検証拒否時はエラーメッセージを表示
     let validationPromise = [];
     let validationResultArray = [];
-    validationPromise[0] = medicineValidation(medicineArray, session.auth_id).then(result => validationResultArray[0] = result);
+    validationPromise[0] = medicineValidation(validationArray, session.auth_id).then(result => validationResultArray[0] = result);
     validationPromise[1] = takeTimeValidation(takeTimeArray).then(result => validationResultArray[1] = result);
     await Promise.all(validationPromise);
+
+    // 更新情報検証成功時
     if (validationResultArray[0].is_success && validationResultArray[1].is_success) {
         let sql = 'UPDATE medicine ' +
             'SET medicine_name=?,hospital_name=?,number=?,' +
             'starts_date=?,period=?,type_id=?,image=?,description=? ' +
             'WHERE medicine_id = ?';
-        await connection.query(sql, medicineArray);
+        await connection.query(sql, updateArgs);
 
         // 現在のtake_timeテーブルに登録されている情報を取得
         let currentTakeTimeSQL = 'SELECT take_time_id as takeTimeId FROM medicine_take_time WHERE medicine_id = ?;';
@@ -135,6 +142,7 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
         }
         return ctx.redirect('/medicine-update/' + medicineId);
     } else {
+        // 更新情報検証失敗時
         if (validationResultArray[1].errors.array === '') {
             validationResultArray[0].errors.takeTime = validationResultArray[1].errors.items[0];
         } else {
