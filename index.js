@@ -63,4 +63,20 @@ const medicineUpdateRouter = require('./router/medicine-update');
 app.use(medicineUpdateRouter.routes());
 app.use(medicineUpdateRouter.allowedMethods());
 
+const medicineDeleteRouter = require('./router/medicine-delete');
+app.use(medicineDeleteRouter.routes());
+app.use(medicineDeleteRouter.allowedMethods());
+
+const accountUpdateRouter = require('./router/accouont-update');
+app.use(accountUpdateRouter.routes());
+app.use(accountUpdateRouter.allowedMethods());
+
+const medicineListRouter = require('./router/medicine-list');
+app.use(medicineListRouter.routes());
+app.use(medicineListRouter.allowedMethods());
+
+const medicineRouter = require('./router/medicine');
+app.use(medicineRouter.routes());
+app.use(medicineRouter.allowedMethods());
+
 app.listen(5000);
