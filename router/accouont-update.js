@@ -88,11 +88,11 @@ router.post('/account-update', async (ctx) => {
     });
     if (mailIsSuccess) {
         // 重複確認
-        let mailDoubleCheckSQL = 'SELECT user_id FROM user WHERE mail = ? AND user_id <> ?;';
+        let mailDoubleCheckSQL = 'SELECT user_id FROM user WHERE mail = ?;';
         let mailCheckResult = (await connection.query(mailDoubleCheckSQL, [newMail, userId]))[0];
         if (mailCheckResult.length !== 0) {
-            mailIsSuccess = false;
             if (mailCheckResult[0]['user_id'] !== userId) {
+                mailIsSuccess = false;
                 session.error_update_mail = "既に登録されているメールアドレスです";
             }
         }
