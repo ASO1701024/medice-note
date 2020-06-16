@@ -100,7 +100,7 @@ router.post('/account-update', async (ctx) => {
 
     // passwordの値の検証
     let newPassword = ctx.request.body['password'];
-    if(newPassword !== "") {
+    if (newPassword !== "") {
         let passwordValidate = new validator({
             password: newPassword,
         }, {
