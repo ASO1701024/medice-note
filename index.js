@@ -88,13 +88,13 @@ const medicineDeleteRouter = require('./router/medicine-delete');
 app.use(medicineDeleteRouter.routes());
 app.use(medicineDeleteRouter.allowedMethods());
 
-const accountSetting = require('./router/account-setting');
-app.use(accountSetting.routes());
-app.use(accountSetting.allowedMethods());
+const accountSettingRouter = require('./router/account-setting');
+app.use(accountSettingRouter.routes());
+app.use(accountSettingRouter.allowedMethods());
 
-const accountEdit = require('./router/account-edit');
-app.use(accountEdit.routes());
-app.use(accountEdit.allowedMethods());
+const accountEditRouter = require('./router/account-edit');
+app.use(accountEditRouter.routes());
+app.use(accountEditRouter.allowedMethods());
 
 const accountDeleteRouter = require('./router/account-delete');
 app.use(accountDeleteRouter.routes());
