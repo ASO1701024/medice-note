@@ -1,9 +1,10 @@
 const validator = require('validatorjs');
 const connection = require('../app/db');
+const app = require('../app/app');
 
 // 受け取った薬情報を検証する。
 // 登録時と変更時に検証を行うため、外部ファイルから利用。
-async function validation(items) {
+async function validation(items,authId) {
     // データをvalidationするために整形
     let requests = {
         medicineName: String(items[0]),
@@ -16,24 +17,32 @@ async function validation(items) {
         description: items[7],
         groupId: items[8]
     };
-    // 存在するmedicineTypeIdをDBから取得。
+    // 存在するmedicineTypeIdを取得。
     let sql = 'SELECT type_id FROM medicine_type;';
     let typeListResult = (await connection.query(sql))[0];
     let typeList = [];
     for(let row of typeListResult){
         typeList.push(String(row['type_id']));
     }
+    // 更新権限を持つgroup_idを取得
+    let userId = await app.getUserId(authId);
+    sql = 'SELECT group_id FROM medicine_group WHERE user_id = ?;';
+    let groupListResult = (await connection.query(sql,[userId]))[0]
+    let groupList = [];
+    for(let row of groupListResult){
+        groupList.push(String(row['group_id']));
+    }
     // validationのルール
     let rules = {
-        medicineName: 'required',
+        medicineName: 'required|max:250',
         hospitalName: 'required|max:100',
-        number: 'required|numeric',
-        startsDate: 'required', // HH:MMの形。後で考える。
-        period: 'required|numeric|min:0',
+        number: 'required|numeric|max:100',
+        startsDate: 'required|date', //
+        period: 'required|numeric|min:0|max:1000',
         medicineType: ['required', 'numeric', {'in': typeList}],
         image: 'max:100',
         description: 'max:255',
-        groupId: 'numeric'
+        groupId: ['numeric', {'in': groupList}],
     };
     // エラーメッセージ
     let errorMessage = {
@@ -46,12 +55,17 @@ async function validation(items) {
         'numeric.number': "個数は数字で入力して下さい",
         'numeric.period': "何日分は数字で入力して下さい",
         'numeric.medicineType': "種類は選択肢から選んで下さい",
-        'numeric.group_id': "グループは選択肢から選んで下さい",
+        'numeric.groupId': "グループは選択肢から選んで下さい",
+        'max.medicineName': "薬の名前は250文字以内で入力して下さい",
         'max.hospitalName': "病院名は100文字以下で入力して下さい",
+        'max.number': "飲む個数は100個以下を入力して下さい",
+        'max.period': "飲む期間は1000日以下を入力して下さい",
         'max.description': "説明は250文字以下で入力して下さい",
         'min.startsDate': "処方日は日付の形式で入力して下さい",
         'min.period': "何日分は1以上の数字を入力して下さい",
-        'in.medicineType': "種類はリストから選択して下さい"
+        'in.medicineType': "種類はリストから選択して下さい",
+        'in.groupId': "グループはリストから選択して下さい",
+        'date.startsDate': "処方日はリストから選択して下さい",
     }
     // validation実行
     let requestValidate = new validator(requests, rules, errorMessage);
@@ -75,6 +89,7 @@ async function validation(items) {
         result.errors.groupId = requestValidate.errors.first('groupId');
         result.request = requests;
     })
+
     return result;
 }
 
