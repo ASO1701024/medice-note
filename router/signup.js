@@ -32,33 +32,6 @@ router.get('/signup', async (ctx, next) => {
         session.error = undefined;
     }
 
-    /*
-    if (session.success_message !== undefined) {
-        result['data']['success_message'] = session.success_message;
-        session.success_message = undefined;
-    }
-
-    if (session.error_message !== undefined) {
-        result['data']['error_message'] = session.error_message;
-        session.error_message = undefined;
-    }
-
-    if (session.error_user_name !== undefined) {
-        result['data']['error_user_name'] = session.error_user_name;
-        session.error_user_name = undefined;
-    }
-
-    if (session.error_mail !== undefined) {
-        result['data']['error_mail'] = session.error_mail;
-        session.error_mail = undefined;
-    }
-
-    if (session.error_password !== undefined) {
-        result['data']['error_password'] = session.error_password;
-        session.error_password = undefined;
-    }
-    */
-
     await ctx.render('signup', result);
 })
 
