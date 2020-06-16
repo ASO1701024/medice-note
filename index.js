@@ -79,8 +79,4 @@ const medicineRouter = require('./router/medicine');
 app.use(medicineRouter.routes());
 app.use(medicineRouter.allowedMethods());
 
-const accountDeleteRouter = require('./router/accouont-delete');
-app.use(accountDeleteRouter.routes());
-app.use(accountDeleteRouter.allowedMethods());
-
 app.listen(5000);
