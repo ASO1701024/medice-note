@@ -52,7 +52,13 @@ router.post('/account-delete', async (ctx) => {
     sql = 'UPDATE user SET deleted_at = ? WHERE user_id = ?';
     await connection.query(sql, [new Date(), userId]);
 
+    sql = 'DELETE FROM session WHERE user_id = ?';
+    await connection.query(sql, [userId]);
+
     session.success.message = 'アカウントを削除しました';
+    session.auth_id = undefined;
+    session.error = undefined;
+    session.old = undefined;
 
     ctx.redirect('/login');
 })
