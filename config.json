@@ -1,10 +1,10 @@
 {
   "db": {
-    "host": "",
+    "host": "localhost",
     "port": 3306,
-    "user": "",
-    "password": "",
-    "database": ""
+    "user": "root",
+    "password": "password",
+    "database": "medice_note"
   },
   "mail": {
     "host": "",
