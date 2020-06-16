@@ -38,6 +38,7 @@ router.get('/login', async (ctx, next) => {
 
 router.post('/login', async (ctx, next) => {
     let session = ctx.session;
+    app.initializeSession(session);
 
     let mail = ctx.request.body['mail'];
     let password = ctx.request.body['password'];
