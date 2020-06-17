@@ -5,10 +5,10 @@ const app = require('../app/app');
 
 router.post('/medicine-delete', async (ctx) => {
     let session = ctx.session;
-    let userId = await app.getUserId(session.auth_id);
 
-    if (!session.auth_id) {
-        return ctx.redirect('/login');
+    let userId = await app.getUserId(session.auth_id);
+    if (userId === false) {
+        return ctx.redirect('/')
     }
     let medicineId = ctx.request.body['medicineId'];
 

@@ -11,12 +11,12 @@ const app = require('../app/app');
 
 router.get('/medicine-update/:medicine_id', async (ctx) => {
     let session = ctx.session;
-    let medicineId = ctx.params['medicine_id'];
-    let userId = await app.getUserId(session.auth_id);
 
-    if (!session.auth_id) {
-        return ctx.redirect('/login');
+    let userId = await app.getUserId(session.auth_id);
+    if (userId === false) {
+        return ctx.redirect('/')
     }
+    let medicineId = ctx.params['medicine_id'];
 
     let result = {};
     result['data'] = {};
@@ -46,12 +46,12 @@ router.get('/medicine-update/:medicine_id', async (ctx) => {
 
 router.post('/medicine-update/:medicine_id', async (ctx) => {
     let session = ctx.session;
-    let medicineId = ctx.params['medicine_id'];
-    let userId = await app.getUserId(session.auth_id);
 
-    if (!session.auth_id) {
-        return ctx.redirect('/login');
+    let userId = await app.getUserId(session.auth_id);
+    if (userId === false) {
+        return ctx.redirect('/')
     }
+    let medicineId = ctx.params['medicine_id'];
 
     let medicineData = app.getMedicine(medicineId, userId);
     // 更新権限の有無の確認。間違えて使わないように確認後はnullで初期化。
