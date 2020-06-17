@@ -1,9 +1,7 @@
 const Router = require('koa-router');
 const router = new Router();
 const connection = require('../app/db');
-const medicineValidation = require('../app/medicine-validation');
-const takeTimeValidation = require('../app/take-time-validation');
-const getMedicine = require('../app/get-medicine');
+const app = require('../app/app');
 
 /* session
     update_medicine_id: 更新する薬情報の薬ID
@@ -14,6 +12,7 @@ const getMedicine = require('../app/get-medicine');
 router.get('/medicine-update/:medicine_id', async (ctx) => {
     let session = ctx.session;
     let medicineId = ctx.params['medicine_id'];
+    let userId = await app.getUserId(session.auth_id);
 
     if (!session.auth_id) {
         return ctx.redirect('/login');
@@ -26,7 +25,7 @@ router.get('/medicine-update/:medicine_id', async (ctx) => {
         session.update_denied_error = null;
     }
 
-    let medicineData = await getMedicine(medicineId, session.auth_id);
+    let medicineData = await app.getMedicine(medicineId, userId);
     if (medicineData === false) {
         // 薬一覧に遷移するように後で変更する。
         return ctx.redirect('/');
@@ -48,11 +47,13 @@ router.get('/medicine-update/:medicine_id', async (ctx) => {
 router.post('/medicine-update/:medicine_id', async (ctx) => {
     let session = ctx.session;
     let medicineId = ctx.params['medicine_id'];
+    let userId = await app.getUserId(session.auth_id);
+
     if (!session.auth_id) {
         return ctx.redirect('/login');
     }
 
-    let medicineData = getMedicine(medicineId, session.auth_id);
+    let medicineData = app.getMedicine(medicineId, userId);
     // 更新権限の有無の確認。間違えて使わないように確認後はnullで初期化。
     if (medicineData === false) {
         // 薬一覧に遷移するように後で変更する。
@@ -84,10 +85,9 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
     // 検証パス時は値をDBに保存し、検証拒否時はエラーメッセージを表示
     let validationPromise = [];
     let validationResultArray = [];
-    validationPromise[0] = medicineValidation(validationArray, session.auth_id).then(result => validationResultArray[0] = result);
-    validationPromise[1] = takeTimeValidation(takeTimeArray).then(result => validationResultArray[1] = result);
+    validationPromise[0] = app.medicineValidation(validationArray, userId).then(result => validationResultArray[0] = result);
+    validationPromise[1] = app.takeTimeValidation(takeTimeArray).then(result => validationResultArray[1] = result);
     await Promise.all(validationPromise);
-
     // 更新情報検証成功時
     if (validationResultArray[0].is_success && validationResultArray[1].is_success) {
         let sql = 'UPDATE medicine ' +

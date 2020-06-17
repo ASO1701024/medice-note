@@ -1,15 +1,17 @@
 const Router = require('koa-router');
 const router = new Router();
-const getMedicine = require('../app/get-medicine');
+const app = require('../app/app');
 
 router.get('/medicine/:medicine_id', async (ctx) => {
     let session = ctx.session;
+    let userId = await app.getUserId(session.auth_id);
+
     if (!session.auth_id) {
         return ctx.redirect('/login');
     }
     let medicineId = ctx.params['medicine_id'];
 
-    let medicineData = (await getMedicine(medicineId, session.auth_id));
+    let medicineData = (await app.getMedicine(medicineId, userId));
 
     if (medicineData === false) {
         return ctx.redirect('/medicine-register');

@@ -2,8 +2,6 @@ const Router = require('koa-router');
 const router = new Router();
 const app = require('../app/app');
 const connection = require('../app/db');
-const medicineValidation = require('../app/medicine-validation');
-const takeTimeValidation = require('../app/take-time-validation');
 
 /* session
 register_denied_request: 薬登録失敗時、送信された登録情報をHTMLのformのvalueに設定して表示
@@ -59,8 +57,8 @@ router.post('/medicine-register', async (ctx) => {
     // 検証パス時は値をDBに保存し、検証拒否時はエラーメッセージを表示
     let validationPromise = [];
     let validationResultArray = [];
-    validationPromise[0] = medicineValidation(medicineArray, session.auth_id).then(result => validationResultArray[0] = result);
-    validationPromise[1] = takeTimeValidation(takeTimeArray).then(result => validationResultArray[1] = result);
+    validationPromise[0] = app.medicineValidation(medicineArray, userId).then(result => validationResultArray[0] = result);
+    validationPromise[1] = app.takeTimeValidation(takeTimeArray).then(result => validationResultArray[1] = result);
     await Promise.all(validationPromise);
 
     if (validationResultArray[0].is_success && validationResultArray[1].is_success) {
