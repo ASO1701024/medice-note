@@ -10,9 +10,12 @@ const connection = require('../app/db');
 
 router.get('/account-delete', async (ctx) => {
     let session = ctx.session;
-    if (!session.auth_id) {
-        return ctx.redirect('/login');
+
+    let userId = await app.getUserId(session.auth_id);
+    if (userId === false) {
+        return ctx.redirect('/')
     }
+
     let result = {data: {accountDelete: {}}};
 
     if (typeof session.account_delete_deny !== 'undefined') {
@@ -24,18 +27,21 @@ router.get('/account-delete', async (ctx) => {
 })
 router.get('/account-delete/complete', async (ctx) => {
     let session = ctx.session;
-    console.log(session)
-    if (session.auth_id) {
+
+    let userId = await app.getUserId(session.auth_id);
+    if (userId !== false) {
         return ctx.redirect('/')
     }
+
     await ctx.render('/account-delete-complete');
 })
 router.post('/account-delete', async (ctx) => {
     let session = ctx.session;
-    if (!session.auth_id) {
-        return ctx.redirect('/login');
-    }
+
     let userId = await app.getUserId(session.auth_id);
+    if (userId === false) {
+        return ctx.redirect('/')
+    }
 
     // passwordの値の検証
     let password = ctx.request.body['password'];

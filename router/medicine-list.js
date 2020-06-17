@@ -4,11 +4,12 @@ const app = require('../app/app');
 
 router.get('/medicine-list', async (ctx) => {
     let session = ctx.session;
-    if (!session.auth_id) {
-        return ctx.redirect('/login');
-    }
 
     let userId = await app.getUserId(session.auth_id);
+    if (userId === false) {
+        return ctx.redirect('/')
+    }
+
     let medicineDataList = await app.getMedicineAll(userId);
 
     let result = {};

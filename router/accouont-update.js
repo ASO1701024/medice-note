@@ -13,9 +13,12 @@ const validator = require('validatorjs');
 
 router.get('/account-update', async (ctx) => {
     let session = ctx.session;
-    if (!session.auth_id) {
-        return ctx.redirect('/login');
+
+    let userId = await app.getUserId(session.auth_id);
+    if (userId === false) {
+        return ctx.redirect('/')
     }
+
     let result = {data: {errorMsg: {}}};
 
     if (typeof session.error_update_user_name !== 'undefined') {
@@ -32,7 +35,6 @@ router.get('/account-update', async (ctx) => {
     }
 
     // ユーザーの情報を取得してrenderに渡す
-    let userId = await app.getUserId(session.auth_id);
     let sql = 'SELECT user_name as userName, mail FROM user WHERE user_id = ? ';
     let userData = (await connection.query(sql, [userId]))[0][0];
     result.data['request'] = {userName: userData['userName'], mail: userData['mail']};
@@ -42,10 +44,12 @@ router.get('/account-update', async (ctx) => {
 
 router.post('/account-update', async (ctx) => {
     let session = ctx.session;
-    if (!session.auth_id) {
-        return ctx.redirect('/login');
-    }
+
     let userId = await app.getUserId(session.auth_id);
+    if (userId === false) {
+        return ctx.redirect('/')
+    }
+
     let userNameIsSuccess = true;
     let mailIsSuccess = true;
     let passwordIsSuccess = true;

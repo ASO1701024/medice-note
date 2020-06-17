@@ -10,8 +10,10 @@ register_denied_error: 薬登録失敗時のエラーメッセージ　
 
 router.get('/medicine-register', async (ctx) => {
     let session = ctx.session;
-    if (!session.auth_id) {
-        return ctx.redirect('/login');
+
+    let userId = await app.getUserId(session.auth_id);
+    if (userId === false) {
+        return ctx.redirect('/')
     }
 
     let result = {};
@@ -28,8 +30,10 @@ router.get('/medicine-register', async (ctx) => {
 
 router.post('/medicine-register', async (ctx) => {
     let session = ctx.session;
-    if (!session.auth_id) {
-        return ctx.redirect('/login');
+
+    let userId = await app.getUserId(session.auth_id);
+    if (userId === false) {
+        return ctx.redirect('/')
     }
 
     // medicineテーブルに登録する項目
@@ -49,7 +53,6 @@ router.post('/medicine-register', async (ctx) => {
 
     // 削除不能の初期グループのgroup_idを取得
     let sql = 'SELECT group_id FROM medicine_group WHERE user_id = ? AND is_deletable = 1;';
-    let userId = await app.getUserId(session.auth_id);
     let groupId = (await connection.query(sql, [userId]))[0][0]['group_id'];
 
     let medicineArray = [medicineName, hospitalName, number,
