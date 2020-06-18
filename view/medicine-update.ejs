@@ -150,7 +150,7 @@
                     </div>
                     <div class="form-group">
                         <label>説明</label>
-                        <textarea class="form-control" name="description"><% if (typeof data.old.description !== "undefined") { %> <%= data.old.description %> <% } %></textarea>
+                        <textarea class="form-control" name="description"><% if (typeof data.old.description !== "undefined") { %><%= data.old.description %><% } %></textarea>
                         <span class="form-error">
                             <% if (typeof data.error.description !== "undefined") { %>
                                 <%= data.error.description %>
