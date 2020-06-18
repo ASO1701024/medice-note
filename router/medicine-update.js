@@ -8,6 +8,7 @@ const { v4: uuid } = require('uuid');
 
 router.get('/medicine-update/:medicine_id', async (ctx) => {
     let session = ctx.session;
+    app.initializeSession(session);
     let medicineId = ctx.params['medicine_id'];
 
     let authId = session.auth_id;
@@ -33,27 +34,26 @@ router.get('/medicine-update/:medicine_id', async (ctx) => {
 
     result['data']['meta']['login_status'] = Boolean(userId);
 
-    let medicine = await app.getMedicineFromMedicineId(medicineId);
-    result['data']['old'] = medicine;
+    result['data']['old'] = await app.getMedicineFromMedicineId(medicineId);
 
+    /*
     if (session.old !== undefined) {
         result['data']['old'] = session.old;
         session.old = undefined;
     }
+    */
 
     if (session.error !== undefined) {
         result['data']['error'] = session.error;
         session.error = undefined;
     }
 
-    console.log(session);
-    console.log(result);
-
     await ctx.render('/medicine-update', result);
 })
 
 router.post('/medicine-update/:medicine_id', async (ctx) => {
     let session = ctx.session;
+    app.initializeSession(session);
     let medicineId = ctx.params['medicine_id'];
 
     // Session
