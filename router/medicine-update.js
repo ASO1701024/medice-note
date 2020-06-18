@@ -157,7 +157,7 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
         if (Array.isArray(takeTime) && takeTime.length > 0) session.old.take_time = takeTime;
         if (startsDate !== '') session.old.starts_date = startsDate;
         if (period !== '') session.old.period = period;
-        if (medicineType !== '') session.old.medicine_type = medicineType;
+        if (medicineType !== '') session.old.type_id = medicineType;
         if (description !== '') session.old.description = description;
         if (!uploadImageFlag) session.error.medicine_image = '1MB以内のJPEG・JPG・PNG・ファイルを選択してください';
 
