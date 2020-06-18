@@ -76,7 +76,7 @@
                             <% if (typeof data.meta.take_time != "undefined") {
                             for (var tt = 0; tt < data.meta.take_time.length; tt++) { %>
                                 <option value="<%= data.meta.take_time[tt]['take_time_id'] %>"
-                                    <% if (typeof data.old.take_time != "undefined" && data.old.take_time.includes(data.meta.take_time[tt]['take_time_id'])) { %> selected <% } %>>
+                                    <% if (typeof data.old.take_time != "undefined" && data.old.take_time.some(d => d == data.meta.take_time[tt]['take_time_id'])) { %> selected <% } %>>
                                     <%= data.meta.take_time[tt]['take_time_name'] %>
                                 </option>
                             <% }
