@@ -43,12 +43,10 @@ router.get('/medicine-update/:medicine_id', async (ctx) => {
         '/js/medicine-image.js'
     ];
 
-    /*
-    if (session.old !== undefined) {
+    if (session.old !== undefined && Object.keys(session.old).length !== 0) {
         result['data']['old'] = session.old;
         session.old = undefined;
     }
-    */
 
     if (session.error !== undefined) {
         result['data']['error'] = session.error;
