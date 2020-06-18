@@ -143,7 +143,7 @@ router.post('/medicine-register', async (ctx) => {
 
         session.success.message = '薬情報を登録しました';
 
-        return ctx.redirect('/');
+        return ctx.redirect('/medicine-list');
     } else {
         session.old = {};
         session.error = validationMedicine.error;
