@@ -1,0 +1,91 @@
+<div class="section-header">
+    <h1>薬情報</h1>
+</div>
+
+<% if (typeof data.success.message !== "undefined") { %>
+    <div class="alert alert-danger alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>×</span>
+            </button>
+            <%= data.success.message %>
+        </div>
+    </div>
+<% } %>
+
+<% if (typeof data.error.message !== "undefined") { %>
+    <div class="alert alert-danger alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>×</span>
+            </button>
+            <%= data.error.message %>
+        </div>
+    </div>
+<% } %>
+
+<div class="card">
+    <div class="card-body pb-0">
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-6">
+                <div class="form-group">
+                    <label>薬の名前</label>
+                    <p><%= data.medicine.medicine_name %></p>
+                </div>
+                <div class="form-group">
+                    <label>病院名</label>
+                    <p><%= data.medicine.hospital_name %></p>
+                </div>
+                <div class="form-group">
+                    <label>飲む個数</label>
+                    <p><%= data.medicine.number%> 個</p>
+                </div>
+                <div class="form-group">
+                    <label>飲む時間</label>
+                        <p>
+                            <% for (var i = 0; i < data.medicine.take_time.length; i++) { %>
+                                <%= data.medicine.take_time[i].take_time_name %>
+                                <% if (data.medicine.take_time.length - 1 !== i) { %>
+                                   ・
+                                <% } %>
+                            <% } %>
+                        </p>
+                </div>
+                <div class="form-group">
+                    <label>処方日</label>
+                    <p><%= data.medicine.starts_date %></p>
+                </div>
+                <div class="form-group">
+                    <label>処方期間</label>
+                    <p><%= data.medicine.number %> 日間</p>
+                </div>
+                <div class="form-group">
+                    <label>種類</label>
+                    <p><%= data.medicine.type_name %></p>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-6">
+                <div class="form-group">
+                    <label>薬画像</label>
+                    <% if (data.medicine.medicine_image === undefined || data.medicine.medicine_image == '') { %>
+                        <p>登録されていません</p>
+                    <% } else { %>
+                        <p><%= data.medicine.medicine_image %></p>
+                    <% } %>
+                </div>
+                <div class="form-group">
+                    <label>説明</label>
+                    <% if (data.medicine.description === undefined || data.medicine.description == '') { %>
+                        <p>登録されていません</p>
+                    <% } else { %>
+                        <p><%= data.medicine.description %></p>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer pt-">
+        <a href="/medicine-update/<%= data.medicine.medicine_id %>" class="card-link">更新</a>
+        <a href="javascript:medicineDelete(<%= data.medicine.medicine_id %>);" class="card-link">削除</a>
+    </div>
+</div>

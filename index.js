@@ -72,6 +72,10 @@ const contactRouter = require('./router/contact');
 app.use(contactRouter.routes());
 app.use(contactRouter.allowedMethods());
 
+const medicineRouter = require('./router/medicine');
+app.use(medicineRouter.routes());
+app.use(medicineRouter.allowedMethods());
+
 const medicineListRouter = require('./router/medicine-list');
 app.use(medicineListRouter.routes());
 app.use(medicineListRouter.allowedMethods());

@@ -46,74 +46,57 @@
                 <div class="table-responsive">
                     <table class="table table-bordered table-md">
                         <tbody>
-                        <tr class="text-center">
-                            <th>ID</th>
-                            <th>薬名</th>
-                            <th>病院名</th>
-                            <th>個数</th>
-                            <th>処方日</th>
-                            <th>期間</th>
-                            <th>種類</th>
-                            <th>画像</th>
-                            <th>説明</th>
-                            <th></th>
-                        </tr>
-                        <% for (var i = 0; i < data.medicine_list.length; i++) { %>
-                            <tr>
-                                <td><%= data.medicine_list[i]['medicine_id'] %></td>
-                                <td><%= data.medicine_list[i]['medicine_name'] %></td>
-                                <td><%= data.medicine_list[i]['hospital_name'] %></td>
-                                <td><%= data.medicine_list[i]['number'] %>個</td>
-                                <td><%= data.medicine_list[i]['starts_date'] %></td>
-                                <td><%= data.medicine_list[i]['period'] %>日</td>
-                                <td><%= data.medicine_list[i]['type_name'] %></td>
-                                <td><%= data.medicine_list[i]['image'] %></td>
-                                <td><%= data.medicine_list[i]['description'] %></td>
-                                <td>
-                                    <div class="dropdown d-inline">
-                                        <button class="btn btn-primary dropdown-toggle" type="button"
-                                                id="dropdownMenuButton2" data-toggle="dropdown"
-                                                aria-haspopup="true" aria-expanded="false">アクション
-                                        </button>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item has-icon" href="/medicine/<%= data.medicine_list[i]['medicine_id'] %>">
-                                                <i class="fas fa-info-circle"></i>
-                                                詳細
-                                            </a>
-                                            <a class="dropdown-item has-icon" href="/medicine-update/<%= data.medicine_list[i]['medicine_id'] %>">
-                                                <i class="far fa-edit"></i>
-                                                編集
-                                            </a>
-                                            <a class="dropdown-item has-icon" href="javascript:medicineDelete(<%= data.medicine_list[i]['medicine_id'] %>)">
-                                                <i class="fas fa-trash"></i>
-                                                削除
-                                            </a>
-                                        </div>
-                                    </div>
-                                </td>
+                            <tr class="text-center">
+                                <th>ID</th>
+                                <th>薬名</th>
+                                <th>病院名</th>
+                                <th>個数</th>
+                                <th>処方日</th>
+                                <th>期間</th>
+                                <th>種類</th>
+                                <th>画像</th>
+                                <th>説明</th>
+                                <th></th>
                             </tr>
+                            <% for (var i = 0; i < data.medicine_list.length; i++) { %>
+                                <tr>
+                                    <td><%= data.medicine_list[i]['medicine_id'] %></td>
+                                    <td><%= data.medicine_list[i]['medicine_name'] %></td>
+                                    <td><%= data.medicine_list[i]['hospital_name'] %></td>
+                                    <td><%= data.medicine_list[i]['number'] %>個</td>
+                                    <td><%= data.medicine_list[i]['starts_date'] %></td>
+                                    <td><%= data.medicine_list[i]['period'] %>日</td>
+                                    <td><%= data.medicine_list[i]['type_name'] %></td>
+                                    <td><%= data.medicine_list[i]['image'] %></td>
+                                    <td><%= data.medicine_list[i]['description'] %></td>
+                                    <td>
+                                        <div class="dropdown d-inline">
+                                            <button class="btn btn-primary dropdown-toggle" type="button"
+                                                    id="dropdownMenuButton2" data-toggle="dropdown"
+                                                    aria-haspopup="true" aria-expanded="false">アクション
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item has-icon" href="/medicine/<%= data.medicine_list[i]['medicine_id'] %>">
+                                                    <i class="fas fa-info-circle"></i>
+                                                    詳細
+                                                </a>
+                                                <a class="dropdown-item has-icon" href="/medicine-update/<%= data.medicine_list[i]['medicine_id'] %>">
+                                                    <i class="far fa-edit"></i>
+                                                    編集
+                                                </a>
+                                                <a class="dropdown-item has-icon" href="javascript:medicineDelete(<%= data.medicine_list[i]['medicine_id'] %>)">
+                                                    <i class="fas fa-trash"></i>
+                                                    削除
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% } %>
                         </tbody>
-                        <% } %>
                     </table>
                 </div>
             </div>
         </div>
     <% } %>
 <% } %>
-
-<script src="/stisla/modules/sweetalert/sweetalert.min.js"></script>
-<script>
-    function medicineDelete(medicineId) {
-        swal({
-            title: '薬情報削除',
-            text: 'お薬情報を削除しますか？',
-            icon: 'warning',
-            buttons: ['キャンセル', '削除'],
-            dangerMode: true
-        }).then(function (value) {
-            if (value) {
-                location.href = '/medicine-delete/' + medicineId
-            }
-        });
-    }
-</script>
