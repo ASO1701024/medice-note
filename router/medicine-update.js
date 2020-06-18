@@ -32,9 +32,12 @@ router.get('/medicine-update/:medicine_id', async (ctx) => {
     let [takeTime] = await connection.query(sql);
     result['data']['meta']['take_time'] = takeTime;
 
-    result['data']['meta']['login_status'] = Boolean(userId);
+    result['data']['meta']['login_status'] = true;
 
     result['data']['old'] = await app.getMedicineFromMedicineId(medicineId);
+    result['data']['meta']['script'] = [
+        '/js/medicine-image.js'
+    ];
 
     /*
     if (session.old !== undefined) {

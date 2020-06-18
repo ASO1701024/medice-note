@@ -21,6 +21,9 @@ router.get('/medicine-register', async (ctx) => {
     let result = app.initializeRenderResult();
     result['data']['meta']['login_status'] = true;
     result['data']['meta']['site_title'] = '薬情報登録 - Medice Note';
+    result['data']['meta']['script'] = [
+        '/js/medicine-image.js'
+    ];
 
     let sql = 'SELECT type_id, type_name FROM medicine_type';
     let [medicineType] = await connection.query(sql);
