@@ -122,7 +122,9 @@ module.exports = {
     },
     getMedicineFromMedicineId: async (medicineId) => {
         let sql = 'SELECT medicine_id, medicine_name, hospital_name, number, ' +
-            'date_format(starts_date, \'%Y-%m-%d\') as starts_date, period, type_id, image, description FROM medicine';
+            'date_format(starts_date, \'%Y-%m-%d\') as starts_date, period, type_id, image, description ' +
+            'FROM medicine ' +
+            'WHERE medicine_id = ?';
         let [medicine] = await connection.query(sql, [medicineId]);
         if (medicine.length === 0) {
             return false;
