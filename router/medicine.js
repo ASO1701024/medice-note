@@ -5,6 +5,7 @@ const connection = require('../app/db');
 
 router.get('/medicine/:medicine_id', async (ctx) => {
     let session = ctx.session;
+    app.initializeSession(session);
 
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
@@ -47,17 +48,14 @@ router.get('/medicine/:medicine_id', async (ctx) => {
     [data] = await connection.query(sql, [medicineId]);
     result['data']['medicine']['take_time'] = data;
 
-    session.success = {};
-    session.error = {};
-
-    if (session.success.message !== undefined) {
-        result['data']['success']['message'] = session.success.message;
+    if (session.success !== undefined) {
+        result['data']['success'] = session.success;
         session.success.message = undefined;
     }
 
-    if (session.error.message !== undefined) {
-        result['data']['error']['message'] = session.error.message;
-        session.error.message = undefined;
+    if (session.error !== undefined) {
+        result['data']['error'] = session.error;
+        session.error = undefined;
     }
 
     await ctx.render('medicine', result);
