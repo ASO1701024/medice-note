@@ -35,7 +35,11 @@ router.get('/medicine-update/:medicine_id', async (ctx) => {
     result['data']['meta']['login_status'] = true;
 
     result['data']['old'] = await app.getMedicineFromMedicineId(medicineId);
+    result['data']['meta']['css'] = [
+        '/stisla/modules/select2/dist/css/select2.min.css'
+    ];
     result['data']['meta']['script'] = [
+        '/stisla/modules/select2/dist/js/select2.full.min.js',
         '/js/medicine-image.js'
     ];
 
@@ -57,16 +61,19 @@ router.get('/medicine-update/:medicine_id', async (ctx) => {
 router.post('/medicine-update/:medicine_id', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
+
     let medicineId = ctx.params['medicine_id'];
 
     // Session
     let authId = session.auth_id;
-    if (!authId || !await app.getUserId(authId)) {
+    let userId = await app.getUserId(authId);
+    if (!userId) {
+        session.error.message = 'ログインしていないため続行できません';
+
         return ctx.redirect('/login');
     }
 
     // Lookup MedicineId
-    let userId = await app.getUserId(authId);
     if (!await app.isHaveMedicine(medicineId, userId)) {
         session.error.message = '薬情報が見つかりませんでした';
 

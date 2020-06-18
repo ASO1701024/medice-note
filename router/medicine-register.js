@@ -21,7 +21,11 @@ router.get('/medicine-register', async (ctx) => {
     let result = app.initializeRenderResult();
     result['data']['meta']['login_status'] = true;
     result['data']['meta']['site_title'] = '薬情報登録 - Medice Note';
+    result['data']['meta']['css'] = [
+        '/stisla/modules/select2/dist/css/select2.min.css'
+    ];
     result['data']['meta']['script'] = [
+        '/stisla/modules/select2/dist/js/select2.full.min.js',
         '/js/medicine-image.js'
     ];
 

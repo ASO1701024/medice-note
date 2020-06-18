@@ -7,7 +7,11 @@
     <title><% if (typeof data.meta.site_title !== "undefined") { %><%= data.meta.site_title %><% } %></title>
     <link rel="stylesheet" href="/stisla/modules/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/stisla/modules/fontawesome/css/all.min.css">
-    <link rel="stylesheet" href="/stisla/modules/select2/dist/css/select2.min.css">
+    <% if (typeof data.meta.css !== "undefined") { %>
+        <% for (var c = 0; c < data.meta.css.length; c++) { %>
+            <link rel="stylesheet" href="<%= data.meta.css[c] %>">
+        <% }%>
+    <% } %>
     <link rel="stylesheet" href="/stisla/css/style.css">
     <link rel="stylesheet" href="/stisla/css/components.css">
     <link rel="stylesheet" href="/css/style.css">
@@ -109,15 +113,15 @@
     <script src="/stisla/modules/bootstrap/js/bootstrap.min.js"></script>
     <script src="/stisla/modules/nicescroll/jquery.nicescroll.min.js"></script>
     <script src="/stisla/modules/moment.min.js"></script>
-    <script src="/stisla/modules/select2/dist/js/select2.full.min.js"></script>
-    <script src="/stisla/js/stisla.js"></script>
     <script src="/stisla/modules/sticky-kit.js"></script>
-    <script src="/stisla/js/scripts.js"></script>
     <% if (typeof data.meta.script !== "undefined") { %>
-        <% for (var i = 0; i < data.meta.script.length; i++) { %>
-            <script src="<%= data.meta.script[i] %>"></script>
+        <% for (var s = 0; s < data.meta.script.length; s++) { %>
+            <script src="<%= data.meta.script[s] %>"></script>
         <% }%>
     <% } %>
+    <script src="/stisla/js/stisla.js"></script>
+    <script src="/stisla/js/scripts.js"></script>
+
 </body>
 
 </html>

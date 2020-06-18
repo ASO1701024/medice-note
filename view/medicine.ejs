@@ -67,10 +67,12 @@
             <div class="col-12 col-sm-6 col-lg-6">
                 <div class="form-group">
                     <label>薬画像</label>
-                    <% if (data.medicine.medicine_image === undefined || data.medicine.medicine_image == '') { %>
+                    <% if (data.medicine.image === undefined || data.medicine.image == '') { %>
                         <p>登録されていません</p>
                     <% } else { %>
-                        <p><%= data.medicine.medicine_image %></p>
+                        <div class="gallery gallery-fw" data-item-height="300">
+                            <div class="gallery-item" data-image="/upload/<%= data.medicine.image %>" data-title="薬画像"></div>
+                        </div>
                     <% } %>
                 </div>
                 <div class="form-group">

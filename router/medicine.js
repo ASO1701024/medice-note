@@ -24,7 +24,11 @@ router.get('/medicine/:medicine_id', async (ctx) => {
     let result = app.initializeRenderResult();
     result['data']['meta']['login_status'] = true;
     result['data']['meta']['site_title'] = '薬情報一覧 - Medice Note';
+    result['data']['meta']['css'] = [
+        '/stisla/modules/chocolat/dist/css/chocolat.css'
+    ];
     result['data']['meta']['script'] = [
+        '/stisla/modules/chocolat/dist/js/jquery.chocolat.min.js',
         '/stisla/modules/sweetalert/sweetalert.min.js',
         '/js/medicine-delete-alert.js'
     ];
