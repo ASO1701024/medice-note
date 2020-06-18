@@ -154,10 +154,10 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
         if (medicineName !== '') session.old.medicine_name = medicineName;
         if (hospitalName !== '') session.old.hospital_name = hospitalName;
         if (number !== '') session.old.number = number;
-        if (Array.isArray(takeTime) && takeTime.length < 0) session.old.take_time = takeTime;
+        if (Array.isArray(takeTime) && takeTime.length > 0) session.old.take_time = takeTime;
         if (startsDate !== '') session.old.starts_date = startsDate;
         if (period !== '') session.old.period = period;
-        if (Array.isArray(medicineType) && medicineType.length < 0) session.old.medicine_type = medicineType;
+        if (medicineType !== '') session.old.medicine_type = medicineType;
         if (description !== '') session.old.description = description;
         if (!uploadImageFlag) session.error.medicine_image = '1MB以内のJPEG・JPG・PNG・ファイルを選択してください';
 
