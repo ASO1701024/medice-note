@@ -104,4 +104,24 @@ const accountDeleteRouter = require('./router/account-delete');
 app.use(accountDeleteRouter.routes());
 app.use(accountDeleteRouter.allowedMethods());
 
+// Error Handler
+// https://qiita.com/Statham/items/40ad8e6d0ffbc020b79f
+app.use(async (ctx, next) => {
+    try {
+        await next();
+        if (ctx.status === 404) {
+            ctx.app.emit("error", ctx, {status: 404, message: "u f**ked up"})
+        }
+    } catch (err) {
+        console.log('error', err)
+        ctx.status = err.status || 500;
+        ctx.body = err.message;
+        ctx.app.emit("error", ctx, err);
+    }
+});
+
+app.on("error", (ctx, err) => {
+    console.log("Error Message");
+});
+
 app.listen(5000);
