@@ -54,21 +54,17 @@
                                 <th>処方日</th>
                                 <th>期間</th>
                                 <th>種類</th>
-                                <th>画像</th>
-                                <th>説明</th>
                                 <th></th>
                             </tr>
                             <% for (var i = 0; i < data.medicine_list.length; i++) { %>
                                 <tr>
-                                    <td><%= data.medicine_list[i]['medicine_id'] %></td>
+                                    <td class="text-center"><%= data.medicine_list[i]['medicine_id'] %></td>
                                     <td><%= data.medicine_list[i]['medicine_name'] %></td>
                                     <td><%= data.medicine_list[i]['hospital_name'] %></td>
                                     <td><%= data.medicine_list[i]['number'] %>個</td>
                                     <td><%= data.medicine_list[i]['starts_date'] %></td>
                                     <td><%= data.medicine_list[i]['period'] %>日</td>
                                     <td><%= data.medicine_list[i]['type_name'] %></td>
-                                    <td><%= data.medicine_list[i]['image'] %></td>
-                                    <td><%= data.medicine_list[i]['description'] %></td>
                                     <td>
                                         <div class="dropdown d-inline">
                                             <button class="btn btn-primary dropdown-toggle" type="button"
