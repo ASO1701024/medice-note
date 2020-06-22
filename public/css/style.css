@@ -1,6 +1,5 @@
 * {
-    font-family: 'M PLUS 1p', sans-serif;
-    font-weight: 300;
+    font-family: 'M PLUS 1p', sans-serif !important;
 }
 .form-error {
     display: block;
