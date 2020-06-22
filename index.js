@@ -39,6 +39,7 @@ app.use(session({
     maxAge: 1000 * 60 * 60 * 24,
     secure: false
 }, app));
+app.proxy = true;
 
 const indexRouter = require('./router/index');
 app.use(indexRouter.routes());
