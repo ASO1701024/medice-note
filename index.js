@@ -6,6 +6,7 @@ const render = require('koa-ejs');
 const koaBody = require('koa-body');
 const session = require('koa-generic-session');
 const SQLite3Store = require('koa-sqlite3-session');
+const config = require('./config.json');
 
 let uploadCache = path.join(__dirname, '/upload_cache')
 if (!fs.existsSync(uploadCache)) {
@@ -33,9 +34,9 @@ app.use(koaBody({
         keepExtensions: true
     }
 }));
-app.keys = ['SECRET_KEY'];
+app.keys = config.session.key;
 app.use(session({
-    store: new SQLite3Store('session.db', {}),
+    store: new SQLite3Store(config.session.filename, {}),
     maxAge: 1000 * 60 * 60 * 24,
     secure: false
 }, app));

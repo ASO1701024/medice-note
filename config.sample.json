@@ -14,5 +14,11 @@
       "user": "",
       "pass": ""
     }
+  },
+  "session": {
+    "key": [
+      "SECRET_KEY"
+    ],
+    "filename": "session.db"
   }
 }
