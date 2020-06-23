@@ -22,11 +22,14 @@ router.get('/medicine-register', async (ctx) => {
     result['data']['meta']['login_status'] = true;
     result['data']['meta']['site_title'] = '薬情報登録 - Medice Note';
     result['data']['meta']['css'] = [
-        '/stisla/modules/select2/dist/css/select2.min.css'
+        '/stisla/modules/select2/dist/css/select2.min.css',
+        'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'
     ];
     result['data']['meta']['script'] = [
         '/stisla/modules/select2/dist/js/select2.full.min.js',
-        '/js/medicine-image.js'
+        'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+        '/js/medicine-image.js',
+        '/js/medicine-name-autocomplete.js'
     ];
 
     let sql = 'SELECT type_id, type_name FROM medicine_type';

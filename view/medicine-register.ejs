@@ -33,7 +33,7 @@
                     <div class="form-group">
                         <label>薬の名前 *</label>
                         <input type="text" class="form-control"
-                               name="medicine_name" <% if (typeof data.old.medicine_name !== "undefined") { %> value="<%= data.old.medicine_name %>" <% } %>>
+                               name="medicine_name" id="medicine_name" <% if (typeof data.old.medicine_name !== "undefined") { %> value="<%= data.old.medicine_name %>" <% } %>>
                         <span class="form-error">
                             <% if (typeof data.error.medicine_name !== "undefined") { %>
                                 <%= data.error.medicine_name %>

@@ -12,3 +12,7 @@
 span.select2.select2-container.select2-container--default {
     width: 100% !important;
 }
+ul#ui-id-1 {
+    max-height: 200px;
+    overflow: scroll;
+}
