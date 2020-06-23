@@ -112,18 +112,18 @@ app.use(async (ctx, next) => {
     try {
         await next();
         if (ctx.status === 404) {
-            ctx.app.emit("error", ctx, {status: 404, message: "u f**ked up"})
+            ctx.app.emit('error', ctx, {status: 404, message: '404 Not Found'})
         }
     } catch (err) {
         console.log('error', err)
         ctx.status = err.status || 500;
         ctx.body = err.message;
-        ctx.app.emit("error", ctx, err);
+        ctx.app.emit('error', ctx, err);
     }
 });
 
-app.on("error", (ctx, err) => {
-    console.log("Error Message");
+app.on('error', (ctx, err) => {
+    console.log('Error Message');
 });
 
 app.listen(5000);
