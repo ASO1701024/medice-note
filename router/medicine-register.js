@@ -28,8 +28,7 @@ router.get('/medicine-register', async (ctx) => {
     result['data']['meta']['script'] = [
         '/stisla/modules/select2/dist/js/select2.full.min.js',
         'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
-        '/js/medicine-image.js',
-        '/js/medicine-name-autocomplete.js'
+        '/js/medicine-form.js'
     ];
 
     let sql = 'SELECT type_id, type_name FROM medicine_type';
