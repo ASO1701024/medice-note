@@ -11,4 +11,17 @@ $(() => {
             }
         });
     });
+
+    $.getJSON('./data/hospital.json', (data) => {
+        let array = $.map(data, (value) => {
+            return value.data;
+        })
+
+        $('#hospital_name').autocomplete({
+            source: (request, response) => {
+                let result = $.ui.autocomplete.filter(array, request.term);
+                response(result.slice(0, 30));
+            }
+        })
+    })
 });
