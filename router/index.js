@@ -11,6 +11,9 @@ router.get('/', async (ctx) => {
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
     result['data']['meta']['login_status'] = Boolean(userId);
+    if (Boolean(userId)) {
+        result['data']['meta']['group_list'] = await app.getGroupList(userId);
+    }
     result['data']['meta']['site_title'] = 'トップページ - Medice Note';
 
     if (session.success !== undefined) {
