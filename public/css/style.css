@@ -16,3 +16,9 @@ span.select2.select2-container.select2-container--default {
     max-height: 200px;
     overflow: scroll;
 }
+.link-danger {
+    color: #e83e8c;
+}
+.link-danger:hover {
+    color: #fc544b;
+}

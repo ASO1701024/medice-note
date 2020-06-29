@@ -1,5 +1,5 @@
 <div class="section-header">
-    <h1>薬一覧</h1>
+    <h1>薬情報一覧</h1>
 </div>
 
 <% if (typeof data.success.message !== "undefined") { %>
@@ -42,12 +42,25 @@
         </div>
     <% } else { %>
         <div class="card">
+            <div class="card-header">
+                <h4></h4>
+                <div class="card-header-action">
+                    <a href="/medicine-list?style=table"
+                       class="btn <% if (data.meta.view_style == 'table') { %> active <% } %>">
+                        <i class="fas fa-table" style="padding-right: 5px"></i>テーブル
+                    </a>
+                    <a href="/medicine-list?style=thumbnail"
+                       class="btn <% if (data.meta.view_style == 'thumbnail') { %> active <% } %>">
+                        <i class="fas fa-grip-horizontal" style="padding-right: 5px"></i>サムネイル
+                    </a>
+                </div>
+            </div>
             <div class="card-body pb-0">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-md">
-                        <tbody>
+                <% if (data.meta.view_style == 'table') { %>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-md">
+                            <tbody>
                             <tr class="text-center">
-                                <th>ID</th>
                                 <th>薬名</th>
                                 <th>病院名</th>
                                 <th>個数</th>
@@ -56,15 +69,14 @@
                                 <th>種類</th>
                                 <th></th>
                             </tr>
-                            <% for (var i = 0; i < data.medicine_list.length; i++) { %>
+                            <% for (var t = 0; t < data.medicine_list.length; t++) { %>
                                 <tr>
-                                    <td class="text-center"><%= data.medicine_list[i]['medicine_id'] %></td>
-                                    <td><%= data.medicine_list[i]['medicine_name'] %></td>
-                                    <td><%= data.medicine_list[i]['hospital_name'] %></td>
-                                    <td><%= data.medicine_list[i]['number'] %>個</td>
-                                    <td><%= data.medicine_list[i]['starts_date'] %></td>
-                                    <td><%= data.medicine_list[i]['period'] %>日</td>
-                                    <td><%= data.medicine_list[i]['type_name'] %></td>
+                                    <td><%= data.medicine_list[t]['medicine_name'] %></td>
+                                    <td><%= data.medicine_list[t]['hospital_name'] %></td>
+                                    <td><%= data.medicine_list[t]['number'] %>個</td>
+                                    <td><%= data.medicine_list[t]['starts_date'] %></td>
+                                    <td><%= data.medicine_list[t]['period'] %>日</td>
+                                    <td><%= data.medicine_list[t]['type_name'] %></td>
                                     <td>
                                         <div class="dropdown d-inline">
                                             <button class="btn btn-primary dropdown-toggle" type="button"
@@ -72,15 +84,15 @@
                                                     aria-haspopup="true" aria-expanded="false">アクション
                                             </button>
                                             <div class="dropdown-menu">
-                                                <a class="dropdown-item has-icon" href="/medicine/<%= data.medicine_list[i]['medicine_id'] %>">
+                                                <a class="dropdown-item has-icon" href="/medicine/<%= data.medicine_list[t]['medicine_id'] %>">
                                                     <i class="fas fa-info-circle"></i>
                                                     詳細
                                                 </a>
-                                                <a class="dropdown-item has-icon" href="/medicine-update/<%= data.medicine_list[i]['medicine_id'] %>">
+                                                <a class="dropdown-item has-icon" href="/medicine-update/<%= data.medicine_list[t]['medicine_id'] %>">
                                                     <i class="far fa-edit"></i>
                                                     編集
                                                 </a>
-                                                <a class="dropdown-item has-icon" href="javascript:medicineDelete(<%= data.medicine_list[i]['medicine_id'] %>)">
+                                                <a class="dropdown-item has-icon" href="javascript:medicineDelete(<%= data.medicine_list[t]['medicine_id'] %>)">
                                                     <i class="fas fa-trash"></i>
                                                     削除
                                                 </a>
@@ -89,9 +101,47 @@
                                     </td>
                                 </tr>
                             <% } %>
-                        </tbody>
-                    </table>
-                </div>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } else if (data.meta.view_style === 'thumbnail') { %>
+                    <% for (var i = 0; i < data.medicine_list.length; i++) { %>
+                        <div class="row">
+                            <% for (var j = 0; j < data.medicine_list[i].length; j++) { %>
+                                <div class="col-12 col-sm-6 col-md-6 col-lg-3">
+                                    <article class="article">
+                                        <div class="article-header">
+                                            <div class="article-image"
+                                                 data-background="<% if (data.medicine_list[i][j]['image'] !== '') { %>/upload/<%= data.medicine_list[i][j]['image'] %><% } else { } %>">
+                                            </div>
+                                            <div class="article-title">
+                                                <h2>
+                                                    <a href="/medicine/<%= data.medicine_list[i][j]['medicine_id'] %>">
+                                                        <%= data.medicine_list[i][j]['medicine_name'] %>
+                                                    </a>
+                                                </h2>
+                                            </div>
+                                        </div>
+                                        <div class="article-details">
+                                            <p><%= data.medicine_list[i][j]['hospital_name'] %></p>
+                                            <p><%= data.medicine_list[i][j]['starts_date'] %> から <%= data.medicine_list[i][j]['period'] %> 日分</p>
+                                            <p>種類：<%= data.medicine_list[i][j]['type_name'] %></p>
+                                            <div class="row">
+                                                <div class="col-12 col-md-6 col-lg-6">
+                                                    <a href="/medicine/<%= data.medicine_list[i][j]['medicine_id'] %>" class="card-link">詳細</a>
+                                                    <a href="/medicine-update/<%= data.medicine_list[i][j]['medicine_id'] %>" class="card-link">編集</a>
+                                                </div>
+                                                <div class="col-12 col-md-6 col-lg-6 text-right">
+                                                    <a href="javascript:medicineDelete(<%= data.medicine_list[i][j]['medicine_id'] %>)" class="card-link link-danger">削除</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </div>
+                            <% } %>
+                        </div>
+                    <% }  %>
+                <% } %>
             </div>
         </div>
     <% } %>

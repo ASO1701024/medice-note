@@ -7,6 +7,15 @@ router.get('/medicine-list', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
 
+    let viewStyle = 'table'
+    if (ctx.request.query['style'] !== undefined) {
+        switch (ctx.request.query['style']) {
+            case 'table':
+            case 'thumbnail':
+                viewStyle = ctx.request.query['style'];
+        }
+    }
+
     let result = app.initializeRenderResult();
 
     let authId = session.auth_id;
@@ -29,6 +38,21 @@ router.get('/medicine-list', async (ctx) => {
         'WHERE group_id in (SELECT group_id FROM medicine_group WHERE user_id = ?)'
 
     let [data] = await connection.query(sql, [userId]);
+
+    if (viewStyle === 'thumbnail') {
+        let allCount = data.length;
+        let splitCount = 4;
+        let temp = [];
+
+        for(let i = 0; i < Math.ceil(allCount / splitCount); i++) {
+            let startCount = i * splitCount;
+            let p = data.slice(startCount, startCount + splitCount);
+            temp.push(p);
+        }
+        data = temp;
+    }
+
+    result['data']['meta']['view_style'] = viewStyle;
     result['data']['medicine_list'] = data;
 
     if (session.success !== undefined) {
