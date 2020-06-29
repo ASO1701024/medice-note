@@ -94,6 +94,10 @@ const medicineDeleteRouter = require('./router/medicine-delete');
 app.use(medicineDeleteRouter.routes());
 app.use(medicineDeleteRouter.allowedMethods());
 
+const groupListRouter = require('./router/group-list');
+app.use(groupListRouter.routes());
+app.use(groupListRouter.allowedMethods());
+
 const accountSettingRouter = require('./router/account-setting');
 app.use(accountSettingRouter.routes());
 app.use(accountSettingRouter.allowedMethods());

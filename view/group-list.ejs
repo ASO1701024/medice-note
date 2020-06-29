@@ -1,0 +1,93 @@
+<div class="section-header">
+    <h1>グループ一覧</h1>
+</div>
+
+<% if (typeof data.success.message !== "undefined") { %>
+    <div class="alert alert-success alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>×</span>
+            </button>
+            <%= data.success.message %>
+        </div>
+    </div>
+<% } %>
+
+<% if (typeof data.error.message !== "undefined") { %>
+    <div class="alert alert-danger alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>×</span>
+            </button>
+            <%= data.error.message %>
+        </div>
+    </div>
+<% } %>
+
+<div class="row">
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="card">
+            <div class="card-header">
+                <h4>グループ追加</h4>
+            </div>
+            <div class="card-body">
+                <form action="/group-list/add" method="post">
+                    <div class="card-body pb-0">
+                        <div class="form-group">
+                            <label class="control-label">グループ名</label>
+                            <input type="text" class="form-control" name="group_name" required>
+                        </div>
+                    </div>
+                    <div class="card-footer pt-">
+                        <button type="submit" class="btn btn-primary">登録</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-9">
+        <div class="card">
+            <div class="card-header">
+                <h4>グループ一覧</h4>
+            </div>
+            <div class="card-body">
+                <% if (typeof data.group_list !== "undefined") { %>
+                    <% if (data.group_list.length === 0) { %>
+                        <p class="text-muted">登録されているグループ情報が見つかりませんでした</p>
+                    <% } else { %>
+                        <div class="table-responsive">
+                            <table id="medicine-list" class="table table-bordered table-md">
+                                <tbody>
+                                    <tr class="text-center" data-sort-method="none">
+                                        <th>グループ名</th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                    <% for (var i = 0; i < data.group_list.length; i++) { %>
+                                        <tr>
+                                            <td style="width: calc(100% - (70px * 2));">
+                                                <input type="hidden" name="group_id" form="form_<%= data.group_list[i]['group_id'] %>" value="<%= data.group_list[i]['group_id'] %>">
+                                                <input type="text" name="group_name" form="form_<%= data.group_list[i]['group_id'] %>" class="form-control" value="<%= data.group_list[i]['group_name'] %>">
+                                            </td>
+                                            <td style="width: 70px;">
+                                                <form action="/group-list/edit" id="form_<%= data.group_list[i]['group_id'] %>" method="post">
+                                                    <button type="submit" class="btn btn-primary">編集</button>
+                                                </form>
+                                            </td>
+                                            <td style="width: 70px;">
+                                                <form action="/group-list/delete" method="post">
+                                                    <input type="hidden" name="group_id" value="<%= data.group_list[i]['group_id'] %>">
+                                                    <button type="submit" class="btn btn-danger">削除</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                    <% } %>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
