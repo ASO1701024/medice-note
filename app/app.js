@@ -19,6 +19,11 @@ module.exports = {
         }
         return group[0]['group_id'];
     },
+    getGroupList: async (userId) => {
+        let sql = 'SELECT group_id, group_name FROM medicine_group WHERE user_id = ?';
+        let [group] = await connection.query(sql, [userId]);
+        return group;
+    },
     validationMedicine: async (array) => {
         let requests = {
             medicineName: array[0],
