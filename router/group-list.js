@@ -22,7 +22,7 @@ router.get('/group-list', async (ctx) => {
     result['data']['group_list'] = group;
 
     result['data']['meta']['login_status'] = true;
-    result['data']['meta']['site_title'] = 'グループ一覧 - Medice Note';
+    result['data']['meta']['site_title'] = 'グループ情報 - Medice Note';
 
     if (session.success !== undefined) {
         result['data']['success'] = session.success;
