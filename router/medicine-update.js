@@ -167,7 +167,7 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
         if (!validationTakeTime) session.error.take_time = '飲む時間が正しく選択されていません';
         if (!validationMedicineType) session.error.medicine_type = '種類が正しく選択されていません';
 
-        session.error_message = '薬情報の更新に失敗しました';
+        session.error.message = '薬情報の更新に失敗しました';
 
         return ctx.redirect('/medicine-update/' + medicineId);
     }
