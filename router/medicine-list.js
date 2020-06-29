@@ -28,7 +28,13 @@ router.get('/medicine-list', async (ctx) => {
     result['data']['meta']['site_title'] = '薬情報一覧 - Medice Note';
     result['data']['meta']['script'] = [
         '/stisla/modules/sweetalert/sweetalert.min.js',
-        '/js/medicine-delete-alert.js'
+        '/js/medicine-delete-alert.js',
+        '/js/library/tablesort.min.js',
+        '/js/library/tablesort.date.min.js',
+        '/js/medicine-list-sort.js'
+    ];
+    result['data']['meta']['css'] = [
+        '/css/library/tablesort.css'
     ];
 
     let sql = 'SELECT medicine_id, medicine_name, hospital_name, number, ' +

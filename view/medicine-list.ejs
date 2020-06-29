@@ -58,9 +58,9 @@
             <div class="card-body pb-0">
                 <% if (data.meta.view_style == 'table') { %>
                     <div class="table-responsive">
-                        <table class="table table-bordered table-md">
+                        <table id="medicine-list" class="table table-bordered table-md">
                             <tbody>
-                            <tr class="text-center">
+                            <tr class="text-center" data-sort-method="none">
                                 <th>薬名</th>
                                 <th>病院名</th>
                                 <th>個数</th>
