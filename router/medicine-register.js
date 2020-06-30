@@ -78,6 +78,7 @@ router.post('/medicine-register', async (ctx) => {
     let startsDate = ctx.request.body['starts_date'];
     let period = ctx.request.body['period'];
     let medicineType = ctx.request.body['medicine_type'];
+    let groupId = ctx.request.body['group_id'];
 
     // Any
     let medicineImage = "";
@@ -110,14 +111,6 @@ router.post('/medicine-register', async (ctx) => {
         fs.unlinkSync(uploadImage['path']);
     }
 
-    // Default Group Search
-    let groupId = await app.getDefaultGroup(userId);
-    if (!groupId) {
-        session.error.message = 'システムエラーが発生しました';
-
-        return ctx.redirect('/medicine-register')
-    }
-
     // Validation
     let validationMedicine = await app.validationMedicine([
         medicineName,
@@ -129,8 +122,9 @@ router.post('/medicine-register', async (ctx) => {
     ]);
     let validationTakeTime = await app.validationTakeTime(takeTime);
     let validationMedicineType = await app.validationMedicineType(medicineType);
+    let validationGroupId = await app.validationGroupId(groupId, userId);
 
-    if (validationMedicine.result && validationTakeTime && validationMedicineType && uploadImageFlag) {
+    if (validationMedicine.result && validationTakeTime && validationMedicineType && validationGroupId && uploadImageFlag) {
         let sql = 'INSERT INTO medicine' +
             '(medicine_name, hospital_name, number, starts_date, period, type_id, image, description, group_id)' +
             'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
@@ -164,11 +158,13 @@ router.post('/medicine-register', async (ctx) => {
         if (startsDate !== '') session.old.starts_date = startsDate;
         if (period !== '') session.old.period = period;
         if (medicineType !== '') session.old.medicine_type = medicineType;
+        if (groupId !== '') session.old.group_id = groupId;
         if (description !== '') session.old.description = description;
         if (!uploadImageFlag) session.error.medicine_image = '1MB以内のJPEG・JPG・PNG・ファイルを選択してください';
 
         if (!validationTakeTime) session.error.take_time = '飲む時間が正しく選択されていません';
         if (!validationMedicineType) session.error.medicine_type = '種類が正しく選択されていません';
+        if (!validationGroupId) session.error.medicine_group = '薬グループが正しく選択されていません';
 
         session.error.message = '薬情報登録に失敗しました';
 

@@ -3,9 +3,24 @@ const router = new Router();
 const app = require('../app/app');
 const connection = require('../app/db');
 
-router.get('/medicine-list', async (ctx) => {
+router.get('/group/:group_id', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
+
+    let authId = session.auth_id;
+    let userId = await app.getUserId(authId);
+    if (!userId) {
+        session.error = 'ログインしていないため続行できませんでした';
+
+        return ctx.redirect('/login');
+    }
+
+    let groupId = ctx.params['group_id'];
+    if (!await app.validationGroupId(groupId, userId)) {
+        session.error = 'グループ情報が見つかりませんでした';
+
+        return ctx.redirect('/medicine-list');
+    }
 
     let viewStyle = 'table'
     if (ctx.request.query['style'] !== undefined) {
@@ -17,13 +32,6 @@ router.get('/medicine-list', async (ctx) => {
     }
 
     let result = app.initializeRenderResult();
-
-    let authId = session.auth_id;
-    let userId = await app.getUserId(authId);
-    if (!authId || !userId) {
-        return ctx.redirect('/login');
-    }
-
     result['data']['meta']['login_status'] = true;
     result['data']['meta']['site_title'] = '薬情報一覧 - Medice Note';
     result['data']['meta']['group_list'] = await app.getGroupList(userId);
@@ -42,9 +50,9 @@ router.get('/medicine-list', async (ctx) => {
         'date_format(starts_date, \'%Y年%c月%d日\') as starts_date, period, ' +
         'medicine_type.type_name, image, description, group_id FROM medicine ' +
         'LEFT JOIN medicine_type ON medicine.type_id = medicine_type.type_id ' +
-        'WHERE group_id in (SELECT group_id FROM medicine_group WHERE user_id = ?)'
+        'WHERE group_id = ?';
 
-    let [data] = await connection.query(sql, [userId]);
+    let [data] = await connection.query(sql, [groupId]);
 
     if (viewStyle === 'thumbnail') {
         let allCount = data.length;
@@ -60,7 +68,7 @@ router.get('/medicine-list', async (ctx) => {
     }
 
     result['data']['meta']['view_style'] = viewStyle;
-    result['data']['meta']['view_switch'] = '/medicine-list';
+    result['data']['meta']['view_switch'] = '/group/' + groupId;
     result['data']['medicine_list'] = data;
 
     if (session.success !== undefined) {

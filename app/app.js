@@ -127,7 +127,7 @@ module.exports = {
     },
     getMedicineFromMedicineId: async (medicineId) => {
         let sql = 'SELECT medicine_id, medicine_name, hospital_name, number, ' +
-            'date_format(starts_date, \'%Y-%m-%d\') as starts_date, period, type_id, image, description ' +
+            'date_format(starts_date, \'%Y-%m-%d\') as starts_date, period, type_id, group_id, image, description ' +
             'FROM medicine ' +
             'WHERE medicine_id = ?';
         let [medicine] = await connection.query(sql, [medicineId]);
@@ -148,6 +148,7 @@ module.exports = {
             starts_date: medicine[0]['starts_date'],
             period: medicine[0]['period'],
             type_id: medicine[0]['type_id'],
+            group_id: medicine[0]['group_id'],
             image: medicine[0]['period'],
             description: medicine[0]['description'],
             take_time: array
@@ -173,5 +174,10 @@ module.exports = {
         if (session.old === undefined) {
             session.old = {};
         }
+    },
+    validationGroupId: async (groupId, userId) => {
+        let sql = 'SELECT group_id FROM medicine_group WHERE group_id = ? AND user_id = ?';
+        let [group] = await connection.query(sql, [groupId, userId]);
+        return group.length !== 0;
     }
 }

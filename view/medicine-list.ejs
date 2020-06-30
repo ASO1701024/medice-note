@@ -45,11 +45,11 @@
             <div class="card-header">
                 <h4></h4>
                 <div class="card-header-action">
-                    <a href="/medicine-list?style=table"
+                    <a href="<%= data.meta.view_switch %>?style=table"
                        class="btn <% if (data.meta.view_style == 'table') { %> active <% } %>">
                         <i class="fas fa-table" style="padding-right: 5px"></i>テーブル
                     </a>
-                    <a href="/medicine-list?style=thumbnail"
+                    <a href="<%= data.meta.view_switch %>?style=thumbnail"
                        class="btn <% if (data.meta.view_style == 'thumbnail') { %> active <% } %>">
                         <i class="fas fa-grip-horizontal" style="padding-right: 5px"></i>サムネイル
                     </a>

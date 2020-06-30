@@ -98,6 +98,10 @@ const groupListRouter = require('./router/group-list');
 app.use(groupListRouter.routes());
 app.use(groupListRouter.allowedMethods());
 
+const groupRouter = require('./router/group');
+app.use(groupRouter.routes());
+app.use(groupRouter.allowedMethods());
+
 const accountSettingRouter = require('./router/account-setting');
 app.use(accountSettingRouter.routes());
 app.use(accountSettingRouter.allowedMethods());

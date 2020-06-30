@@ -63,6 +63,10 @@
                     <label>種類</label>
                     <p><%= data.medicine.type_name %></p>
                 </div>
+                <div class="form-group">
+                    <label>グループ</label>
+                    <p><a href="/group/<%= data.medicine.group_id %>"><%= data.medicine.group_name %></a></p>
+                </div>
             </div>
             <div class="col-12 col-sm-6 col-lg-6">
                 <div class="form-group">
