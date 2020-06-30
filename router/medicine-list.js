@@ -26,6 +26,7 @@ router.get('/medicine-list', async (ctx) => {
 
     result['data']['meta']['login_status'] = true;
     result['data']['meta']['site_title'] = '薬情報一覧 - Medice Note';
+    result['data']['meta']['group_list'] = await app.getGroupList(userId);
     result['data']['meta']['script'] = [
         '/stisla/modules/sweetalert/sweetalert.min.js',
         '/js/medicine-delete-alert.js',

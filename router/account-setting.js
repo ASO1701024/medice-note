@@ -16,6 +16,7 @@ router.get('/account-setting', async (ctx, next) => {
     let result = app.initializeRenderResult();
     result['data']['meta']['login_status'] = true;
     result['data']['meta']['site_title'] = 'アカウント設定 - Medice Note';
+    result['data']['meta']['group_list'] = await app.getGroupList(userId);
 
     let sql = 'SELECT user_name, mail FROM user WHERE user_id = ?';
     let [user] = await connection.query(sql, [userId]);

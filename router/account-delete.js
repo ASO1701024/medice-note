@@ -17,6 +17,7 @@ router.get('/account-delete', async (ctx) => {
     let result = app.initializeRenderResult();
     result['data']['meta']['login_status'] = true;
     result['data']['meta']['site_title'] = 'アカウント情報削除 - Medice Note';
+    result['data']['meta']['group_list'] = await app.getGroupList(userId);
 
     if (session.error !== undefined) {
         result['data']['error'] = session.error;

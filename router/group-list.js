@@ -23,6 +23,7 @@ router.get('/group-list', async (ctx) => {
 
     result['data']['meta']['login_status'] = true;
     result['data']['meta']['site_title'] = 'グループ情報 - Medice Note';
+    result['data']['meta']['group_list'] = await app.getGroupList(userId);
 
     if (session.success !== undefined) {
         result['data']['success'] = session.success;

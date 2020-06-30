@@ -27,6 +27,7 @@ router.get('/login', async (ctx, next) => {
 
     // Render
     let result = app.initializeRenderResult();
+    result['data']['meta']['login_status'] = false;
     result['data']['meta']['site_title'] = 'ログイン - Medice Note';
 
     if (session.success !== undefined) {

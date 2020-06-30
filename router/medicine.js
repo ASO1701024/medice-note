@@ -25,6 +25,7 @@ router.get('/medicine/:medicine_id', async (ctx) => {
     let result = app.initializeRenderResult();
     result['data']['meta']['login_status'] = true;
     result['data']['meta']['site_title'] = '薬情報 - Medice Note';
+    result['data']['meta']['group_list'] = await app.getGroupList(userId);
     result['data']['meta']['css'] = [
         '/stisla/modules/chocolat/dist/css/chocolat.css'
     ];

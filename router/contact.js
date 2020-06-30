@@ -14,6 +14,9 @@ router.get('/contact', async (ctx, next) => {
     let userId = await app.getUserId(authId);
     result['data']['meta']['login_status'] = Boolean(userId);
     result['data']['meta']['site_title'] = 'お問い合わせ - Medice Note';
+    if (Boolean(userId)) {
+        result['data']['meta']['group_list'] = await app.getGroupList(userId);
+    }
 
     if (session.success !== undefined) {
         result['data']['success'] = session.success;

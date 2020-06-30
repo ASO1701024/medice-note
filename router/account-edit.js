@@ -18,6 +18,7 @@ router.get('/account-edit', async (ctx) => {
     let result = app.initializeRenderResult();
     result['data']['meta']['login_status'] = true;
     result['data']['meta']['site_title'] = 'アカウント情報変更 - Medice Note';
+    result['data']['meta']['group_list'] = await app.getGroupList(userId);
 
     let sql = 'SELECT user_name, mail FROM user WHERE user_id = ?';
     let [user] = await connection.query(sql, [userId]);

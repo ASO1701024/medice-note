@@ -34,6 +34,7 @@ router.get('/medicine-update/:medicine_id', async (ctx) => {
 
     result['data']['meta']['login_status'] = true;
     result['data']['meta']['site_title'] = '薬情報更新 - Medice Note';
+    result['data']['meta']['group_list'] = await app.getGroupList(userId);
 
     result['data']['old'] = await app.getMedicineFromMedicineId(medicineId);
     result['data']['meta']['css'] = [
