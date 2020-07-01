@@ -106,4 +106,8 @@ const accountDeleteRouter = require('./router/account-delete');
 app.use(accountDeleteRouter.routes());
 app.use(accountDeleteRouter.allowedMethods());
 
+const lineLoginRouter = require('./router/linelogin');
+app.use(lineLoginRouter.routes());
+app.use(lineLoginRouter.allowedMethods());
+
 app.listen(5000);
