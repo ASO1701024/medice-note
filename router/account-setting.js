@@ -23,6 +23,12 @@ router.get('/account-setting', async (ctx, next) => {
     result['data']['account']['user_name'] = user[0]['user_name'];
     result['data']['account']['mail'] = user[0]['mail'];
 
+    let lineLoginSQL = 'SELECT line_user_name FROM line_login WHERE user_id = ?;';
+    let [lineUserName] = await connection.query(lineLoginSQL, [userId]);
+    if(lineUserName.length > 0){
+        result['data']['account']['line_user_name'] = lineUserName['line_user_name'];
+    }
+
     await ctx.render('account-setting', result);
 })
 
