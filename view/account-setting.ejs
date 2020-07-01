@@ -20,7 +20,13 @@
         <h4 class="card-title">LINE通知</h4>
     </div>
     <div class="card-body">
-        <a href="/lineLogin"><img src="/image/btn_login_base.png" width="150px" height="auto"></a>
+        <%if (typeof data.account.line_user_name !== 'undefined'){ %>
+            <p class="card-text"><%= data.account.line_user_name %>でログイン中</p>
+            <button>ログアウト</button>
+        <%} else {%>
+            <a href="/lineLogin"><img src="/image/btn_login_base.png" width="150px" height="auto"></a>
+        <% }%>
+
     </div>
 </div>
 
