@@ -56,6 +56,7 @@ router.get('/lineCallback', login.callback(
             let deleteLineNoticeUserId = 'DELETE FROM line_notice_user_id WHERE user_id = ?;';
             await connection.query(deleteLineNoticeUserId, [userId]);
         }
+
         // Register line_data
         let insertLineLoginSQL = 'INSERT INTO line_login VALUES(?,?,?,?);';
         await connection.query(insertLineLoginSQL, [userId, lineUserName, accessToken, refreshToken]);
