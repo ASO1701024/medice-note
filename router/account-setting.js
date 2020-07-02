@@ -33,24 +33,24 @@ router.get('/account-setting', async (ctx, next) => {
     let lineLoginSQL = 'SELECT line_user_name, access_token, refresh_token FROM line_login WHERE user_id = ?;';
     let lineUserData = (await connection.query(lineLoginSQL, [userId]))[0];
 
-    if(lineUserData.length > 0){
-        //LINEログイン済みの場合、アクセストークンを検証
+    if (lineUserData.length > 0) {
+        // verify access_token
         let lineUserName = lineUserData[0].line_user_name;
         let lineAccessToken = lineUserData[0].access_token;
         let lineRefreshToken = lineUserData[0].refresh_token;
 
         let verifyAccessTokenResult = await login.verify_access_token(lineAccessToken);
 
-        if(typeof verifyAccessTokenResult.error === 'undefined'){
-            //アクセストークンの検証成功時、LINEログイン済みとしてレンダリング
+        if (typeof verifyAccessTokenResult.error === 'undefined') {
+            // verify_success
             result['data']['account']['line_user_name'] = lineUserName;
 
-        }else{
-            //アクセストークンの検証拒否時、リフレッシュトークンで期間延長申請する
+        } else {
+            // refresh_access_token
             let refreshAccessTokenResult = login.refresh_access_token(lineRefreshToken);
 
-            if(typeof refreshAccessTokenResult.error === 'undefined'){
-                //アクセストークン更新成功時はDBの'access_token'と'refresh_token'を更新
+            if (typeof refreshAccessTokenResult.error === 'undefined') {
+                // UPDATE 'access_token' and 'refresh_token'
                 let newAccessToken = refreshAccessTokenResult.access_token;
                 let newRefreshToken = refreshAccessTokenResult.refresh_token;
                 let refreshTokenSQL = 'UPDATE line_login SET access_token = ?, refresh_token = ? WHERE user_id=?;';
@@ -58,8 +58,8 @@ router.get('/account-setting', async (ctx, next) => {
                 await connection.query(refreshTokenSQL, [newAccessToken, newRefreshToken, userId])
                 result['data']['account']['line_user_name'] = lineUserName[0]['line_user_name'];
 
-            }else{
-                //アクセストークン更新失敗時はDBのLINE関連登録情報を全て削除して再登録させる
+            } else {
+                // DELETE "line_login" and "line_notice_user_id"
                 let deleteLineLoginSQL = 'DELETE FROM line_login WHERE user_id = ?;';
                 await connection.query(deleteLineLoginSQL, [userId]);
                 let deleteLineNoticeUserId = 'DELETE FROM line_notice_user_id WHERE user_id = ?;';

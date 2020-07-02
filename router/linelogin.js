@@ -23,7 +23,7 @@ router.get('/lineLogin', async (ctx, next) => {
     }
     ctx.session.line_login_state = crypto.randomBytes(20).toString('hex');
     ctx.session.line_login_nonce = crypto.randomBytes(20).toString('hex');
-    return ctx.redirect(login.make_auth_url(ctx.session.line_login_state, ctx.session.line_login_nonce)+"&scope=profile%20openid");
+    return ctx.redirect(login.make_auth_url(ctx.session.line_login_state, ctx.session.line_login_nonce) + "&scope=profile%20openid");
 });
 
 router.get('/lineCallback', login.callback(
@@ -49,14 +49,14 @@ router.get('/lineCallback', login.callback(
 
         let lineLoginSQL = 'SELECT user_id FROM line_login WHERE user_id = ?;';
         let lineUserData = (await connection.query(lineLoginSQL, [userId]))[0];
-        if(lineUserData.length > 0){
-            // 既にLINEログイン済みのユーザーが再度登録を行なった場合は、登録済みの情報を削除してからINSERTする
+        if (lineUserData.length > 0) {
+            // When your line_data already exists
             let deleteLineLoginSQL = 'DELETE FROM line_login WHERE user_id = ?;';
             await connection.query(deleteLineLoginSQL, [userId]);
             let deleteLineNoticeUserId = 'DELETE FROM line_notice_user_id WHERE user_id = ?;';
             await connection.query(deleteLineNoticeUserId, [userId]);
         }
-
+        // Register line_data
         let insertLineLoginSQL = 'INSERT INTO line_login VALUES(?,?,?,?);';
         await connection.query(insertLineLoginSQL, [userId, lineUserName, accessToken, refreshToken]);
         let insertLineUserIdSQL = 'INSERT INTO line_notice_user_id VALUES(?,?);';

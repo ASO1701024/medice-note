@@ -50,7 +50,7 @@ router.get('/medicine-list', async (ctx) => {
         let splitCount = 4;
         let temp = [];
 
-        for(let i = 0; i < Math.ceil(allCount / splitCount); i++) {
+        for (let i = 0; i < Math.ceil(allCount / splitCount); i++) {
             let startCount = i * splitCount;
             let p = data.slice(startCount, startCount + splitCount);
             temp.push(p);
