@@ -16,6 +16,7 @@
     "koa-body": "^4.1.1",
     "koa-ejs": "^4.3.0",
     "koa-generic-session": "^2.0.4",
+    "koa-json": "^2.0.2",
     "koa-router": "^8.0.8",
     "koa-sqlite3-session": "^1.0.4",
     "koa-static": "^5.0.0",

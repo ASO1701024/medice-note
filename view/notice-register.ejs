@@ -1,0 +1,172 @@
+<div class="section-header">
+    <h1>通知登録</h1>
+</div>
+
+<% if (typeof data.success.message !== "undefined") { %>
+    <div class="alert alert-success alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>×</span>
+            </button>
+            <%= data.success.message %>
+        </div>
+    </div>
+<% } %>
+
+<% if (typeof data.error.message !== "undefined") { %>
+    <div class="alert alert-danger alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>×</span>
+            </button>
+            <%= data.error.message %>
+        </div>
+    </div>
+<% } %>
+
+<div class="row">
+    <div class="col-12 col-md-6 col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h4>通知情報登録</h4>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">* : 必須項目</p>
+                <form action="/notice-register" method="post">
+                    <div class="card-body pb-0">
+                        <div class="form-group">
+                            <label class="control-label">通知名 *</label>
+                            <input type="text" class="form-control" name="group_name" required>
+                        </div>
+                        <style>
+                            .medicine-table tbody tr td:nth-of-type(1) {
+                                width: calc(100% - 70px - 40px);
+                            }
+                            .medicine-table tbody tr td:nth-of-type(2) {
+                                width: 70px;
+                            }
+                            .medicine-table tbody tr td:nth-of-type(3) {
+                                width: 40px;
+                            }
+                            .time-table tr td:nth-of-type(1) {
+                                width: calc(100% - 40px);
+                            }
+                            .time-table tr td:nth-of-type(2) {
+                                width: 40px;
+                            }
+                            input.form-control-plaintext {
+                                pointer-events: none;
+                            }
+                        </style>
+                        <div class="form-group">
+                            <label class="control-label">薬名 *</label>
+                            <small class="form-text text-muted">
+                                通知時に表示する薬情報を選択します
+                            </small>
+                            <table id="medicine_table" class="table medicine-table">
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">時間 *</label>
+                            <small class="form-text text-muted">
+                                30分間隔で時間を設定できます
+                            </small>
+                            <div class="table-responsive">
+                                <table id="time_table" class="table time-table">
+                                    <tbody>
+<!--                                        <tr>-->
+<!--                                            <td class="p-0">-->
+<!--                                                <input type="time" class="form-control" name="time[]" value="07:00" required>-->
+<!--                                            </td>-->
+<!--                                            <td class="p-2 text-center">-->
+<!--                                                <a href="#" class="btn btn-icon">-->
+<!--                                                    <i class="fas fa-times"></i>-->
+<!--                                                </a>-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+<!--                                        <tr>-->
+<!--                                            <td class="p-0">-->
+<!--                                                <input type="time" class="form-control" name="time[]" value="12:30" required>-->
+<!--                                            </td>-->
+<!--                                            <td class="p-2 text-center">-->
+<!--                                                <a href="#" class="btn btn-icon">-->
+<!--                                                    <i class="fas fa-times"></i>-->
+<!--                                                </a>-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+<!--                                        <tr>-->
+<!--                                            <td class="p-0">-->
+<!--                                                <input type="time" class="form-control" name="time[]" value="20:00" required>-->
+<!--                                            </td>-->
+<!--                                            <td class="p-2 text-center">-->
+<!--                                                <a href="#" class="btn btn-icon">-->
+<!--                                                    <i class="fas fa-times"></i>-->
+<!--                                                </a>-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+                                        <tr>
+                                            <td class="p-0">
+                                                <input type="time" class="form-control" name="input_time">
+                                            </td>
+                                            <td class="p-2 text-center">
+                                                <a href="javascript:void(0)" class="btn btn-icon table-time-add">
+                                                    <i class="fas fa-plus"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">曜日 *</label>
+                            <select class="form-control select2" multiple="" name="take_time">
+                                <option value="0">日曜日</option>
+                                <option value="1">月曜日</option>
+                                <option value="2">火曜日</option>
+                                <option value="3">水曜日</option>
+                                <option value="4">木曜日</option>
+                                <option value="5">金曜日</option>
+                                <option value="6">土曜日</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">通知終了日付</label>
+                            <input type="date" class="form-control" name="group_name" required>
+                        </div>
+                    </div>
+                    <div class="card-footer pt-">
+                        <button type="submit" class="btn btn-primary">登録</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h4>薬情報プレビュー</h4>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label class="control-label">薬情報選択</label>
+                    <select class="form-control select2" name="medicine_name" onchange="getMedicine(this.value)">
+                        <option selected disabled>選択してください</option>
+                        <% for (var ml = 0; ml < data.medicine_list.length; ml++) { %>
+                            <option value="<%= data.medicine_list[ml]['medicine_id'] %>">
+                                <%= data.medicine_list[ml]['medicine_name'] %>
+                            </option>
+                        <% } %>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">薬情報</label>
+                    <div id="medicine_preview">
+                        <p class="text-muted">プレビューする薬名を選択してください</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

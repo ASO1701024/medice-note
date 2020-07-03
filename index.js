@@ -6,6 +6,7 @@ const render = require('koa-ejs');
 const koaBody = require('koa-body');
 const session = require('koa-generic-session');
 const SQLite3Store = require('koa-sqlite3-session');
+const json = require('koa-json')
 const config = require('./config.json');
 
 let uploadCache = path.join(__dirname, '/upload_cache')
@@ -33,6 +34,9 @@ app.use(koaBody({
         uploadDir: path.join(__dirname, '/upload_cache'),
         keepExtensions: true
     }
+}));
+app.use(json({
+    pretty: true
 }));
 app.keys = config.session.key;
 app.use(session({
@@ -102,6 +106,14 @@ const groupRouter = require('./router/group');
 app.use(groupRouter.routes());
 app.use(groupRouter.allowedMethods());
 
+const noticeListRouter = require('./router/notice-list');
+app.use(noticeListRouter.routes());
+app.use(noticeListRouter.allowedMethods());
+
+const noticeRegisterRouter = require('./router/notice-register');
+app.use(noticeRegisterRouter.routes());
+app.use(noticeRegisterRouter.allowedMethods());
+
 const accountSettingRouter = require('./router/account-setting');
 app.use(accountSettingRouter.routes());
 app.use(accountSettingRouter.allowedMethods());
@@ -113,5 +125,9 @@ app.use(accountEditRouter.allowedMethods());
 const accountDeleteRouter = require('./router/account-delete');
 app.use(accountDeleteRouter.routes());
 app.use(accountDeleteRouter.allowedMethods());
+
+const apiMedicineRouter = require('./router/api-medicine');
+app.use(apiMedicineRouter.routes());
+app.use(apiMedicineRouter.allowedMethods());
 
 app.listen(5000);
