@@ -22,9 +22,9 @@
     <div class="card-body">
         <%if (typeof data.account.line_user_name !== 'undefined'){ %>
             <p class="card-text"><%= data.account.line_user_name %>でログイン中</p>
-            <button>ログアウト</button>
+            <a href="/account-setting/line-logout"><button>ログアウト</button></a>
         <%} else {%>
-            <a href="/lineLogin"><img src="/image/btn_login_base.png" width="150px" height="auto"></a>
+            <a href="/account-setting/line-login"><img src="/image/btn_login_base.png" width="150px" height="auto"></a>
         <% }%>
 
     </div>

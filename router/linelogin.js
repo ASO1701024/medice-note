@@ -11,7 +11,7 @@ const login = new lineLogin({
 });
 const crypto = require("crypto");
 
-router.get('/lineLogin', async (ctx, next) => {
+router.get('/account-setting/line-login', async (ctx, next) => {
     let session = ctx.session;
     app.initializeSession(session);
 
@@ -26,31 +26,34 @@ router.get('/lineLogin', async (ctx, next) => {
     return ctx.redirect(login.make_auth_url(ctx.session.line_login_state, ctx.session.line_login_nonce) + "&scope=profile%20openid");
 });
 
-router.get('/lineCallback', login.callback(
-    async (ctx, res, next, token_response) => {
-        let session = ctx.session;
-        app.initializeSession(session);
+router.get('/lineCallback', async (ctx) => {
+    let session = ctx.session;
+    app.initializeSession(session);
 
-        let authId = session.auth_id;
-        let userId = await app.getUserId(authId);
-        if (!userId) {
-            session.error = 'ログインしていないため続行できませんでした';
-            return ctx.redirect('/login');
-        }
-        ctx.session.line_login_state = null;
-        ctx.session.line_login_nonce = null;
+    let authId = session.auth_id;
+    let userId = await app.getUserId(authId);
+    if (!userId) {
+        session.error = 'ログインしていないため続行できませんでした';
+        return ctx.redirect('/login');
+    }
+    delete ctx.session.line_login_state;
+    delete ctx.session.line_login_nonce;
 
+    // Get access_token from 'code'
+    await login.issue_access_token(ctx.request.query.code).then( async (token_response) => {
         let accessToken = token_response.access_token;
         let refreshToken = token_response.refresh_token;
 
-        let lineProfile = (await login.get_user_profile(token_response.access_token));
+        // Get line Profile from access_token
+        let lineProfile = (await login.get_user_profile(accessToken));
         let lineUserId = lineProfile.userId;
         let lineUserName = lineProfile.displayName;
 
+        // Check your line_data already exists in the database
         let lineLoginSQL = 'SELECT user_id FROM line_login WHERE user_id = ?;';
         let lineUserData = (await connection.query(lineLoginSQL, [userId]))[0];
         if (lineUserData.length > 0) {
-            // When your line_data already exists
+            // When already exists
             let deleteLineLoginSQL = 'DELETE FROM line_login WHERE user_id = ?;';
             await connection.query(deleteLineLoginSQL, [userId]);
             let deleteLineNoticeUserId = 'DELETE FROM line_notice_user_id WHERE user_id = ?;';
@@ -62,10 +65,9 @@ router.get('/lineCallback', login.callback(
         await connection.query(insertLineLoginSQL, [userId, lineUserName, accessToken, refreshToken]);
         let insertLineUserIdSQL = 'INSERT INTO line_notice_user_id VALUES(?,?);';
         await connection.query(insertLineUserIdSQL, [userId, lineUserId]);
-    },
-    (ctx, res, next, error) => {
-        console.log(error);
-    }
-));
+    })
+
+    return ctx.redirect('/account-setting')
+});
 
 module.exports = router;

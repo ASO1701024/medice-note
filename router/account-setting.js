@@ -17,6 +17,7 @@ router.get('/account-setting', async (ctx, next) => {
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
     if (!authId || !userId) {
+        session.error = 'ログインしていないため続行できませんでした';
         return ctx.redirect('/');
     }
 
@@ -69,6 +70,35 @@ router.get('/account-setting', async (ctx, next) => {
     }
 
     await ctx.render('account-setting', result);
-})
+});
+
+router.get('/account-setting/line-logout', async (ctx) => {
+    let session = ctx.session;
+    app.initializeSession(session);
+
+    let authId = session.auth_id;
+    let userId = await app.getUserId(authId);
+    if (!authId || !userId) {
+        session.error = 'ログインしていないため続行できませんでした';
+        return ctx.redirect('/');
+    }
+
+    let getAccessTokenSQL = 'SELECT access_token from line_login WHERE user_id = ?;';
+    let accessToken = (await connection.query(getAccessTokenSQL, [userId]))[0];
+
+    if(accessToken.length === 0){
+        // When you have't logged in line
+        return ctx.redirect('/account-setting');
+    }
+
+    await login.revoke_access_token(accessToken[0].access_token);
+
+    let deleteLineLoginSQL = 'DELETE FROM line_login WHERE user_id = ?;';
+    await connection.query(deleteLineLoginSQL, [userId]);
+    let deleteLineNoticeUserId = 'DELETE FROM line_notice_user_id WHERE user_id = ?;';
+    await connection.query(deleteLineNoticeUserId, [userId]);
+
+    return ctx.redirect('/account-setting');
+});
 
 module.exports = router;
