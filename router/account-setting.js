@@ -3,7 +3,7 @@ const router = new Router();
 const app = require('../app/app');
 const connection = require('../app/db');
 const lineLogin = require("line-login");
-const lineConfig = require('../config.sample.json');
+const lineConfig = require('../config.json');
 const login = new lineLogin({
     channel_id: lineConfig.line.LINE_LOGIN_CHANNEL_ID,
     channel_secret: lineConfig.line.LINE_LOGIN_CHANNEL_SECRET,
