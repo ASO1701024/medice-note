@@ -96,7 +96,7 @@ module.exports = {
         return result;
     },
     validationTakeTime: async (array) => {
-        if (!Array.isArray(array) || array.length === 0) return false;
+        if (array === '' || array === undefined) return false;
 
         let result = true;
         for (let i = 0; i < array.length; i++) {
