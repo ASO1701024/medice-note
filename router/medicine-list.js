@@ -65,7 +65,7 @@ router.get('/medicine-list', async (ctx) => {
 
     if (session.success !== undefined) {
         result['data']['success'] = session.success;
-        session.success.message = undefined;
+        session.success = undefined;
     }
 
     if (session.error !== undefined) {
