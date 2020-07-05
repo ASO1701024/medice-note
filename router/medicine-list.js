@@ -46,19 +46,6 @@ router.get('/medicine-list', async (ctx) => {
 
     let [data] = await connection.query(sql, [userId]);
 
-    if (viewStyle === 'thumbnail') {
-        let allCount = data.length;
-        let splitCount = 4;
-        let temp = [];
-
-        for(let i = 0; i < Math.ceil(allCount / splitCount); i++) {
-            let startCount = i * splitCount;
-            let p = data.slice(startCount, startCount + splitCount);
-            temp.push(p);
-        }
-        data = temp;
-    }
-
     result['data']['meta']['view_style'] = viewStyle;
     result['data']['meta']['view_switch'] = '/medicine-list';
     result['data']['medicine_list'] = data;

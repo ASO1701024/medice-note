@@ -90,42 +90,40 @@
                         </table>
                     </div>
                 <% } else if (data.meta.view_style === 'thumbnail') { %>
-                    <% for (var i = 0; i < data.medicine_list.length; i++) { %>
-                        <div class="row">
-                            <% for (var j = 0; j < data.medicine_list[i].length; j++) { %>
-                                <div class="col-12 col-sm-6 col-md-6 col-lg-3">
-                                    <article class="article">
-                                        <div class="article-header">
-                                            <div class="article-image"
-                                                 data-background="<% if (data.medicine_list[i][j]['image'] !== '') { %>/upload/<%= data.medicine_list[i][j]['image'] %><% } else { } %>">
+                    <div class="row">
+                        <% for (var i = 0; i < data.medicine_list.length; i++) { %>
+                            <div class="col-12 col-sm-6 col-md-6 col-lg-3">
+                                <article class="article">
+                                    <div class="article-header">
+                                        <div class="article-image"
+                                             data-background="<% if (data.medicine_list[i]['image'] !== '') { %>/upload/<%= data.medicine_list[i]['image'] %><% } else { } %>">
+                                        </div>
+                                        <div class="article-title">
+                                            <h2>
+                                                <a href="/medicine/<%= data.medicine_list[i]['medicine_id'] %>">
+                                                    <%= data.medicine_list[i]['medicine_name'] %>
+                                                </a>
+                                            </h2>
+                                        </div>
+                                    </div>
+                                    <div class="article-details">
+                                        <p><%= data.medicine_list[i]['hospital_name'] %></p>
+                                        <p><%= data.medicine_list[i]['starts_date'] %> から <%= data.medicine_list[i]['period'] %> 日分</p>
+                                        <p>種類：<%= data.medicine_list[i]['type_name'] %></p>
+                                        <div class="row">
+                                            <div class="col-12 col-md-6 col-lg-6">
+                                                <a href="/medicine/<%= data.medicine_list[i]['medicine_id'] %>" class="card-link">詳細</a>
+                                                <a href="/medicine-update/<%= data.medicine_list[i]['medicine_id'] %>" class="card-link">編集</a>
                                             </div>
-                                            <div class="article-title">
-                                                <h2>
-                                                    <a href="/medicine/<%= data.medicine_list[i][j]['medicine_id'] %>">
-                                                        <%= data.medicine_list[i][j]['medicine_name'] %>
-                                                    </a>
-                                                </h2>
+                                            <div class="col-12 col-md-6 col-lg-6 text-right">
+                                                <a href="javascript:medicineDelete(<%= data.medicine_list[i]['medicine_id'] %>)" class="card-link link-danger">削除</a>
                                             </div>
                                         </div>
-                                        <div class="article-details">
-                                            <p><%= data.medicine_list[i][j]['hospital_name'] %></p>
-                                            <p><%= data.medicine_list[i][j]['starts_date'] %> から <%= data.medicine_list[i][j]['period'] %> 日分</p>
-                                            <p>種類：<%= data.medicine_list[i][j]['type_name'] %></p>
-                                            <div class="row">
-                                                <div class="col-12 col-md-6 col-lg-6">
-                                                    <a href="/medicine/<%= data.medicine_list[i][j]['medicine_id'] %>" class="card-link">詳細</a>
-                                                    <a href="/medicine-update/<%= data.medicine_list[i][j]['medicine_id'] %>" class="card-link">編集</a>
-                                                </div>
-                                                <div class="col-12 col-md-6 col-lg-6 text-right">
-                                                    <a href="javascript:medicineDelete(<%= data.medicine_list[i][j]['medicine_id'] %>)" class="card-link link-danger">削除</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </article>
-                                </div>
-                            <% } %>
-                        </div>
-                    <% }  %>
+                                    </div>
+                                </article>
+                            </div>
+                        <% }  %>
+                    </div>
                 <% } %>
             </div>
         </div>

@@ -54,19 +54,6 @@ router.get('/group/:group_id', async (ctx) => {
 
     let [data] = await connection.query(sql, [groupId]);
 
-    if (viewStyle === 'thumbnail') {
-        let allCount = data.length;
-        let splitCount = 4;
-        let temp = [];
-
-        for(let i = 0; i < Math.ceil(allCount / splitCount); i++) {
-            let startCount = i * splitCount;
-            let p = data.slice(startCount, startCount + splitCount);
-            temp.push(p);
-        }
-        data = temp;
-    }
-
     result['data']['meta']['view_style'] = viewStyle;
     result['data']['meta']['view_switch'] = '/group/' + groupId;
     result['data']['medicine_list'] = data;
