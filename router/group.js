@@ -10,7 +10,7 @@ router.get('/group/:group_id', async (ctx) => {
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
     if (!userId) {
-        session.error = 'ログインしていないため続行できませんでした';
+        session.error.message = 'ログインしていないため続行できませんでした';
 
         return ctx.redirect('/login');
     }
@@ -73,7 +73,7 @@ router.get('/group/:group_id', async (ctx) => {
 
     if (session.success !== undefined) {
         result['data']['success'] = session.success;
-        session.success.message = undefined;
+        session.success = undefined;
     }
 
     if (session.error !== undefined) {
