@@ -98,16 +98,14 @@ module.exports = {
     validationTakeTime: async (array) => {
         if (array === '' || array === undefined) return false;
 
-        let result = true;
         for (let i = 0; i < array.length; i++) {
             let sql = 'SELECT take_time_id FROM take_time WHERE take_time_id = ?';
             let [data] = await connection.query(sql, [array[i]]);
             if (data.length === 0) {
-                result = false;
                 return false;
             }
         }
-        return result;
+        return true;
     },
     validationMedicineType: async (item) => {
         let sql = 'SELECT type_id FROM medicine_type WHERE type_id = ?';
