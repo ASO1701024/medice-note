@@ -17,6 +17,7 @@
   },
   "session": {
     "key": [
+      "SECRET_KEY",
       "SECRET_KEY"
     ],
     "filename": "session.db"

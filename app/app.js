@@ -19,6 +19,11 @@ module.exports = {
         }
         return group[0]['group_id'];
     },
+    getGroupList: async (userId) => {
+        let sql = 'SELECT group_id, group_name FROM medicine_group WHERE user_id = ?';
+        let [group] = await connection.query(sql, [userId]);
+        return group;
+    },
     validationMedicine: async (array) => {
         let requests = {
             medicineName: array[0],
@@ -91,18 +96,16 @@ module.exports = {
         return result;
     },
     validationTakeTime: async (array) => {
-        if (!Array.isArray(array) || array.length === 0) return false;
+        if (array === '' || array === undefined) return false;
 
-        let result = true;
         for (let i = 0; i < array.length; i++) {
             let sql = 'SELECT take_time_id FROM take_time WHERE take_time_id = ?';
             let [data] = await connection.query(sql, [array[i]]);
             if (data.length === 0) {
-                result = false;
                 return false;
             }
         }
-        return result;
+        return true;
     },
     validationMedicineType: async (item) => {
         let sql = 'SELECT type_id FROM medicine_type WHERE type_id = ?';
@@ -122,7 +125,7 @@ module.exports = {
     },
     getMedicineFromMedicineId: async (medicineId) => {
         let sql = 'SELECT medicine_id, medicine_name, hospital_name, number, ' +
-            'date_format(starts_date, \'%Y-%m-%d\') as starts_date, period, type_id, image, description ' +
+            'date_format(starts_date, \'%Y-%m-%d\') as starts_date, period, type_id, group_id, image, description ' +
             'FROM medicine ' +
             'WHERE medicine_id = ?';
         let [medicine] = await connection.query(sql, [medicineId]);
@@ -143,6 +146,7 @@ module.exports = {
             starts_date: medicine[0]['starts_date'],
             period: medicine[0]['period'],
             type_id: medicine[0]['type_id'],
+            group_id: medicine[0]['group_id'],
             image: medicine[0]['period'],
             description: medicine[0]['description'],
             take_time: array
@@ -168,5 +172,10 @@ module.exports = {
         if (session.old === undefined) {
             session.old = {};
         }
+    },
+    validationGroupId: async (groupId, userId) => {
+        let sql = 'SELECT group_id FROM medicine_group WHERE group_id = ? AND user_id = ?';
+        let [group] = await connection.query(sql, [groupId, userId]);
+        return group.length !== 0;
     }
 }

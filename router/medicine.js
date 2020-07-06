@@ -25,6 +25,7 @@ router.get('/medicine/:medicine_id', async (ctx) => {
     let result = app.initializeRenderResult();
     result['data']['meta']['login_status'] = true;
     result['data']['meta']['site_title'] = '薬情報 - Medice Note';
+    result['data']['meta']['group_list'] = await app.getGroupList(userId);
     result['data']['meta']['css'] = [
         '/stisla/modules/chocolat/dist/css/chocolat.css'
     ];
@@ -36,8 +37,9 @@ router.get('/medicine/:medicine_id', async (ctx) => {
 
     let sql = 'SELECT medicine_id, medicine_name, hospital_name, number, ' +
         'date_format(starts_date, \'%Y年%c月%d日\') as starts_date, period, ' +
-        'medicine_type.type_name, image, description, group_id FROM medicine ' +
+        'medicine_type.type_name, medicine_group.group_name, image, description, medicine.group_id FROM medicine ' +
         'LEFT JOIN medicine_type ON medicine.type_id = medicine_type.type_id ' +
+        'LEFT JOIN medicine_group ON medicine.group_id = medicine_group.group_id ' +
         'WHERE medicine_id = ?';
     let [data] = await connection.query(sql, [medicineId]);
     result['data']['medicine'] = data[0];

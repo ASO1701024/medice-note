@@ -16,6 +16,15 @@
     <link rel="stylesheet" href="/stisla/css/components.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@300&display=swap">
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-171420901-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-171420901-1');
+    </script>
 </head>
 
 <body class="layout-2">
@@ -44,6 +53,34 @@
                                 <a class="nav-link" href="/medicine-register">
                                     <i class="fas fa-plus"></i>
                                     <span>薬情報登録</span>
+                                </a>
+                            </li>
+                            <li class="menu-header">グループ</li>
+                            <li>
+                                <a class="nav-link" href="/group-list">
+                                    <i class="fas fa-layer-group"></i>
+                                    <span>グループ情報</span>
+                                </a>
+                            </li>
+                            <% if (typeof data.meta.group_list !== "undefined") { %>
+                                <% for (var g = 0; g < data.meta.group_list.length; g++) { %>
+                                    <li>
+                                        <a class="nav-link" href="/group/<%= data.meta.group_list[g]['group_id'] %>">
+                                            <i class="far fa-square"></i>
+                                            <span><%= data.meta.group_list[g]['group_name'] %></span>
+                                        </a>
+                                    </li>
+                                <% } %>
+                            <% } %>
+                            <li class="menu-header">通知</li>
+                            <li>
+                                <a class="nav-link" href="/notice-list">
+                                    <i class="fas fa-bell"></i>
+                                    <span>通知一覧</span>
+                                </a>
+                                <a class="nav-link" href="/notice-register">
+                                    <i class="fas fa-plus"></i>
+                                    <span>通知登録</span>
                                 </a>
                             </li>
                             <li class="menu-header">その他</li>

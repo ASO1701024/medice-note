@@ -21,6 +21,7 @@ router.get('/medicine-register', async (ctx) => {
     let result = app.initializeRenderResult();
     result['data']['meta']['login_status'] = true;
     result['data']['meta']['site_title'] = '薬情報登録 - Medice Note';
+    result['data']['meta']['group_list'] = await app.getGroupList(userId);
     result['data']['meta']['css'] = [
         '/stisla/modules/select2/dist/css/select2.min.css',
         'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'
@@ -77,6 +78,7 @@ router.post('/medicine-register', async (ctx) => {
     let startsDate = ctx.request.body['starts_date'];
     let period = ctx.request.body['period'];
     let medicineType = ctx.request.body['medicine_type'];
+    let groupId = ctx.request.body['group_id'];
 
     // Any
     let medicineImage = "";
@@ -109,14 +111,6 @@ router.post('/medicine-register', async (ctx) => {
         fs.unlinkSync(uploadImage['path']);
     }
 
-    // Default Group Search
-    let groupId = await app.getDefaultGroup(userId);
-    if (!groupId) {
-        session.error.message = 'システムエラーが発生しました';
-
-        return ctx.redirect('/medicine-register')
-    }
-
     // Validation
     let validationMedicine = await app.validationMedicine([
         medicineName,
@@ -128,8 +122,9 @@ router.post('/medicine-register', async (ctx) => {
     ]);
     let validationTakeTime = await app.validationTakeTime(takeTime);
     let validationMedicineType = await app.validationMedicineType(medicineType);
+    let validationGroupId = await app.validationGroupId(groupId, userId);
 
-    if (validationMedicine.result && validationTakeTime && validationMedicineType && uploadImageFlag) {
+    if (validationMedicine.result && validationTakeTime && validationMedicineType && validationGroupId && uploadImageFlag) {
         let sql = 'INSERT INTO medicine' +
             '(medicine_name, hospital_name, number, starts_date, period, type_id, image, description, group_id)' +
             'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
@@ -159,15 +154,17 @@ router.post('/medicine-register', async (ctx) => {
         if (medicineName !== '') session.old.medicine_name = medicineName;
         if (hospitalName !== '') session.old.hospital_name = hospitalName;
         if (number !== '') session.old.number = number;
-        if (Array.isArray(takeTime) && takeTime.length > 0) session.old.take_time = takeTime;
+        if (takeTime !== '' && takeTime !== undefined && takeTime.length > 0) session.old.take_time = (typeof takeTime === "string") ? [takeTime] : takeTime;
         if (startsDate !== '') session.old.starts_date = startsDate;
         if (period !== '') session.old.period = period;
         if (medicineType !== '') session.old.medicine_type = medicineType;
+        if (groupId !== '') session.old.group_id = groupId;
         if (description !== '') session.old.description = description;
         if (!uploadImageFlag) session.error.medicine_image = '1MB以内のJPEG・JPG・PNG・ファイルを選択してください';
 
         if (!validationTakeTime) session.error.take_time = '飲む時間が正しく選択されていません';
         if (!validationMedicineType) session.error.medicine_type = '種類が正しく選択されていません';
+        if (!validationGroupId) session.error.medicine_group = '薬グループが正しく選択されていません';
 
         session.error.message = '薬情報登録に失敗しました';
 

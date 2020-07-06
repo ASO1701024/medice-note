@@ -34,6 +34,7 @@ router.get('/medicine-update/:medicine_id', async (ctx) => {
 
     result['data']['meta']['login_status'] = true;
     result['data']['meta']['site_title'] = '薬情報更新 - Medice Note';
+    result['data']['meta']['group_list'] = await app.getGroupList(userId);
 
     result['data']['old'] = await app.getMedicineFromMedicineId(medicineId);
     result['data']['meta']['css'] = [
@@ -88,6 +89,7 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
     let startsDate = ctx.request.body['starts_date'];
     let period = ctx.request.body['period'];
     let medicineType = ctx.request.body['medicine_type'];
+    let groupId = ctx.request.body['group_id'];
 
     // 任意項目
     let medicineImage = "";
@@ -130,12 +132,13 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
     ]);
     let validationTakeTime = await app.validationTakeTime(takeTime);
     let validationMedicineType = await app.validationMedicineType(medicineType);
+    let validationGroupId = await app.validationGroupId(groupId, userId);
 
-    if (validationMedicine.result && validationTakeTime && validationMedicineType && uploadImageFlag) {
+    if (validationMedicine.result && validationTakeTime && validationMedicineType && validationGroupId && uploadImageFlag) {
         // Update Medicine
         let sql = 'UPDATE medicine SET medicine_name = ?, hospital_name = ?, number = ?, starts_date = ?, ' +
-            'period = ?, type_id = ?, image = ?, description = ? WHERE medicine_id = ?';
-        await connection.query(sql, [medicineName, hospitalName, number, startsDate, period, medicineType, medicineImage, description, medicineId]);
+            'period = ?, type_id = ?, group_id = ?, image = ?, description = ? WHERE medicine_id = ?';
+        await connection.query(sql, [medicineName, hospitalName, number, startsDate, period, medicineType, groupId, medicineImage, description, medicineId]);
 
         // Delete TakeTime
         sql = 'DELETE FROM medicine_take_time WHERE medicine_id = ?';
@@ -149,7 +152,7 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
 
         session.success.message = '薬情報を更新しました';
 
-        return ctx.redirect('/');
+        return ctx.redirect('/medicine-list');
     } else {
         session.old = {};
         session.error = validationMedicine.error;
@@ -157,17 +160,19 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
         if (medicineName !== '') session.old.medicine_name = medicineName;
         if (hospitalName !== '') session.old.hospital_name = hospitalName;
         if (number !== '') session.old.number = number;
-        if (Array.isArray(takeTime) && takeTime.length > 0) session.old.take_time = takeTime;
+        if (takeTime !== '' && takeTime !== undefined && takeTime.length > 0) session.old.take_time = (typeof takeTime === "string") ? [takeTime] : takeTime;
         if (startsDate !== '') session.old.starts_date = startsDate;
         if (period !== '') session.old.period = period;
         if (medicineType !== '') session.old.type_id = medicineType;
+        if (groupId !== '') session.old.group_id = groupId;
         if (description !== '') session.old.description = description;
         if (!uploadImageFlag) session.error.medicine_image = '1MB以内のJPEG・JPG・PNG・ファイルを選択してください';
 
         if (!validationTakeTime) session.error.take_time = '飲む時間が正しく選択されていません';
         if (!validationMedicineType) session.error.medicine_type = '種類が正しく選択されていません';
+        if (!validationGroupId) session.error.group_id = 'グループが正しく選択されていません';
 
-        session.error_message = '薬情報の更新に失敗しました';
+        session.error.message = '薬情報の更新に失敗しました';
 
         return ctx.redirect('/medicine-update/' + medicineId);
     }
