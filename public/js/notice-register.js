@@ -85,6 +85,8 @@ $(document).on('click', '.table-time-add', function () {
         return;
     }
 
+    time = convertTime(time);
+
     let template = Handlebars.compile($('#template_notice_time_item').html());
     let data = {
         time: time
@@ -118,4 +120,14 @@ window.onload = () => {
             let head = document.getElementsByTagName('head');
             head[0].insertAdjacentHTML('beforeend', await response.text());
         })
+    $('.timepicker-30step').timepicker({
+        icons: {
+            up: 'fas fa-chevron-up',
+            down: 'fas fa-chevron-down'
+        },
+        use24hours: true,
+        minuteStep: 30,
+        showMeridian: false,
+        disableFocus: true
+    });
 }

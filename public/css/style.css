@@ -40,3 +40,18 @@ span.select2.select2-container.select2-container--default {
 input.form-control-plaintext {
     pointer-events: none;
 }
+.bootstrap-timepicker-hour,
+.bootstrap-timepicker-minute,
+.bootstrap-timepicker-meridian {
+    border: 1px solid #888;
+}
+.bootstrap-timepicker-meridian {
+    width: 32px !important;
+}
+.timepicker-30step-background {
+    background-color: #fdfdff !important
+}
+.bootstrap-timepicker-widget.dropdown-menu.timepicker-orient-left.timepicker-orient-top.open,
+.bootstrap-timepicker-widget.dropdown-menu.timepicker-orient-left.timepicker-orient-bottom.open {
+    width: 150px;
+}
