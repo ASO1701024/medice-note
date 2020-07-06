@@ -152,7 +152,7 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
 
         session.success.message = '薬情報を更新しました';
 
-        return ctx.redirect('/');
+        return ctx.redirect('/medicine-list');
     } else {
         session.old = {};
         session.error = validationMedicine.error;
@@ -160,7 +160,7 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
         if (medicineName !== '') session.old.medicine_name = medicineName;
         if (hospitalName !== '') session.old.hospital_name = hospitalName;
         if (number !== '') session.old.number = number;
-        if (Array.isArray(takeTime) && takeTime.length > 0) session.old.take_time = takeTime;
+        if (takeTime !== '' && takeTime !== undefined && takeTime.length > 0) session.old.take_time = (typeof takeTime === "string") ? [takeTime] : takeTime;
         if (startsDate !== '') session.old.starts_date = startsDate;
         if (period !== '') session.old.period = period;
         if (medicineType !== '') session.old.type_id = medicineType;
