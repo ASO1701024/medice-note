@@ -48,8 +48,8 @@ input.form-control-plaintext {
 .bootstrap-timepicker-meridian {
     width: 32px !important;
 }
-.timepicker-30step-background {
-    background-color: #fdfdff !important
+.readonly-background {
+    background-color: #fdfdff !important;
 }
 .bootstrap-timepicker-widget.dropdown-menu.timepicker-orient-left.timepicker-orient-top.open,
 .bootstrap-timepicker-widget.dropdown-menu.timepicker-orient-left.timepicker-orient-bottom.open {
