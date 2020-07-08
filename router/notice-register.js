@@ -71,33 +71,15 @@ router.post('/notice-register', async (ctx) => {
     let noticeDay = ctx.request.body['notice_day'];
     let endDate = ctx.request.body['end_date'];
 
-    console.log([
-        noticeName,
-        medicineId,
-        noticeTime,
-        noticeDay,
-        endDate
-    ])
-
     medicineId = Array.from(new Set(medicineId));
     noticeTime = Array.from(new Set(noticeTime));
     noticeDay = Array.from(new Set(noticeDay));
-
-    console.log([
-        noticeName,
-        medicineId,
-        noticeTime,
-        noticeDay,
-        endDate
-    ])
 
     let validationNoticeName = app.validationNoticeName(noticeName);
     let validationNoticeMedicineId = await app.validationNoticeMedicineId(medicineId, userId);
     let validationNoticeTime = app.validationNoticeTime(noticeTime);
     let validationNoticeDay = app.validationNoticeDay(noticeDay);
     let validationEndDate = app.validationEndDate(endDate);
-
-    console.log(validationNoticeName, validationNoticeMedicineId, validationNoticeTime, validationNoticeDay, validationEndDate)
 
     if (validationNoticeName && validationNoticeMedicineId && validationNoticeTime && validationNoticeDay && validationEndDate) {
         let sql = 'INSERT INTO notice (notice_name, notice_period, user_id) VALUES (?, ?, ?)';
@@ -123,8 +105,6 @@ router.post('/notice-register', async (ctx) => {
         ctx.redirect('/notice-list');
     } else {
         session.error.message = '通知情報登録に失敗しました';
-
-
 
         if (noticeName !== '') session.old.notice_name = noticeName;
         if (medicineId.length > 0) {
