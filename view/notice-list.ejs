@@ -23,3 +23,43 @@
         </div>
     </div>
 <% } %>
+
+<% if (typeof data.notice_list !== "undefined") { %>
+    <div class="row">
+        <% for (var nl = 0; nl < data.notice_list.length; nl++) { %>
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="accordion_<%= nl %>">
+                            <div class="accordion">
+                                <div class="accordion-header" role="button" data-toggle="collapse" data-target="#panel-body-<%= nl %>" aria-expanded="true">
+                                    <h4><%= data.notice_list[nl]['notice_name'] %></h4>
+                                </div>
+                                <div class="accordion-body collapse" id="panel-body-<%= nl %>" data-parent="#accordion_<%= nl %>">
+                                    <p class="mb-0">通知期間：<%= data.notice_list[nl]['notice_period'] %></p>
+                                    <p class="mb-0">通知項目：<br>
+                                        <% data.notice_list[nl]['medicine'].forEach(d => { %>
+                                            <%= d %><br>
+                                        <% }) %>
+                                    </p>
+                                    <p class="mb-0">通知時間：<br>
+                                        <% data.notice_list[nl]['time'].forEach(d => { %>
+                                            <%= d %>,
+                                        <% }) %>
+                                    </p>
+                                    <p class="mb-0">通知曜日：<br>
+                                        <% data.notice_list[nl]['week'].forEach(d => { %>
+                                            <%= d %>,
+                                        <% }) %>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#" class="card-link">編集</a>
+                        <a href="javascript:noticeDelete(<%= data.notice_list[nl]['notice_id'] %>)" class="card-link link-danger">削除</a>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+    </div>
+<% } %>

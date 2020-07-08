@@ -5,13 +5,16 @@ const app = require('../app/app');
 
 router.get('/medicine-delete/:medicine_id', async (ctx) => {
     let session = ctx.session;
+    app.initializeSession(session);
     let medicineId = ctx.params['medicine_id'];
 
     let authId = session.auth_id;
-    if (!authId || !await app.getUserId(authId)) {
+    let userId = await app.getUserId(authId)
+    if (!userId) {
+        session.error.message = 'ログインしていないため続行できませんでした';
+
         return ctx.redirect('/login');
     }
-    let userId = await app.getUserId(authId);
 
     if (!await app.isHaveMedicine(medicineId, userId)) {
         session.error.message = '薬情報が見つかりませんでした';
@@ -20,6 +23,9 @@ router.get('/medicine-delete/:medicine_id', async (ctx) => {
     }
 
     let sql = 'DELETE FROM medicine_take_time WHERE medicine_id = ?';
+    await connection.query(sql, [medicineId]);
+
+    sql = 'DELETE FROM notice_medicine WHERE medicine_id = ?';
     await connection.query(sql, [medicineId]);
 
     sql = 'DELETE FROM medicine WHERE medicine_id = ?';
