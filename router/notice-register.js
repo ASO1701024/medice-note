@@ -21,12 +21,12 @@ router.get('/notice-register', async (ctx) => {
     result['data']['meta']['group_list'] = await app.getGroupList(userId);
     result['data']['meta']['css'] = [
         '/stisla/modules/select2/dist/css/select2.min.css',
-        '/stisla/modules/bootstrap-timepicker/css/bootstrap-timepicker.min.css',
+        // '/stisla/modules/bootstrap-timepicker/css/bootstrap-timepicker.min.css',
         '/stisla/modules/bootstrap-daterangepicker/daterangepicker.css'
     ];
     result['data']['meta']['script'] = [
         '/stisla/modules/select2/dist/js/select2.full.min.js',
-        '/stisla/modules/bootstrap-timepicker/js/bootstrap-timepicker.min.js',
+        // '/stisla/modules/bootstrap-timepicker/js/bootstrap-timepicker.min.js',
         '/stisla/modules/bootstrap-daterangepicker/daterangepicker.js',
         '/js/library/handlebars.min.js',
         '/js/notice-register.js',
