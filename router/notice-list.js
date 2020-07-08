@@ -21,7 +21,7 @@ router.get('/notice-list', async (ctx) => {
     result['data']['meta']['group_list'] = await app.getGroupList(userId);
     result['data']['meta']['script'] = [
         '/stisla/modules/sweetalert/sweetalert.min.js',
-        '/js/notice-delete-alert.js',
+        '/js/notice-action-alert.js',
     ];
 
     let sql = 'SELECT notice_id, notice_name, date_format(notice_period, \'%Y年%c月%d日\') as notice_period, is_enable FROM notice WHERE user_id = ?';
