@@ -7,7 +7,7 @@ function noticeDelete(noticeId) {
         dangerMode: true
     }).then(function (value) {
         if (value) {
-            location.href = `/notice-delete/${noticeId}`
+            location.href = `/notice-delete/${noticeId}`;
         }
     });
 }
@@ -21,7 +21,7 @@ function noticeToggleTrue(noticeId) {
         dangerMode: true
     }).then(function (value) {
         if (value) {
-            // location.href = '/medicine-delete/' + medicineId
+            location.href = `/notice-toggle/true/${noticeId}`;
         }
     });
 }
@@ -35,7 +35,7 @@ function noticeToggleFalse(noticeId) {
         dangerMode: true
     }).then(function (value) {
         if (value) {
-            // location.href = '/medicine-delete/' + medicineId
+            location.href = `/notice-toggle/false/${noticeId}`;
         }
     });
 }

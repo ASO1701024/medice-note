@@ -109,4 +109,48 @@ router.get('/notice-delete/:notice_id', async (ctx) => {
     ctx.redirect('/notice-list');
 })
 
+router.get('/notice-toggle/:bool/:notice_id', async (ctx) => {
+    let session = ctx.session;
+    app.initializeSession(session);
+
+    let authId = session.auth_id;
+    let userId = await app.getUserId(authId);
+    if (!userId) {
+        session.error = 'ログインしていないため続行できませんでした';
+
+        return ctx.redirect('/login');
+    }
+
+    let noticeId = ctx.params['notice_id'];
+    let bool = ctx.params['bool'];
+
+    let sql = 'SELECT notice_id FROM notice WHERE notice_id = ? AND user_id = ?';
+    let [notice] = await connection.query(sql,[noticeId, userId]);
+    if (notice.length === 0) {
+        session.error.message = '通知情報が見つかりませんでした';
+
+        return ctx.redirect('/notice-list');
+    }
+
+    switch (bool) {
+        case 'true':
+            sql = 'UPDATE notice SET is_enable = ? WHERE notice_id = ?';
+            await connection.query(sql, [true, noticeId]);
+
+            session.success.message = '通知を有効化しました';
+            break;
+        case 'false':
+            sql = 'UPDATE notice SET is_enable = ? WHERE notice_id = ?';
+            await connection.query(sql, [false, noticeId]);
+
+            session.success.message = '通知を無効化しました';
+            break;
+        default:
+            session.error.message = '通知の状態を変更できませんでした';
+            break;
+    }
+
+    ctx.redirect('/notice-list');
+})
+
 module.exports = router;
