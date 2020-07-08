@@ -10,12 +10,6 @@ router.get('/login', async (ctx, next) => {
     let session = ctx.session;
     app.initializeSession(session);
 
-    /*
-    console.log(ctx.request.ip)
-    console.log(ctx.req.headers['x-forwarded-for'])
-    console.log(ctx.req.connection.remoteAddress)
-    */
-
     // Login Check
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
