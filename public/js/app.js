@@ -1,25 +1,10 @@
-// function convertTime(time) {
-//     let array = time.split(':');
-//     if (array[0] <= 9) {
-//         array[0] = `0${array[0]}`;
-//     }
-//     time = `${array[0]}:${array[1]}`;
-//
-//     return time;
-// }
-
 $('.datepicker').daterangepicker({
     "singleDatePicker": true,
     "autoApply": true,
     "locale": {
         "format": "YYYY-MM-DD",
         "separator": " - ",
-        // "applyLabel": "Apply",
-        // "cancelLabel": "Cancel",
-        // "fromLabel": "From",
-        // "toLabel": "To",
         "customRangeLabel": "Custom",
-        // "weekLabel": "W",
         "daysOfWeek": [
             "日",
             "月",
