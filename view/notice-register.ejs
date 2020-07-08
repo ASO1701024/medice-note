@@ -90,6 +90,11 @@
                                     <option value="<%= `${hour}:30` %>" <% if (`${hour}:30` == '07:30' || `${hour}:30` == '12:30') { %> selected <% } %>><%= `${hour}:30` %></option>
                                 <% } %>
                             </select>
+                            <span class="form-error">
+                                <% if (typeof data.error.notice_time !== "undefined") { %>
+                                    <%= data.error.notice_time %>
+                                <% } %>
+                            </span>
                         </div>
                         <div class="form-group">
                             <label class="control-label">曜日 *</label>
