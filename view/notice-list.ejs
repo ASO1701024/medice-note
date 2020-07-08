@@ -35,28 +35,64 @@
                                 <div class="accordion-header" role="button" data-toggle="collapse" data-target="#panel-body-<%= nl %>" aria-expanded="true">
                                     <h4><%= data.notice_list[nl]['notice_name'] %></h4>
                                 </div>
+                                <small class="form-text text-muted mt-2">
+                                    この通知は<% if (data.notice_list[nl]['is_enable']) { %> 有効 <% } else { %> 無効 <% } %>です
+                                </small>
                                 <div class="accordion-body collapse" id="panel-body-<%= nl %>" data-parent="#accordion_<%= nl %>">
-                                    <p class="mb-0">通知期間：<%= data.notice_list[nl]['notice_period'] %></p>
-                                    <p class="mb-0">通知項目：<br>
-                                        <% data.notice_list[nl]['medicine'].forEach(d => { %>
-                                            <%= d %><br>
-                                        <% }) %>
-                                    </p>
-                                    <p class="mb-0">通知時間：<br>
-                                        <% data.notice_list[nl]['time'].forEach(d => { %>
-                                            <%= d %>,
-                                        <% }) %>
-                                    </p>
-                                    <p class="mb-0">通知曜日：<br>
-                                        <% data.notice_list[nl]['week'].forEach(d => { %>
-                                            <%= d %>,
-                                        <% }) %>
-                                    </p>
+                                    <div class="form-group">
+                                        <label>通知期間</label>
+                                        <p><%= data.notice_list[nl]['notice_period'] %></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>通知項目</label>
+                                        <p>
+                                            <% data.notice_list[nl]['medicine'].forEach(m => { %>
+                                                ・<%= m %><br>
+                                            <% }) %>
+                                        </p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>通知時間</label>
+                                        <p>
+                                            <% data.notice_list[nl]['time'].forEach((t, i) => { %>
+                                                <%= t %>
+                                                <% if (data.notice_list[nl]['time'].length - 1 !== i) { %>
+                                                   ,
+                                                <% } %>
+                                            <% }) %>
+                                        </p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>通知曜日</label>
+                                        <p>
+                                            <% data.notice_list[nl]['week'].forEach((w, i) => { %>
+                                                <%= w %>
+                                                <% if (data.notice_list[nl]['week'].length - 1 !== i) { %>
+                                                    ,
+                                                <% } %>
+                                            <% }) %>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <a href="#" class="card-link">編集</a>
-                        <a href="javascript:noticeDelete(<%= data.notice_list[nl]['notice_id'] %>)" class="card-link link-danger">削除</a>
+                        <div class="row">
+                            <div class="col-12 col-md-6 col-lg-6">
+                                <a href="/notice-update/<%= data.notice_list[nl]['notice_id'] %>" class="card-link">編集</a>
+                                <a href="javascript:noticeDelete(<%= data.notice_list[nl]['notice_id'] %>)" class="card-link link-danger">削除</a>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-6 text-right">
+                                <% if (data.notice_list[nl]['is_enable']) { %>
+                                    <a href="javascript:noticeToggleFalse(<%= data.notice_list[nl]['notice_id'] %>)" class="btn btn-icon icon-left">
+                                        <i class="fas fa-bell-slash"></i> 無効化
+                                    </a>
+                                <% } else { %>
+                                    <a href="javascript:noticeToggleTrue(<%= data.notice_list[nl]['notice_id'] %>)" class="btn btn-icon icon-left">
+                                        <i class="fas fa-bell"></i> 有効化
+                                    </a>
+                                <% } %>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
