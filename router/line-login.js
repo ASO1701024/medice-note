@@ -3,12 +3,8 @@ const router = new Router();
 const app = require('../app/app');
 const connection = require('../app/db');
 const lineLogin = require("line-login");
-const lineConfig = require('../config.json');
-const login = new lineLogin({
-    channel_id: lineConfig.line.LINE_LOGIN_CHANNEL_ID,
-    channel_secret: lineConfig.line.LINE_LOGIN_CHANNEL_SECRET,
-    callback_url: lineConfig.line.LINE_LOGIN_CALLBACK_URL,
-});
+const config = require('../config.json');
+const login = new lineLogin(config.line_login);
 const crypto = require("crypto");
 
 router.get('/account-setting/line-login', async (ctx, next) => {
@@ -26,7 +22,7 @@ router.get('/account-setting/line-login', async (ctx, next) => {
     return ctx.redirect(login.make_auth_url(ctx.session.line_login_state, ctx.session.line_login_nonce) + "&scope=profile%20openid");
 });
 
-router.get('/lineCallback', async (ctx) => {
+router.get('/account-setting/line-callback', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
 
@@ -40,7 +36,7 @@ router.get('/lineCallback', async (ctx) => {
     delete ctx.session.line_login_nonce;
 
     // Get access_token from 'code'
-    await login.issue_access_token(ctx.request.query.code).then( async (token_response) => {
+    await login.issue_access_token(ctx.request.query.code).then(async (token_response) => {
         let accessToken = token_response.access_token;
         let refreshToken = token_response.refresh_token;
 

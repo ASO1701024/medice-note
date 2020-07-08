@@ -20,5 +20,13 @@
       "SECRET_KEY"
     ],
     "filename": "session.db"
+  },
+  "line_login": {
+    "channel_id": "",
+    "channel_secret": "",
+    "callback_url": ""
+  },
+  "line_bot": {
+    "channelAccessToken": ""
   }
 }
