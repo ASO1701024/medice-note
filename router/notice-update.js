@@ -128,8 +128,8 @@ router.post('/notice-update/:notice_id', async (ctx) => {
     let validationEndDate = app.validationEndDate(endDate);
 
     if (validationNoticeName && validationNoticeMedicineId && validationNoticeTime && validationNoticeDay && validationEndDate) {
-        let sql = 'UPDATE notice SET notice_name = ?, notice_period = ? WHERE notice_id';
-        await connection.query(sql, [noticeName, endDate, userId]);
+        let sql = 'UPDATE notice SET notice_name = ?, notice_period = ? WHERE notice_id = ?';
+        await connection.query(sql, [noticeName, endDate, noticeId]);
 
         sql = 'DELETE FROM notice_medicine WHERE notice_id = ?';
         await connection.query(sql, [noticeId]);
