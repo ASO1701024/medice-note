@@ -114,6 +114,10 @@ const noticeRegisterRouter = require('./router/notice-register');
 app.use(noticeRegisterRouter.routes());
 app.use(noticeRegisterRouter.allowedMethods());
 
+const noticeUpdateRouter = require('./router/notice-update');
+app.use(noticeUpdateRouter.routes());
+app.use(noticeUpdateRouter.allowedMethods());
+
 const accountSettingRouter = require('./router/account-setting');
 app.use(accountSettingRouter.routes());
 app.use(accountSettingRouter.allowedMethods());
