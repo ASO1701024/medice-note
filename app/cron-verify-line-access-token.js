@@ -16,7 +16,7 @@ module.exports = cron.schedule('0 0 0 1 * *', async () => {
 async function letAccessTokenEnable(userId, accessToken, refreshToken) {
     login.verify_access_token(accessToken).then(async () => {
         // verify_success
-        await insertProcessingLog(userId, '機能: verify_access_token  ステータスコード: 200', 2);
+        await insertUserMessage(userId, '機能: verify_access_token  ステータスコード: 200', 2);
     }).catch(async () => {
         // verify_filed
         await refreshAccessToken(refreshToken, userId);
@@ -27,7 +27,7 @@ async function refreshAccessToken(refreshToken, userId) {
     login.refresh_access_token(refreshToken)
         .then(async (result) => {
             // refresh_success
-            await insertProcessingLog(userId, '機能: refresh_access_token  ステータスコード: 200', 2);
+            await insertUserMessage(userId, '機能: refresh_access_token  ステータスコード: 200', 2);
 
             let refreshTokenSQL = 'UPDATE line_login SET access_token = ?, refresh_token = ? WHERE user_id = ?;';
             await connection.query(refreshTokenSQL, [result['access_token'], result['refresh_token'], userId]);
@@ -35,11 +35,11 @@ async function refreshAccessToken(refreshToken, userId) {
         .catch(async () => {
             // refresh_failed
             let errorMsg = '機能: refresh_access_token  ステータスコード: 400  エラーメッセージ: Bad Request';
-            await insertProcessingLog(userId, errorMsg, 3);
+            await insertUserMessage(userId, errorMsg, 3);
         })
 }
 
-async function insertProcessingLog(userId, resultMessage, resultFlg) {
-    let insertErrorSQL = 'INSERT INTO cron_processing_log VALUES (0,?,?,?);';
+async function insertUserMessage(userId, resultMessage, resultFlg) {
+    let insertErrorSQL = 'INSERT INTO user_message VALUES (0,?,?,?);';
     await connection.query(insertErrorSQL, [userId, resultMessage, resultFlg]);
 }

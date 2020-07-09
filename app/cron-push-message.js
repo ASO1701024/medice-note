@@ -42,11 +42,11 @@ async function pushNotice (noticeList) {
         await client.pushMessage(to, message, false)
             .then(async ()=>{
                 let message = '機能: pushNotice  ステータスコード: 200';
-                await insertProcessingLog(noticeRow['notice_id'], message, 2);
+                await insertUserMessage(noticeRow['notice_id'], message, 2);
             })
             .catch(async (error) => {
                 let errorMsg = '機能: pushNotice  ステータスコード: ' + error['statusCode'] +'  エラーメッセージ: '+ error['statusMessage'];
-                await insertProcessingLog(noticeRow['notice_id'], errorMsg, 3);
+                await insertUserMessage(noticeRow['notice_id'], errorMsg, 3);
             })
     }
 }
@@ -84,10 +84,10 @@ async function createPushMessage(noticeId){
     };
 }
 
-async function insertProcessingLog(noticeId, resultMessage, resultFlg) {
+async function insertUserMessage(noticeId, resultMessage, resultFlg) {
     let getUserIdSQL = 'SELECT user_id FROM notice WHERE notice_id = ?;';
     let userId = (await connection.query(getUserIdSQL,[noticeId]));
 
-    let insertErrorSQL = 'INSERT INTO cron_processing_log VALUES (0,?,?,?);';
+    let insertErrorSQL = 'INSERT INTO user_message VALUES (0,?,?,?);';
     await connection.query(insertErrorSQL, [userId, resultMessage, resultFlg]);
 }
