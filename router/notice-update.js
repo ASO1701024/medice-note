@@ -170,6 +170,7 @@ router.post('/notice-update/:notice_id', async (ctx) => {
             }
             session.old.medicine_id = medicineList;
         }
+        session.old.notice_id = noticeId;
         if (noticeTime.length > 0) session.old.notice_time = noticeTime;
         if (noticeDay.length > 0) session.old.notice_day = noticeDay;
         if (endDate) session.old.end_date = endDate;
