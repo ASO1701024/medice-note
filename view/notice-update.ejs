@@ -1,5 +1,5 @@
 <div class="section-header">
-    <h1>通知登録</h1>
+    <h1>通知編集</h1>
 </div>
 
 <% if (typeof data.success.message !== "undefined") { %>
@@ -28,11 +28,11 @@
     <div class="col-12 col-md-6 col-lg-6">
         <div class="card">
             <div class="card-header">
-                <h4>通知情報登録</h4>
+                <h4>通知情報編集</h4>
             </div>
             <div class="card-body">
                 <p class="text-muted">* : 必須項目</p>
-                <form action="/notice-register" method="post">
+                <form action="/notice-update/<%= data.old.notice_id %>" method="post">
                     <div class="card-body pb-0">
                         <div class="form-group">
                             <label class="control-label">通知名 *</label>
@@ -50,24 +50,24 @@
                             </small>
                             <table id="medicine_table" class="table medicine-table">
                                 <tbody>
-                                    <% if (typeof data.old.medicine_id !== "undefined") {
-                                        for (var mi = 0; mi < data.old.medicine_id.length; mi++) { %>
-                                            <tr>
-                                                <td class="pl-0">
-                                                    <input type="text" class="form-control-plaintext" readonly value="<%= data.old.medicine_id[mi]['medicine_name'] %>">
-                                                </td>
-                                                <td class="p-0">
-                                                    <input type="text" class="form-control-plaintext text-center" readonly value="<%= data.old.medicine_id[mi]['number'] %> 個">
-                                                </td>
-                                                <td class="pr-2 pl-2 text-center">
-                                                    <a href="javascript:void(0)" class="btn btn-icon table-tr-delete">
-                                                        <i class="fas fa-times"></i>
-                                                    </a>
-                                                </td>
-                                                <input type="hidden" name="medicine_id[]" value="<%= data.old.medicine_id[mi]['medicine_id'] %>">
-                                            </tr>
-                                        <% }
-                                    } %>
+                                <% if (typeof data.old.medicine_id !== "undefined") {
+                                    for (var mi = 0; mi < data.old.medicine_id.length; mi++) { %>
+                                        <tr>
+                                            <td class="pl-0">
+                                                <input type="text" class="form-control-plaintext" readonly value="<%= data.old.medicine_id[mi]['medicine_name'] %>">
+                                            </td>
+                                            <td class="p-0">
+                                                <input type="text" class="form-control-plaintext text-center" readonly value="<%= data.old.medicine_id[mi]['number'] %> 個">
+                                            </td>
+                                            <td class="pr-2 pl-2 text-center">
+                                                <a href="javascript:void(0)" class="btn btn-icon table-tr-delete">
+                                                    <i class="fas fa-times"></i>
+                                                </a>
+                                            </td>
+                                            <input type="hidden" name="medicine_id[]" value="<%= data.old.medicine_id[mi]['medicine_id'] %>">
+                                        </tr>
+                                    <% }
+                                } %>
                                 </tbody>
                             </table>
                             <span class="form-error">
@@ -129,7 +129,7 @@
                         </div>
                     </div>
                     <div class="card-footer pt-">
-                        <button type="submit" class="btn btn-primary">登録</button>
+                        <button type="submit" class="btn btn-primary">編集</button>
                     </div>
                 </form>
             </div>

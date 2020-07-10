@@ -50,7 +50,8 @@ router.get('/group/:group_id', async (ctx) => {
         'date_format(starts_date, \'%Y年%c月%d日\') as starts_date, period, ' +
         'medicine_type.type_name, image, description, group_id FROM medicine ' +
         'LEFT JOIN medicine_type ON medicine.type_id = medicine_type.type_id ' +
-        'WHERE group_id = ?';
+        'WHERE group_id = ? ' +
+        'ORDER BY starts_date DESC';
 
     let [data] = await connection.query(sql, [groupId]);
 

@@ -40,3 +40,28 @@ span.select2.select2-container.select2-container--default {
 input.form-control-plaintext {
     pointer-events: none;
 }
+.bootstrap-timepicker-hour,
+.bootstrap-timepicker-minute,
+.bootstrap-timepicker-meridian {
+    border: 1px solid #888;
+}
+.bootstrap-timepicker-meridian {
+    width: 32px !important;
+}
+.readonly-background {
+    background-color: #fdfdff !important;
+}
+.bootstrap-timepicker-widget.dropdown-menu.timepicker-orient-left.timepicker-orient-top.open,
+.bootstrap-timepicker-widget.dropdown-menu.timepicker-orient-left.timepicker-orient-bottom.open {
+    width: 150px;
+}
+.accordion-header[aria-expanded=true] h4:before {
+    content: '\f078';
+    font-family: "Font Awesome 5 Free";
+    padding-right: 10px;
+}
+.accordion-header[aria-expanded=false] h4:before {
+    content: '\f077';
+    font-family: "Font Awesome 5 Free";
+    padding-right: 10px;
+}

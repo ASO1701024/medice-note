@@ -548,6 +548,7 @@ $(function() {
   }
 
   // Daterangepicker
+  /*
   if(jQuery().daterangepicker) {
     if($(".datepicker").length) {
       $('.datepicker').daterangepicker({
@@ -571,6 +572,7 @@ $(function() {
       });
     }
   }
+  */
 
   // Timepicker
   if(jQuery().timepicker && $(".timepicker").length) {

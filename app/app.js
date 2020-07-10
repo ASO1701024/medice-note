@@ -177,5 +177,64 @@ module.exports = {
         let sql = 'SELECT group_id FROM medicine_group WHERE group_id = ? AND user_id = ?';
         let [group] = await connection.query(sql, [groupId, userId]);
         return group.length !== 0;
+    },
+    validationNoticeName: (noticeName) => {
+        let validation = new validator({
+            noticeName: noticeName
+        }, {
+            noticeName: 'required|string|min:1|max:100'
+        });
+        return validation.passes();
+    },
+    validationNoticeMedicineId: async (medicineId, userId) => {
+        if (medicineId === '' || medicineId === undefined || medicineId.length <= 0) return false;
+
+        for (let i = 0; i < medicineId.length; i++) {
+            let sql = 'SELECT medicine_id FROM medicine WHERE medicine_id = ? ' +
+                'AND group_id in (SELECT group_id FROM medicine_group WHERE user_id = ?)';
+            let [medicine] = await connection.query(sql, [medicineId[i], userId]);
+            if (medicine.length === 0) {
+                return false;
+            }
+        }
+        return true;
+    },
+    validationNoticeTime: (noticeTime) => {
+        if (noticeTime === '' || noticeTime === undefined || noticeTime.length <= 0) return false;
+
+        for (let i = 0; i < noticeTime.length; i++) {
+            let validation = new validator({
+                time: noticeTime[i]
+            }, {
+                time: ['required', 'regex:/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/']
+            });
+            if (validation.fails()) {
+                return false;
+            }
+        }
+        return true;
+    },
+    validationNoticeDay: (noticeWeek) => {
+        if (noticeWeek === '' || noticeWeek === undefined) return false;
+
+        for (let i = 0; i < noticeWeek.length; i++) {
+            let validation = new validator({
+                week: noticeWeek[i]
+            }, {
+                week: ['required', { 'in': ['0', '1', '2', '3', '4', '5', '6'] }]
+            });
+            if (validation.fails()) {
+                return false;
+            }
+        }
+        return true;
+    },
+    validationEndDate: (endDate) => {
+        let validation = new validator({
+            endDate: endDate
+        }, {
+            endDate: 'required|date'
+        });
+        return validation.passes();
     }
 }
