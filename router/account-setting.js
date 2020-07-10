@@ -3,12 +3,8 @@ const router = new Router();
 const app = require('../app/app');
 const connection = require('../app/db');
 const lineLogin = require("line-login");
-const lineConfig = require('../config.json');
-const login = new lineLogin({
-    channel_id: lineConfig.line.LINE_LOGIN_CHANNEL_ID,
-    channel_secret: lineConfig.line.LINE_LOGIN_CHANNEL_SECRET,
-    callback_url: lineConfig.line.LINE_LOGIN_CALLBACK_URL,
-});
+const config = require('../config.json');
+const login = new lineLogin(config.line_login);
 
 router.get('/account-setting', async (ctx, next) => {
     let session = ctx.session;
@@ -41,32 +37,8 @@ router.get('/account-setting', async (ctx, next) => {
         let lineAccessToken = lineUserData[0].access_token;
         let lineRefreshToken = lineUserData[0].refresh_token;
 
-        let verifyAccessTokenResult = await login.verify_access_token(lineAccessToken);
-
-        if (typeof verifyAccessTokenResult.error === 'undefined') {
-            // verify_success
+        if (await letAccessTokenEnable(userId, lineAccessToken, lineRefreshToken)) {
             result['data']['account']['line_user_name'] = lineUserName;
-
-        } else {
-            // refresh_access_token
-            let refreshAccessTokenResult = login.refresh_access_token(lineRefreshToken);
-
-            if (typeof refreshAccessTokenResult.error === 'undefined') {
-                // UPDATE 'access_token' and 'refresh_token'
-                let newAccessToken = refreshAccessTokenResult.access_token;
-                let newRefreshToken = refreshAccessTokenResult.refresh_token;
-                let refreshTokenSQL = 'UPDATE line_login SET access_token = ?, refresh_token = ? WHERE user_id=?;';
-
-                await connection.query(refreshTokenSQL, [newAccessToken, newRefreshToken, userId])
-                result['data']['account']['line_user_name'] = lineUserName[0]['line_user_name'];
-
-            } else {
-                // DELETE "line_login" and "line_notice_user_id"
-                let deleteLineLoginSQL = 'DELETE FROM line_login WHERE user_id = ?;';
-                await connection.query(deleteLineLoginSQL, [userId]);
-                let deleteLineNoticeUserId = 'DELETE FROM line_notice_user_id WHERE user_id = ?;';
-                await connection.query(deleteLineNoticeUserId, [userId]);
-            }
         }
     }
 
@@ -87,7 +59,7 @@ router.get('/account-setting/line-logout', async (ctx) => {
     let getAccessTokenSQL = 'SELECT access_token from line_login WHERE user_id = ?;';
     let accessToken = (await connection.query(getAccessTokenSQL, [userId]))[0];
 
-    if(accessToken.length === 0){
+    if (accessToken.length === 0) {
         // When you have't logged in line
         return ctx.redirect('/account-setting');
     }
@@ -101,5 +73,35 @@ router.get('/account-setting/line-logout', async (ctx) => {
 
     return ctx.redirect('/account-setting');
 });
+
+async function letAccessTokenEnable(userId, accessToken, refreshToken) {
+    return login.verify_access_token(accessToken).then(() => {
+        // verify_success
+        return accessToken;
+    }).catch(async () => {
+        let refreshTokenResult = await refreshAccessToken(refreshToken, userId);
+        if (refreshTokenResult) {
+            return refreshTokenResult;
+        }
+        return false;
+    });
+}
+
+async function refreshAccessToken(refreshToken, userId) {
+    // verify_failed
+    return login.refresh_access_token(refreshToken)
+        .then(async (result) => {
+            let refreshTokenSQL = 'UPDATE line_login SET access_token = ?, refresh_token = ? WHERE user_id = ?;';
+            await connection.query(refreshTokenSQL, [result['access_token'], result['refresh_token'], userId]);
+            return result['access_token'];
+        })
+        .catch(async () => {
+            let deleteLoginDataSQL = 'DELETE FROM line_login WHERE user_id = ?';
+            await connection.query(deleteLoginDataSQL, [userId]);
+            let deleteLineNoticeUserId = 'DELETE FROM line_notice_user_id WHERE user_id = ?;';
+            await connection.query(deleteLineNoticeUserId, [userId]);
+            return false;
+        })
+}
 
 module.exports = router;

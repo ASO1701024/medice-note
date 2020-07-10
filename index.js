@@ -46,6 +46,9 @@ app.use(session({
 }, app));
 app.proxy = true;
 
+require('./app/cron-push-message');
+require('./app/cron-verify-line-access-token');
+
 const indexRouter = require('./router/index');
 app.use(indexRouter.routes());
 app.use(indexRouter.allowedMethods());
@@ -126,7 +129,7 @@ const accountDeleteRouter = require('./router/account-delete');
 app.use(accountDeleteRouter.routes());
 app.use(accountDeleteRouter.allowedMethods());
 
-const lineLoginRouter = require('./router/linelogin');
+const lineLoginRouter = require('./router/line-login');
 app.use(lineLoginRouter.routes());
 app.use(lineLoginRouter.allowedMethods());
 
