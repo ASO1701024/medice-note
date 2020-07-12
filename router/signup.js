@@ -8,7 +8,7 @@ const app = require('../app/app');
 const transporter = require('../app/mail');
 const config = require('../config.json');
 
-router.get('/signup', async (ctx, next) => {
+router.get('/signup', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
 
@@ -37,7 +37,7 @@ router.get('/signup', async (ctx, next) => {
     await ctx.render('signup', result);
 })
 
-router.post('/signup', async (ctx, next) => {
+router.post('/signup', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
 

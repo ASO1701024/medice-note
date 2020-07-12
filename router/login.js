@@ -5,7 +5,7 @@ const app = require('../app/app');
 const bcrypt = require('bcrypt');
 const { v4: uuid } = require('uuid');
 
-router.get('/login', async (ctx, next) => {
+router.get('/login', async (ctx) => {
     // Session
     let session = ctx.session;
     app.initializeSession(session);
@@ -37,7 +37,7 @@ router.get('/login', async (ctx, next) => {
     await ctx.render('login', result);
 })
 
-router.post('/login', async (ctx, next) => {
+router.post('/login', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
 
