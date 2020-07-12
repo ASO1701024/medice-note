@@ -31,7 +31,6 @@ router.get('/api/medicine/:medicine_id', async (ctx) => {
         }
     }
 
-    let result = [];
     let sql = 'SELECT medicine_id, medicine_name, hospital_name, number, ' +
         'date_format(starts_date, \'%Y年%c月%d日\') as starts_date, period, ' +
         'medicine_type.type_name, medicine_group.group_name, description, medicine.group_id FROM medicine ' +
@@ -39,7 +38,7 @@ router.get('/api/medicine/:medicine_id', async (ctx) => {
         'LEFT JOIN medicine_group ON medicine.group_id = medicine_group.group_id ' +
         'WHERE medicine_id = ?';
     let [data] = await connection.query(sql, [medicineId]);
-    result = data[0];
+    let result = data[0];
 
     sql = 'SELECT take_time_name FROM medicine_take_time ' +
         'LEFT JOIN take_time ON medicine_take_time.take_time_id = take_time.take_time_id ' +
