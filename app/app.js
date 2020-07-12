@@ -221,7 +221,7 @@ module.exports = {
             let validation = new validator({
                 week: noticeWeek[i]
             }, {
-                week: ['required', { 'in': ['0', '1', '2', '3', '4', '5', '6'] }]
+                week: ['required', {'in': ['0', '1', '2', '3', '4', '5', '6']}]
             });
             if (validation.fails()) {
                 return false;
