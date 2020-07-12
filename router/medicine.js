@@ -10,14 +10,14 @@ router.get('/medicine/:medicine_id', async (ctx) => {
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
     if (!userId) {
-        session.error = 'ログインしていないため続行できませんでした';
+        session.error.message = 'ログインしていないため続行できませんでした';
 
         return ctx.redirect('/login');
     }
 
     let medicineId = ctx.params['medicine_id'];
     if (!await app.isHaveMedicine(medicineId, userId)) {
-        session.error = '薬情報が見つかりませんでした';
+        session.error.message = '薬情報が見つかりませんでした';
 
         return ctx.redirect('/medicine-list');
     }
@@ -52,7 +52,7 @@ router.get('/medicine/:medicine_id', async (ctx) => {
 
     if (session.success !== undefined) {
         result['data']['success'] = session.success;
-        session.success.message = undefined;
+        session.success = undefined;
     }
 
     if (session.error !== undefined) {
