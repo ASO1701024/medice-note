@@ -3,7 +3,7 @@ const router = new Router();
 const connection = require('../app/db');
 const app = require('../app/app');
 const bcrypt = require('bcrypt');
-const { v4: uuid } = require('uuid');
+const {v4: uuid} = require('uuid');
 
 router.get('/login', async (ctx) => {
     // Session

@@ -17,7 +17,7 @@ router.get('/notice-update/:notice_id', async (ctx) => {
 
     let noticeId = ctx.params['notice_id'];
     let sql = 'SELECT notice_id FROM notice WHERE notice_id = ? AND user_id = ?';
-    let [count] = await connection.query(sql,[noticeId, userId]);
+    let [count] = await connection.query(sql, [noticeId, userId]);
     if (count.length === 0) {
         session.error.message = '通知情報が見つかりませんでした';
 
@@ -106,7 +106,7 @@ router.post('/notice-update/:notice_id', async (ctx) => {
 
     let noticeId = ctx.params['notice_id'];
     let sql = 'SELECT notice_id FROM notice WHERE notice_id = ? AND user_id = ?';
-    let [count] = await connection.query(sql,[noticeId, userId]);
+    let [count] = await connection.query(sql, [noticeId, userId]);
     if (count.length === 0) {
         session.error.message = '通知情報が見つかりませんでした';
 

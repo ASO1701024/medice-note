@@ -87,7 +87,7 @@ router.post('/notice-register', async (ctx) => {
         let sql = 'INSERT INTO notice (notice_name, notice_period, user_id) VALUES (?, ?, ?)';
         let [notice] = await connection.query(sql, [noticeName, endDate, userId]);
 
-        let noticeId =  notice.insertId;
+        let noticeId = notice.insertId;
 
         for (let i = 0; i < medicineId.length; i++) {
             let sql = 'INSERT INTO notice_medicine (notice_id, medicine_id) VALUES (?, ?)';

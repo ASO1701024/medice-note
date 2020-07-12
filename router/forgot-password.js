@@ -1,7 +1,7 @@
 const Router = require('koa-router');
 const router = new Router();
 const connection = require('../app/db');
-const { v4: uuid } = require('uuid');
+const {v4: uuid} = require('uuid');
 const transporter = require('../app/mail');
 const app = require('../app/app');
 const config = require('../config.json');

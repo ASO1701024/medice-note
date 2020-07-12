@@ -4,7 +4,7 @@ const Router = require('koa-router');
 const router = new Router();
 const connection = require('../app/db');
 const app = require('../app/app');
-const { v4: uuid } = require('uuid');
+const {v4: uuid} = require('uuid');
 
 router.get('/medicine-update/:medicine_id', async (ctx) => {
     let session = ctx.session;
