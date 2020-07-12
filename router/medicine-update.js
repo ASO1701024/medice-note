@@ -12,10 +12,13 @@ router.get('/medicine-update/:medicine_id', async (ctx) => {
     let medicineId = ctx.params['medicine_id'];
 
     let authId = session.auth_id;
-    if (!authId || !await app.getUserId(authId)) {
+    let userId = await app.getUserId(authId);
+    if (!userId) {
+        session.error.message = 'ログインしていないため続行できませんでした';
+
         return ctx.redirect('/login');
     }
-    let userId = await app.getUserId(authId);
+
     if (!await app.isHaveMedicine(medicineId, userId)) {
         session.error.message = '薬情報が見つかりませんでした';
 

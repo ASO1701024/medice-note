@@ -11,8 +11,10 @@ router.get('/account-edit', async (ctx) => {
 
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
-    if (!authId || !userId) {
-        return ctx.redirect('/');
+    if (!userId) {
+        session.error.message = 'ログインしていないため続行できませんでした';
+
+        return ctx.redirect('/login');
     }
 
     let result = app.initializeRenderResult();
@@ -47,7 +49,9 @@ router.post('/account-edit', async (ctx) => {
     // Login Check
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
-    if (!authId || !userId) {
+    if (!userId) {
+        session.error.message = 'ログインしていないため続行できませんでした';
+
         return ctx.redirect('/login');
     }
 

@@ -16,14 +16,15 @@ router.get('/medicine-list', async (ctx) => {
         }
     }
 
-    let result = app.initializeRenderResult();
-
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
-    if (!authId || !userId) {
+    if (!userId) {
+        session.error.message = 'ログインしていないため続行できませんでした';
+
         return ctx.redirect('/login');
     }
 
+    let result = app.initializeRenderResult();
     result['data']['meta']['login_status'] = true;
     result['data']['meta']['site_title'] = '薬情報一覧 - Medice Note';
     result['data']['meta']['group_list'] = await app.getGroupList(userId);

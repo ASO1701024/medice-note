@@ -12,7 +12,9 @@ router.get('/forgot-password', async (ctx) => {
 
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
-    if (authId || userId) {
+    if (userId) {
+        session.error.message = '既にログインしています';
+
         return ctx.redirect('/');
     }
 

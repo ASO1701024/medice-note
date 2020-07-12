@@ -14,7 +14,9 @@ router.get('/medicine-register', async (ctx) => {
     // Login Check
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
-    if (!authId || !userId) {
+    if (!userId) {
+        session.error.message = 'ログインしていないため続行できませんでした';
+
         return ctx.redirect('/login');
     }
 
@@ -66,7 +68,9 @@ router.post('/medicine-register', async (ctx) => {
     // Login Check
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
-    if (!authId || !userId) {
+    if (!userId) {
+        session.error.message = 'ログインしていないため続行できませんでした';
+
         return ctx.redirect('/login');
     }
 

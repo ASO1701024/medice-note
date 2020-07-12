@@ -14,8 +14,10 @@ router.get('/signup', async (ctx, next) => {
 
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
-    if (authId && userId) {
-        return ctx.redirect('/login');
+    if (userId) {
+        session.error.message = '既にログインしています';
+
+        return ctx.redirect('/');
     }
 
     let result = app.initializeRenderResult();
