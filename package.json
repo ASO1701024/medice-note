@@ -21,6 +21,7 @@
     "koa-static": "^5.0.0",
     "mysql2": "^2.1.0",
     "nodemailer": "^6.4.8",
+    "ua-parser-js": "^0.7.21",
     "uuid": "^8.1.0",
     "validatorjs": "^3.18.1"
   },

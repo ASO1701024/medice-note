@@ -24,6 +24,13 @@
     </div>
 <% } %>
 
+<% if (typeof data.meta.browser_warning !== "undefined" && data.meta.browser_warning === true) { %>
+    <div class="alert alert-warning">
+        <div class="alert-title">注意</div>
+        お使いのブラウザはサポートしていません<br>Google ChromeかMozilla Firefoxの最新版をご利用ください
+    </div>
+<% } %>
+
 <div class="col-12 mb-4" style="padding-left: unset; padding-right: unset;">
     <div class="hero bg-primary text-white">
         <div class="hero-inner">
