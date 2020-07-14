@@ -24,6 +24,15 @@
     </div>
 <% } %>
 
+<% if (typeof data.meta.browser_warning !== "undefined" && data.meta.browser_warning === true) { %>
+    <div class="alert alert-warning">
+        <div class="alert-title">注意</div>
+        お使いのブラウザはサポートしていません<br>
+        <a href="https://www.google.co.jp/chrome/" target="_blank" rel="noopener" class="alert-link">Google Chrome</a>か
+        <a href="https://www.mozilla.org/ja/firefox/" target="_blank" rel="noopener" class="alert-link">Mozilla Firefox</a>の最新版をご利用ください
+    </div>
+<% } %>
+
 <div class="col-12 mb-4" style="padding-left: unset; padding-right: unset;">
     <div class="hero bg-primary text-white">
         <div class="hero-inner">
