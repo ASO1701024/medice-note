@@ -10,7 +10,7 @@ router.get('/notice-register', async (ctx) => {
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
     if (!userId) {
-        session.error = 'ログインしていないため続行できませんでした';
+        session.error.message = 'ログインしていないため続行できませんでした';
 
         return ctx.redirect('/login');
     }
