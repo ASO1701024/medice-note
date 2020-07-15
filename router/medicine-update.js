@@ -43,12 +43,12 @@ router.get('/medicine-update/:medicine_id', async (ctx) => {
     result['data']['meta']['css'] = [
         '/stisla/modules/select2/dist/css/select2.min.css',
         '/stisla/modules/bootstrap-daterangepicker/daterangepicker.css',
-        '/public/css/library/jquery-ui.min.css'
+        '/css/library/jquery-ui.min.css'
     ];
     result['data']['meta']['script'] = [
         '/stisla/modules/select2/dist/js/select2.full.min.js',
         '/stisla/modules/bootstrap-daterangepicker/daterangepicker.js',
-        '/public/js/library/jquery-ui.min.js',
+        '/js/library/jquery-ui.min.js',
         '/js/medicine-form.js'
     ];
 
