@@ -36,8 +36,7 @@ router.get('/notice-update/:notice_id', async (ctx) => {
         '/stisla/modules/select2/dist/js/select2.full.min.js',
         '/stisla/modules/bootstrap-daterangepicker/daterangepicker.js',
         '/js/library/handlebars.min.js',
-        '/js/notice-register.js',
-        '/js/app.js'
+        '/js/notice-register.js'
     ];
 
     sql = 'SELECT notice_name, date_format(notice_period, \'%Y-%c-%d\') as end_date FROM notice WHERE notice_id = ?';

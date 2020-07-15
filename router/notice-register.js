@@ -27,8 +27,7 @@ router.get('/notice-register', async (ctx) => {
         '/stisla/modules/select2/dist/js/select2.full.min.js',
         '/stisla/modules/bootstrap-daterangepicker/daterangepicker.js',
         '/js/library/handlebars.min.js',
-        '/js/notice-register.js',
-        '/js/app.js'
+        '/js/notice-register.js'
     ];
 
     let sql = 'SELECT medicine_id, medicine_name FROM medicine  ' +
