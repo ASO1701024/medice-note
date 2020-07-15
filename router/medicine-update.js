@@ -42,10 +42,12 @@ router.get('/medicine-update/:medicine_id', async (ctx) => {
     result['data']['old'] = await app.getMedicineFromMedicineId(medicineId);
     result['data']['meta']['css'] = [
         '/stisla/modules/select2/dist/css/select2.min.css',
+        '/stisla/modules/bootstrap-daterangepicker/daterangepicker.css',
         'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'
     ];
     result['data']['meta']['script'] = [
         '/stisla/modules/select2/dist/js/select2.full.min.js',
+        '/stisla/modules/bootstrap-daterangepicker/daterangepicker.js',
         'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
         '/js/medicine-form.js'
     ];
