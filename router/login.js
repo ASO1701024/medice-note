@@ -53,6 +53,9 @@ router.post('/login', async (ctx) => {
         new Date()
     ]);
 
+    sql = 'DELETE FROM session WHERE expired_at <= ?';
+    await connection.query(sql, [new Date()]);
+
     // Lookup Account
     sql = 'SELECT user_id, password, is_enable FROM user WHERE mail = ? AND deleted_at IS NULL';
     let [user] = await connection.query(sql, [mail]);
