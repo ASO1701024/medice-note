@@ -25,6 +25,10 @@ router.get('/group-list', async (ctx) => {
     result['data']['meta']['login_status'] = true;
     result['data']['meta']['site_title'] = 'グループ情報 - Medice Note';
     result['data']['meta']['group_list'] = await app.getGroupList(userId);
+    result['data']['meta']['script'] = [
+        '/stisla/modules/sweetalert/sweetalert.min.js',
+        '/js/group-list.js',
+    ];
 
     if (session.success !== undefined) {
         result['data']['success'] = session.success;
