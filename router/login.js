@@ -75,7 +75,7 @@ router.post('/login', async (ctx) => {
             let date = new Date();
             date.setDate(date.getDate() + 30);
 
-            sql = "INSERT INTO session VALUES (?, ?, ?)";
+            sql = 'INSERT INTO session VALUES (?, ?, ?)';
             await connection.query(sql, [user['user_id'], sessionId, date]);
 
             session.auth_id = sessionId;

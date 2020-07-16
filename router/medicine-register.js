@@ -87,7 +87,7 @@ router.post('/medicine-register', async (ctx) => {
     let groupId = ctx.request.body['group_id'];
 
     // Any
-    let medicineImage = "";
+    let medicineImage = '';
     let description = ctx.request.body.description || '';
 
     let uploadImage = ctx.request.files['medicine_image'];

@@ -97,7 +97,7 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
     let groupId = ctx.request.body['group_id'];
 
     // 任意項目
-    let medicineImage = "";
+    let medicineImage = '';
     let description = ctx.request.body.description || '';
 
     let uploadImage = ctx.request.files['medicine_image'];
