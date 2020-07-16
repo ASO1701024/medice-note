@@ -72,6 +72,16 @@ router.post('/notice-register', async (ctx) => {
     let noticeDay = ctx.request.body['notice_day'];
     let endDate = ctx.request.body['end_date'];
 
+    if (typeof medicineId === "string") {
+        medicineId = [medicineId];
+    }
+    if (typeof noticeTime === "string") {
+        noticeTime = [noticeTime];
+    }
+    if (typeof noticeDay === "string") {
+        noticeDay = [noticeDay];
+    }
+
     medicineId = Array.from(new Set(medicineId));
     noticeTime = Array.from(new Set(noticeTime));
     noticeDay = Array.from(new Set(noticeDay));
