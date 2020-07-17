@@ -70,12 +70,14 @@ async function createPushMessage(noticeId) {
         'LEFT JOIN medicine M on NM.medicine_id = M.medicine_id;';
     let noticeData = (await connection.query(getNoticeDataSQL, [noticeId]))[0];
 
-    let messageText = '[' + noticeData[0]['notice_name'] + ']\n';
+    let messageText = '薬を飲む時間のお知らせをします。\n\n';
+    messageText += '[' + noticeData[0]['notice_name'] + ']';
     for (let row of noticeData) {
+        messageText += '\n'
         messageText += '・' + row['medicine_name'];
-        messageText += ': ';
+        messageText += 'を';
         messageText += row['number'];
-        messageText += '個\n';
+        messageText += '個';
     }
 
     return {
