@@ -85,7 +85,7 @@ router.get('/notice-delete/:notice_id', async (ctx) => {
     let noticeId = ctx.params['notice_id'];
 
     let sql = 'SELECT notice_id FROM notice WHERE notice_id = ? AND user_id = ?';
-    let [notice] = await connection.query(sql,[noticeId, userId]);
+    let [notice] = await connection.query(sql, [noticeId, userId]);
     if (notice.length === 0) {
         session.error.message = '通知情報が見つかりませんでした';
 
@@ -125,7 +125,7 @@ router.get('/notice-toggle/:bool/:notice_id', async (ctx) => {
     let bool = ctx.params['bool'];
 
     let sql = 'SELECT notice_id FROM notice WHERE notice_id = ? AND user_id = ?';
-    let [notice] = await connection.query(sql,[noticeId, userId]);
+    let [notice] = await connection.query(sql, [noticeId, userId]);
     if (notice.length === 0) {
         session.error.message = '通知情報が見つかりませんでした';
 

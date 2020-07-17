@@ -31,7 +31,7 @@
                 <h4>グループ追加</h4>
             </div>
             <div class="card-body">
-                <form action="/group-list/add" method="post">
+                <form action="/group-add" method="post">
                     <div class="card-body pb-0">
                         <div class="form-group">
                             <label class="control-label">グループ名</label>
@@ -70,14 +70,14 @@
                                                 <input type="text" name="group_name" form="form_<%= data.group_list[i]['group_id'] %>" class="form-control" value="<%= data.group_list[i]['group_name'] %>">
                                             </td>
                                             <td style="width: 70px;">
-                                                <form action="/group-list/edit" id="form_<%= data.group_list[i]['group_id'] %>" method="post">
+                                                <form action="/group-edit" id="form_<%= data.group_list[i]['group_id'] %>" method="post">
                                                     <button type="submit" class="btn btn-primary">編集</button>
                                                 </form>
                                             </td>
                                             <td style="width: 70px;">
-                                                <form action="/group-list/delete" method="post">
+                                                <form action="/group-delete" method="post">
                                                     <input type="hidden" name="group_id" value="<%= data.group_list[i]['group_id'] %>">
-                                                    <button type="submit" class="btn btn-danger">削除</button>
+                                                    <button type="button" class="btn btn-danger group-delete">削除</button>
                                                 </form>
                                             </td>
                                         </tr>

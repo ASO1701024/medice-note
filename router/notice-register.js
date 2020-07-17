@@ -10,7 +10,7 @@ router.get('/notice-register', async (ctx) => {
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
     if (!userId) {
-        session.error = 'ログインしていないため続行できませんでした';
+        session.error.message = 'ログインしていないため続行できませんでした';
 
         return ctx.redirect('/login');
     }
@@ -27,8 +27,7 @@ router.get('/notice-register', async (ctx) => {
         '/stisla/modules/select2/dist/js/select2.full.min.js',
         '/stisla/modules/bootstrap-daterangepicker/daterangepicker.js',
         '/js/library/handlebars.min.js',
-        '/js/notice-register.js',
-        '/js/app.js'
+        '/js/notice-register.js'
     ];
 
     let sql = 'SELECT medicine_id, medicine_name FROM medicine  ' +
@@ -39,7 +38,7 @@ router.get('/notice-register', async (ctx) => {
 
     if (session.success !== undefined) {
         result['data']['success'] = session.success;
-        session.success.message = undefined;
+        session.success = undefined;
     }
 
     if (session.error !== undefined) {
@@ -62,6 +61,8 @@ router.post('/notice-register', async (ctx) => {
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
     if (!userId) {
+        session.error.message = 'ログインしていないため続行できませんでした';
+
         return ctx.redirect('/login');
     }
 
@@ -70,6 +71,22 @@ router.post('/notice-register', async (ctx) => {
     let noticeTime = ctx.request.body['notice_time'];
     let noticeDay = ctx.request.body['notice_day'];
     let endDate = ctx.request.body['end_date'];
+
+    if (typeof medicineId === "string") {
+        medicineId = [medicineId];
+    } else if (typeof medicineId === "undefined") {
+        medicineId = [];
+    }
+    if (typeof noticeTime === "string") {
+        noticeTime = [noticeTime];
+    } else if (typeof noticeTime === "undefined") {
+        noticeTime = [];
+    }
+    if (typeof noticeDay === "string") {
+        noticeDay = [noticeDay];
+    } else if (typeof noticeDay === "undefined") {
+        noticeDay = [];
+    }
 
     medicineId = Array.from(new Set(medicineId));
     noticeTime = Array.from(new Set(noticeTime));
@@ -85,7 +102,7 @@ router.post('/notice-register', async (ctx) => {
         let sql = 'INSERT INTO notice (notice_name, notice_period, user_id) VALUES (?, ?, ?)';
         let [notice] = await connection.query(sql, [noticeName, endDate, userId]);
 
-        let noticeId =  notice.insertId;
+        let noticeId = notice.insertId;
 
         for (let i = 0; i < medicineId.length; i++) {
             let sql = 'INSERT INTO notice_medicine (notice_id, medicine_id) VALUES (?, ?)';
@@ -102,7 +119,7 @@ router.post('/notice-register', async (ctx) => {
             await connection.query(sql, [noticeId, noticeTime[i]]);
         }
 
-        ctx.redirect('/notice-list');
+        return ctx.redirect('/notice-list');
     } else {
         session.error.message = '通知情報登録に失敗しました';
 
@@ -128,7 +145,7 @@ router.post('/notice-register', async (ctx) => {
         if (!validationNoticeDay) session.error.notice_day = '通知曜日が正しく選択されていません';
         if (!validationEndDate) session.error.end_date = '日付の書式で入力してください';
 
-        ctx.redirect('/notice-register');
+        return ctx.redirect('/notice-register');
     }
 })
 

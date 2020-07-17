@@ -17,7 +17,7 @@ router.get('/notice-update/:notice_id', async (ctx) => {
 
     let noticeId = ctx.params['notice_id'];
     let sql = 'SELECT notice_id FROM notice WHERE notice_id = ? AND user_id = ?';
-    let [count] = await connection.query(sql,[noticeId, userId]);
+    let [count] = await connection.query(sql, [noticeId, userId]);
     if (count.length === 0) {
         session.error.message = '通知情報が見つかりませんでした';
 
@@ -36,8 +36,7 @@ router.get('/notice-update/:notice_id', async (ctx) => {
         '/stisla/modules/select2/dist/js/select2.full.min.js',
         '/stisla/modules/bootstrap-daterangepicker/daterangepicker.js',
         '/js/library/handlebars.min.js',
-        '/js/notice-register.js',
-        '/js/app.js'
+        '/js/notice-register.js'
     ];
 
     sql = 'SELECT notice_name, date_format(notice_period, \'%Y-%c-%d\') as end_date FROM notice WHERE notice_id = ?';
@@ -99,12 +98,14 @@ router.post('/notice-update/:notice_id', async (ctx) => {
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
     if (!userId) {
+        session.error.message = 'ログインしていないため続行できませんでした';
+
         return ctx.redirect('/login');
     }
 
     let noticeId = ctx.params['notice_id'];
     let sql = 'SELECT notice_id FROM notice WHERE notice_id = ? AND user_id = ?';
-    let [count] = await connection.query(sql,[noticeId, userId]);
+    let [count] = await connection.query(sql, [noticeId, userId]);
     if (count.length === 0) {
         session.error.message = '通知情報が見つかりませんでした';
 
@@ -116,6 +117,22 @@ router.post('/notice-update/:notice_id', async (ctx) => {
     let noticeTime = ctx.request.body['notice_time'];
     let noticeDay = ctx.request.body['notice_day'];
     let endDate = ctx.request.body['end_date'];
+
+    if (typeof medicineId === "string") {
+        medicineId = [medicineId];
+    } else if (typeof medicineId === "undefined") {
+        medicineId = [];
+    }
+    if (typeof noticeTime === "string") {
+        noticeTime = [noticeTime];
+    } else if (typeof noticeTime === "undefined") {
+        noticeTime = [];
+    }
+    if (typeof noticeDay === "string") {
+        noticeDay = [noticeDay];
+    } else if (typeof noticeDay === "undefined") {
+        noticeDay = [];
+    }
 
     medicineId = Array.from(new Set(medicineId));
     noticeTime = Array.from(new Set(noticeTime));

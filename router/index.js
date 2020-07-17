@@ -1,6 +1,7 @@
 const Router = require('koa-router');
 const router = new Router();
 const app = require('../app/app');
+const parser = require('ua-parser-js');
 
 router.get('/', async (ctx) => {
     let session = ctx.session;
@@ -12,6 +13,12 @@ router.get('/', async (ctx) => {
     let userId = await app.getUserId(authId);
     result['data']['meta']['login_status'] = Boolean(userId);
     result['data']['meta']['site_title'] = 'トップページ - Medice Note';
+
+    let ua = parser(ctx.request.header['user-agent']);
+    if (!['chrome', 'firefox'].includes(ua.browser.name.toLowerCase())) {
+        result['data']['meta']['browser_warning'] = true;
+    }
+
     if (Boolean(userId)) {
         result['data']['meta']['group_list'] = await app.getGroupList(userId);
     }

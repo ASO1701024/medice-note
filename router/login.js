@@ -3,9 +3,9 @@ const router = new Router();
 const connection = require('../app/db');
 const app = require('../app/app');
 const bcrypt = require('bcrypt');
-const { v4: uuid } = require('uuid');
+const {v4: uuid} = require('uuid');
 
-router.get('/login', async (ctx, next) => {
+router.get('/login', async (ctx) => {
     // Session
     let session = ctx.session;
     app.initializeSession(session);
@@ -13,7 +13,7 @@ router.get('/login', async (ctx, next) => {
     // Login Check
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
-    if (authId || userId) {
+    if (userId) {
         session.error.message = '既にログインしています';
 
         return ctx.redirect('/');
@@ -37,7 +37,7 @@ router.get('/login', async (ctx, next) => {
     await ctx.render('login', result);
 })
 
-router.post('/login', async (ctx, next) => {
+router.post('/login', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
 
@@ -52,6 +52,9 @@ router.post('/login', async (ctx, next) => {
         ctx.request.ip,
         new Date()
     ]);
+
+    sql = 'DELETE FROM session WHERE expired_at <= ?';
+    await connection.query(sql, [new Date()]);
 
     // Lookup Account
     sql = 'SELECT user_id, password, is_enable FROM user WHERE mail = ? AND deleted_at IS NULL';
@@ -72,7 +75,7 @@ router.post('/login', async (ctx, next) => {
             let date = new Date();
             date.setDate(date.getDate() + 30);
 
-            sql = "INSERT INTO session VALUES (?, ?, ?)";
+            sql = 'INSERT INTO session VALUES (?, ?, ?)';
             await connection.query(sql, [user['user_id'], sessionId, date]);
 
             session.auth_id = sessionId;

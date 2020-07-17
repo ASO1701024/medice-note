@@ -3,19 +3,21 @@ const router = new Router();
 const connection = require('../app/db');
 const validator = require('validatorjs');
 const bcrypt = require('bcrypt');
-const { v4: uuid } = require('uuid');
+const {v4: uuid} = require('uuid');
 const app = require('../app/app');
 const transporter = require('../app/mail');
 const config = require('../config.json');
 
-router.get('/signup', async (ctx, next) => {
+router.get('/signup', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
 
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
-    if (authId && userId) {
-        return ctx.redirect('/login');
+    if (userId) {
+        session.error.message = '既にログインしています';
+
+        return ctx.redirect('/');
     }
 
     let result = app.initializeRenderResult();
@@ -35,7 +37,7 @@ router.get('/signup', async (ctx, next) => {
     await ctx.render('signup', result);
 })
 
-router.post('/signup', async (ctx, next) => {
+router.post('/signup', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
 

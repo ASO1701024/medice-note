@@ -6,7 +6,7 @@ const lineLogin = require("line-login");
 const config = require('../config.json');
 const login = new lineLogin(config.line_login);
 
-router.get('/account-setting', async (ctx, next) => {
+router.get('/account-setting', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
 

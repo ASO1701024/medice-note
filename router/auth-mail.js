@@ -3,7 +3,7 @@ const router = new Router();
 const connection = require('../app/db');
 const app = require('../app/app');
 
-router.get('/auth-mail/:auth_key', async (ctx, next) => {
+router.get('/auth-mail/:auth_key', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
 

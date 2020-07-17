@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { v4: uuid } = require('uuid');
+const {v4: uuid} = require('uuid');
 const Router = require('koa-router');
 const router = new Router();
 const app = require('../app/app');
@@ -14,7 +14,9 @@ router.get('/medicine-register', async (ctx) => {
     // Login Check
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
-    if (!authId || !userId) {
+    if (!userId) {
+        session.error.message = 'ログインしていないため続行できませんでした';
+
         return ctx.redirect('/login');
     }
 
@@ -24,11 +26,13 @@ router.get('/medicine-register', async (ctx) => {
     result['data']['meta']['group_list'] = await app.getGroupList(userId);
     result['data']['meta']['css'] = [
         '/stisla/modules/select2/dist/css/select2.min.css',
-        'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'
+        '/stisla/modules/bootstrap-daterangepicker/daterangepicker.css',
+        '/css/library/jquery-ui.min.css'
     ];
     result['data']['meta']['script'] = [
         '/stisla/modules/select2/dist/js/select2.full.min.js',
-        'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+        '/stisla/modules/bootstrap-daterangepicker/daterangepicker.js',
+        '/js/library/jquery-ui.min.js',
         '/js/medicine-form.js'
     ];
 
@@ -66,7 +70,9 @@ router.post('/medicine-register', async (ctx) => {
     // Login Check
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
-    if (!authId || !userId) {
+    if (!userId) {
+        session.error.message = 'ログインしていないため続行できませんでした';
+
         return ctx.redirect('/login');
     }
 
@@ -81,7 +87,7 @@ router.post('/medicine-register', async (ctx) => {
     let groupId = ctx.request.body['group_id'];
 
     // Any
-    let medicineImage = "";
+    let medicineImage = '';
     let description = ctx.request.body.description || '';
 
     let uploadImage = ctx.request.files['medicine_image'];
