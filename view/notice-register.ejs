@@ -24,141 +24,158 @@
     </div>
 <% } %>
 
-<div class="row">
-    <div class="col-12 col-md-6 col-lg-6">
-        <div class="card">
-            <div class="card-header">
-                <h4>通知情報登録</h4>
+<% if (data.medicine_list.length === 0) { %>
+    <div class="col-12 mb-4" style="padding-left: unset; padding-right: unset;">
+        <div class="hero bg-primary text-white">
+            <div class="hero-inner">
+                <p class="lead">
+                    登録されている薬情報が見つからないため通知情報を登録できません
+                </p>
+                <div class="mt-4">
+                    <a href="/medicine-register" class="btn btn-outline-white btn-lg btn-icon icon-left">
+                        <i class="fas fa-plus"></i> 薬情報を登録
+                    </a>
+                </div>
             </div>
-            <div class="card-body">
-                <p class="text-muted">* : 必須項目</p>
-                <form action="/notice-register" method="post">
-                    <div class="card-body pb-0">
-                        <div class="form-group">
-                            <label class="control-label">通知名 *</label>
-                            <input type="text" class="form-control" name="notice_name" <% if (typeof data.old.notice_name !== "undefined") { %> value="<%= data.old.notice_name %>" <% } %> required>
-                            <span class="form-error">
-                                <% if (typeof data.error.notice_name !== "undefined") { %>
-                                    <%= data.error.notice_name %>
-                                <% } %>
-                            </span>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">薬名 *</label>
-                            <small class="form-text text-muted">
-                                通知時に表示する薬情報を選択します (※ 重複した項目は自動的に削除されます)
-                            </small>
-                            <table id="medicine_table" class="table medicine-table">
-                                <tbody>
-                                    <% if (typeof data.old.medicine_id !== "undefined") {
-                                        for (var mi = 0; mi < data.old.medicine_id.length; mi++) { %>
-                                            <tr>
-                                                <td class="pl-0">
-                                                    <input type="text" class="form-control-plaintext" readonly value="<%= data.old.medicine_id[mi]['medicine_name'] %>">
-                                                </td>
-                                                <td class="p-0">
-                                                    <input type="text" class="form-control-plaintext text-center" readonly value="<%= data.old.medicine_id[mi]['number'] %> 個">
-                                                </td>
-                                                <td class="pr-2 pl-2 text-center">
-                                                    <a href="javascript:void(0)" class="btn btn-icon table-tr-delete">
-                                                        <i class="fas fa-times"></i>
-                                                    </a>
-                                                </td>
-                                                <input type="hidden" name="medicine_id[]" value="<%= data.old.medicine_id[mi]['medicine_id'] %>">
-                                            </tr>
-                                        <% }
-                                    } %>
-                                </tbody>
-                            </table>
-                            <span class="form-error">
-                                <% if (typeof data.error.medicine_id !== "undefined") { %>
-                                    <%= data.error.medicine_id %>
-                                <% } %>
-                            </span>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">時間</label>
-                            <select class="form-control select2" name="notice_time" multiple required>
-                                <% for (var t = 0; t < 24; t++) {
-                                    var hour = '';
-                                    if (t < 10) {
-                                        hour = `0${t}`;
-                                    } else {
-                                        hour = `${t}`;
-                                    } %>
-                                    <% if (typeof data.old.notice_time !== "undefined") { %>
-                                        <option value="<%= `${hour}:00` %>" <% if (data.old.notice_time.some(t => t == `${hour}:00`)) { %> selected <% } %>><%= `${hour}:00` %></option>
-                                        <option value="<%= `${hour}:30` %>" <% if (data.old.notice_time.some(t => t == `${hour}:30`)) { %> selected <% } %>><%= `${hour}:30` %></option>
-                                    <% } else { %>
-                                        <option value="<%= `${hour}:00` %>" <% if (`${hour}:00` == '20:00') { %> selected <% } %>><%= `${hour}:00` %></option>
-                                        <option value="<%= `${hour}:30` %>" <% if (`${hour}:30` == '07:30' || `${hour}:30` == '12:30') { %> selected <% } %>><%= `${hour}:30` %></option>
+        </div>
+    </div>
+<% } else { %>
+    <div class="row">
+        <div class="col-12 col-md-6 col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>通知情報登録</h4>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">* : 必須項目</p>
+                    <form action="/notice-register" method="post">
+                        <div class="card-body pb-0">
+                            <div class="form-group">
+                                <label class="control-label">通知名 *</label>
+                                <input type="text" class="form-control" name="notice_name" <% if (typeof data.old.notice_name !== "undefined") { %> value="<%= data.old.notice_name %>" <% } %> required>
+                                <span class="form-error">
+                                    <% if (typeof data.error.notice_name !== "undefined") { %>
+                                        <%= data.error.notice_name %>
                                     <% } %>
-                                <% } %>
-                            </select>
-                            <span class="form-error">
-                                <% if (typeof data.error.notice_time !== "undefined") { %>
-                                    <%= data.error.notice_time %>
-                                <% } %>
-                            </span>
+                                </span>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">薬名 *</label>
+                                <small class="form-text text-muted">
+                                    通知時に表示する薬情報を選択します (※ 重複した項目は自動的に削除されます)
+                                </small>
+                                <table id="medicine_table" class="table medicine-table">
+                                    <tbody>
+                                    <% if (typeof data.old.medicine_id !== "undefined") {
+                                    for (var mi = 0; mi < data.old.medicine_id.length; mi++) { %>
+                                        <tr>
+                                            <td class="pl-0">
+                                                <input type="text" class="form-control-plaintext" readonly value="<%= data.old.medicine_id[mi]['medicine_name'] %>">
+                                            </td>
+                                            <td class="p-0">
+                                                <input type="text" class="form-control-plaintext text-center" readonly value="<%= data.old.medicine_id[mi]['number'] %> 個">
+                                            </td>
+                                            <td class="pr-2 pl-2 text-center">
+                                                <a href="javascript:void(0)" class="btn btn-icon table-tr-delete">
+                                                    <i class="fas fa-times"></i>
+                                                </a>
+                                            </td>
+                                            <input type="hidden" name="medicine_id[]" value="<%= data.old.medicine_id[mi]['medicine_id'] %>">
+                                        </tr>
+                                    <% }
+                                    } %>
+                                    </tbody>
+                                </table>
+                                <span class="form-error">
+                                    <% if (typeof data.error.medicine_id !== "undefined") { %>
+                                        <%= data.error.medicine_id %>
+                                    <% } %>
+                                </span>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">時間</label>
+                                <select class="form-control select2" name="notice_time" multiple required>
+                                    <% for (var t = 0; t < 24; t++) {
+                                        var hour = '';
+                                        if (t < 10) {
+                                            hour = `0${t}`;
+                                        } else {
+                                            hour = `${t}`;
+                                        } %>
+                                        <% if (typeof data.old.notice_time !== "undefined") { %>
+                                            <option value="<%= `${hour}:00` %>" <% if (data.old.notice_time.some(t => t == `${hour}:00`)) { %> selected <% } %>><%= `${hour}:00` %></option>
+                                            <option value="<%= `${hour}:30` %>" <% if (data.old.notice_time.some(t => t == `${hour}:30`)) { %> selected <% } %>><%= `${hour}:30` %></option>
+                                        <% } else { %>
+                                            <option value="<%= `${hour}:00` %>" <% if (`${hour}:00` == '20:00') { %> selected <% } %>><%= `${hour}:00` %></option>
+                                            <option value="<%= `${hour}:30` %>" <% if (`${hour}:30` == '07:30' || `${hour}:30` == '12:30') { %> selected <% } %>><%= `${hour}:30` %></option>
+                                        <% } %>
+                                    <% } %>
+                                </select>
+                                <span class="form-error">
+                                    <% if (typeof data.error.notice_time !== "undefined") { %>
+                                        <%= data.error.notice_time %>
+                                    <% } %>
+                                </span>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">曜日 *</label>
+                                <select class="form-control select2" multiple="" name="notice_day" required>
+                                    <option value="0" <% if (typeof data.old.notice_day != "undefined" && data.old.notice_day.some(d => d == 0)) { %> selected <% } %>>日曜日</option>
+                                    <option value="1" <% if (typeof data.old.notice_day != "undefined" && data.old.notice_day.some(d => d == 1)) { %> selected <% } %>>月曜日</option>
+                                    <option value="2" <% if (typeof data.old.notice_day != "undefined" && data.old.notice_day.some(d => d == 2)) { %> selected <% } %>>火曜日</option>
+                                    <option value="3" <% if (typeof data.old.notice_day != "undefined" && data.old.notice_day.some(d => d == 3)) { %> selected <% } %>>水曜日</option>
+                                    <option value="4" <% if (typeof data.old.notice_day != "undefined" && data.old.notice_day.some(d => d == 4)) { %> selected <% } %>>木曜日</option>
+                                    <option value="5" <% if (typeof data.old.notice_day != "undefined" && data.old.notice_day.some(d => d == 5)) { %> selected <% } %>>金曜日</option>
+                                    <option value="6" <% if (typeof data.old.notice_day != "undefined" && data.old.notice_day.some(d => d == 6)) { %> selected <% } %>>土曜日</option>
+                                </select>
+                                <span class="form-error">
+                                    <% if (typeof data.error.notice_day !== "undefined") { %>
+                                        <%= data.error.notice_day %>
+                                    <% } %>
+                                </span>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">通知終了日付 *</label>
+                                <input type="text" class="form-control datepicker readonly-background" readonly name="end_date" <% if (typeof data.old.end_date !== "undefined") { %> value="<%= data.old.end_date %>" <% } %> required>
+                                <span class="form-error">
+                                    <% if (typeof data.error.end_date !== "undefined") { %>
+                                        <%= data.error.end_date %>
+                                    <% } %>
+                                </span>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label class="control-label">曜日 *</label>
-                            <select class="form-control select2" multiple="" name="notice_day" required>
-                                <option value="0" <% if (typeof data.old.notice_day != "undefined" && data.old.notice_day.some(d => d == 0)) { %> selected <% } %>>日曜日</option>
-                                <option value="1" <% if (typeof data.old.notice_day != "undefined" && data.old.notice_day.some(d => d == 1)) { %> selected <% } %>>月曜日</option>
-                                <option value="2" <% if (typeof data.old.notice_day != "undefined" && data.old.notice_day.some(d => d == 2)) { %> selected <% } %>>火曜日</option>
-                                <option value="3" <% if (typeof data.old.notice_day != "undefined" && data.old.notice_day.some(d => d == 3)) { %> selected <% } %>>水曜日</option>
-                                <option value="4" <% if (typeof data.old.notice_day != "undefined" && data.old.notice_day.some(d => d == 4)) { %> selected <% } %>>木曜日</option>
-                                <option value="5" <% if (typeof data.old.notice_day != "undefined" && data.old.notice_day.some(d => d == 5)) { %> selected <% } %>>金曜日</option>
-                                <option value="6" <% if (typeof data.old.notice_day != "undefined" && data.old.notice_day.some(d => d == 6)) { %> selected <% } %>>土曜日</option>
-                            </select>
-                            <span class="form-error">
-                                <% if (typeof data.error.notice_day !== "undefined") { %>
-                                    <%= data.error.notice_day %>
-                                <% } %>
-                            </span>
+                        <div class="card-footer pt-">
+                            <button type="submit" class="btn btn-primary">登録</button>
                         </div>
-                        <div class="form-group">
-                            <label class="control-label">通知終了日付 *</label>
-                            <input type="text" class="form-control datepicker readonly-background" readonly name="end_date" <% if (typeof data.old.end_date !== "undefined") { %> value="<%= data.old.end_date %>" <% } %> required>
-                            <span class="form-error">
-                                <% if (typeof data.error.end_date !== "undefined") { %>
-                                    <%= data.error.end_date %>
-                                <% } %>
-                            </span>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>薬情報プレビュー</h4>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="control-label">薬情報選択</label>
+                        <select class="form-control select2" name="medicine_name" onchange="getMedicine(this.value)">
+                            <option selected disabled>選択してください</option>
+                            <% for (var ml = 0; ml < data.medicine_list.length; ml++) { %>
+                                <option value="<%= data.medicine_list[ml]['medicine_id'] %>">
+                                    <%= data.medicine_list[ml]['medicine_name'] %>
+                                </option>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">薬情報</label>
+                        <div id="medicine_preview">
+                            <p class="text-muted">プレビューする薬名を選択してください</p>
                         </div>
                     </div>
-                    <div class="card-footer pt-">
-                        <button type="submit" class="btn btn-primary">登録</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-12 col-md-6 col-lg-6">
-        <div class="card">
-            <div class="card-header">
-                <h4>薬情報プレビュー</h4>
-            </div>
-            <div class="card-body">
-                <div class="form-group">
-                    <label class="control-label">薬情報選択</label>
-                    <select class="form-control select2" name="medicine_name" onchange="getMedicine(this.value)">
-                        <option selected disabled>選択してください</option>
-                        <% for (var ml = 0; ml < data.medicine_list.length; ml++) { %>
-                            <option value="<%= data.medicine_list[ml]['medicine_id'] %>">
-                                <%= data.medicine_list[ml]['medicine_name'] %>
-                            </option>
-                        <% } %>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="control-label">薬情報</label>
-                    <div id="medicine_preview">
-                        <p class="text-muted">プレビューする薬名を選択してください</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<% } %>
