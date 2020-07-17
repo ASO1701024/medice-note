@@ -120,12 +120,18 @@ router.post('/notice-update/:notice_id', async (ctx) => {
 
     if (typeof medicineId === "string") {
         medicineId = [medicineId];
+    } else if (typeof medicineId === "undefined") {
+        medicineId = [];
     }
     if (typeof noticeTime === "string") {
         noticeTime = [noticeTime];
+    } else if (typeof noticeTime === "undefined") {
+        noticeTime = [];
     }
     if (typeof noticeDay === "string") {
         noticeDay = [noticeDay];
+    } else if (typeof noticeDay === "undefined") {
+        noticeDay = [];
     }
 
     medicineId = Array.from(new Set(medicineId));
