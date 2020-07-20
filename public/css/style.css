@@ -28,6 +28,7 @@ span.select2.select2-container.select2-container--default {
     border: 1px solid #e4e6fc;
     background-color: #fdfdff;
     border-radius: .25rem;
+    padding-left: 10px;
 }
 .medicine-table tbody tr td:nth-of-type(1) {
     width: calc(100% - 70px - 40px);
