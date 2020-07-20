@@ -54,7 +54,7 @@ async function getLineUserId(noticeId) {
     let getLineUserIdSQL =
         'SELECT line_user_id ' +
         'FROM (SELECT user_id FROM notice N WHERE notice_id = ?)SQ ' +
-        'LEFT JOIN line_notice_user_id LN ON SQ.user_id = LN.user_id;';
+        'LEFT JOIN line_notice_user_id LN ON SQ.user_id = LN.user_id';
     return (await connection.query(getLineUserIdSQL, [noticeId]))[0][0]['line_user_id'];
 }
 
@@ -65,7 +65,7 @@ async function createPushMessage(noticeId) {
         'FROM (' +
         'SELECT notice_id, notice_name FROM notice WHERE notice_id = ?' +
         ')SQ LEFT JOIN notice_medicine NM ON SQ.notice_id = NM.notice_id ' +
-        'LEFT JOIN medicine M on NM.medicine_id = M.medicine_id;';
+        'LEFT JOIN medicine M on NM.medicine_id = M.medicine_id';
     let noticeData = (await connection.query(getNoticeDataSQL, [noticeId]))[0];
 
     let messageText = '薬を飲む時間のお知らせをします。\n\n';
@@ -85,9 +85,9 @@ async function createPushMessage(noticeId) {
 }
 
 async function insertUserMessage(noticeId, resultMessage, resultFlg) {
-    let getUserIdSQL = 'SELECT user_id FROM notice WHERE notice_id = ?;';
+    let getUserIdSQL = 'SELECT user_id FROM notice WHERE notice_id = ?';
     let userId = (await connection.query(getUserIdSQL, [noticeId]))[0][0]['user_id'];
 
-    let insertErrorSQL = 'INSERT INTO user_message VALUES (0,?,?,?);';
+    let insertErrorSQL = 'INSERT INTO user_message VALUES (0,?,?,?)';
     await connection.query(insertErrorSQL, [userId, resultMessage, resultFlg]);
 }

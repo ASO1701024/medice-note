@@ -28,7 +28,7 @@ async function refreshAccessToken(refreshToken, userId) {
             // refresh_success
             await insertUserMessage(userId, '機能: refresh_access_token  ステータスコード: 200', 2);
 
-            let refreshTokenSQL = 'UPDATE line_login SET access_token = ?, refresh_token = ? WHERE user_id = ?;';
+            let refreshTokenSQL = 'UPDATE line_login SET access_token = ?, refresh_token = ? WHERE user_id = ?';
             await connection.query(refreshTokenSQL, [result['access_token'], result['refresh_token'], userId]);
         })
         .catch(async () => {
@@ -39,6 +39,6 @@ async function refreshAccessToken(refreshToken, userId) {
 }
 
 async function insertUserMessage(userId, resultMessage, resultFlg) {
-    let insertErrorSQL = 'INSERT INTO user_message VALUES (0,?,?,?);';
+    let insertErrorSQL = 'INSERT INTO user_message VALUES (0,?,?,?)';
     await connection.query(insertErrorSQL, [userId, resultMessage, resultFlg]);
 }

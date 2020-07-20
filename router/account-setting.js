@@ -28,7 +28,7 @@ router.get('/account-setting', async (ctx) => {
     result['data']['account']['user_name'] = user[0]['user_name'];
     result['data']['account']['mail'] = user[0]['mail'];
 
-    let lineLoginSQL = 'SELECT line_user_name, access_token, refresh_token FROM line_login WHERE user_id = ?;';
+    let lineLoginSQL = 'SELECT line_user_name, access_token, refresh_token FROM line_login WHERE user_id = ?';
     let lineUserData = (await connection.query(lineLoginSQL, [userId]))[0];
 
     if (lineUserData.length > 0) {
@@ -56,7 +56,7 @@ router.get('/account-setting/line-logout', async (ctx) => {
         return ctx.redirect('/');
     }
 
-    let getAccessTokenSQL = 'SELECT access_token from line_login WHERE user_id = ?;';
+    let getAccessTokenSQL = 'SELECT access_token from line_login WHERE user_id = ?';
     let accessToken = (await connection.query(getAccessTokenSQL, [userId]))[0];
 
     if (accessToken.length === 0) {
@@ -67,9 +67,9 @@ router.get('/account-setting/line-logout', async (ctx) => {
 
     await login.revoke_access_token(accessToken[0].access_token);
 
-    let deleteLineLoginSQL = 'DELETE FROM line_login WHERE user_id = ?;';
+    let deleteLineLoginSQL = 'DELETE FROM line_login WHERE user_id = ?';
     await connection.query(deleteLineLoginSQL, [userId]);
-    let deleteLineNoticeUserId = 'DELETE FROM line_notice_user_id WHERE user_id = ?;';
+    let deleteLineNoticeUserId = 'DELETE FROM line_notice_user_id WHERE user_id = ?';
     await connection.query(deleteLineNoticeUserId, [userId]);
 
     return ctx.redirect('/account-setting');
@@ -92,14 +92,14 @@ async function refreshAccessToken(refreshToken, userId) {
     // verify_failed
     return login.refresh_access_token(refreshToken)
         .then(async (result) => {
-            let refreshTokenSQL = 'UPDATE line_login SET access_token = ?, refresh_token = ? WHERE user_id = ?;';
+            let refreshTokenSQL = 'UPDATE line_login SET access_token = ?, refresh_token = ? WHERE user_id = ?';
             await connection.query(refreshTokenSQL, [result['access_token'], result['refresh_token'], userId]);
             return result['access_token'];
         })
         .catch(async () => {
             let deleteLoginDataSQL = 'DELETE FROM line_login WHERE user_id = ?';
             await connection.query(deleteLoginDataSQL, [userId]);
-            let deleteLineNoticeUserId = 'DELETE FROM line_notice_user_id WHERE user_id = ?;';
+            let deleteLineNoticeUserId = 'DELETE FROM line_notice_user_id WHERE user_id = ?';
             await connection.query(deleteLineNoticeUserId, [userId]);
             return false;
         })
