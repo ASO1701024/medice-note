@@ -5,7 +5,6 @@ const config = require('../config.json');
 const login = new lineLogin(config.line_login);
 
 module.exports = cron.schedule('0 0 0 1 * *', async () => {
-// module.exports = cron.schedule('* * * * * *', async () => {
     let getLineLoginListSQL = 'SELECT user_id, access_token, refresh_token FROM line_login';
     let lineLoginList = (await connection.query(getLineLoginListSQL, []))[0];
     for (let row of lineLoginList) {
