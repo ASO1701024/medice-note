@@ -41,8 +41,7 @@ async function pushNotice(noticeList) {
         let message = await createPushMessage(noticeRow['notice_id']);
         await client.pushMessage(to, message, false)
             .then(async () => {
-                let message = '機能: pushNotice  ステータスコード: 200';
-                await insertUserMessage(noticeRow['notice_id'], message, 2);
+                // 成功時はそこで処理終了
             })
             .catch(async (error) => {
                 let errorMsg = '機能: pushNotice  ステータスコード: ' + error['statusCode'] + '  エラーメッセージ: ' + error['statusMessage'];
