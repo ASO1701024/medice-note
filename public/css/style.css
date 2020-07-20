@@ -22,6 +22,39 @@ span.select2.select2-container.select2-container--default {
 .link-danger:hover {
     color: #fc544b;
 }
+.line-login {
+    width:150px;
+    height:auto;
+}
+.line-log-out {
+    display: flex;
+    width: 150px;
+    height: 40px;
+}
+.line-log-out:hover {
+    text-decoration: none;
+}
+.line-log-out img {
+    background-color: #00C300;
+    border-radius: 7px 0 0 7px;
+    width: 40px;
+    height: auto;
+    padding: 1px;
+}
+.line-log-out div:nth-of-type(1) {
+    width: 1px;
+    height: 40px;
+    background-color: #00b330;
+}
+.line-log-out div:nth-of-type(2) {
+    width: 109px;
+    background-color: #00C300;
+    border-radius: 0 7px 7px 0;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 9px;
+}
 .medicine-table {
     min-height: 61px;
     display: inline-block;
