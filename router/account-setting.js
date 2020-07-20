@@ -61,6 +61,7 @@ router.get('/account-setting/line-logout', async (ctx) => {
 
     if (accessToken.length === 0) {
         // When you have't logged in line
+        session.error.message = 'アカウント連携されていません'
         return ctx.redirect('/account-setting');
     }
 
