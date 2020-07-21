@@ -16,7 +16,7 @@ router.get('/', async (ctx) => {
     result['data']['meta']['site_title'] = 'トップページ - Medice Note';
 
     let ua = parser(ctx.request.header['user-agent']);
-    if (!['chrome', 'firefox'].includes(ua.browser.name.toLowerCase())) {
+    if (ua.browser.name === undefined || !['chrome', 'firefox'].includes(ua.browser.name.toLowerCase())) {
         result['data']['meta']['browser_warning'] = true;
     }
 
