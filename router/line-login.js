@@ -2,12 +2,12 @@ const Router = require('koa-router');
 const router = new Router();
 const app = require('../app/app');
 const connection = require('../app/db');
-const lineLogin = require("line-login");
+const lineLogin = require('line-login');
 const config = require('../config.json');
 const login = new lineLogin(config.line_login);
-const crypto = require("crypto");
+const crypto = require('crypto');
 
-router.get('/account-setting/line-login', async (ctx, next) => {
+router.get('/account-setting/line-login', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
 
@@ -19,7 +19,7 @@ router.get('/account-setting/line-login', async (ctx, next) => {
     }
     ctx.session.line_login_state = crypto.randomBytes(20).toString('hex');
     ctx.session.line_login_nonce = crypto.randomBytes(20).toString('hex');
-    return ctx.redirect(login.make_auth_url(ctx.session.line_login_state, ctx.session.line_login_nonce) + "&scope=profile%20openid");
+    return ctx.redirect(login.make_auth_url(ctx.session.line_login_state, ctx.session.line_login_nonce) + '&scope=profile%20openid');
 });
 
 router.get('/account-setting/line-callback', async (ctx) => {

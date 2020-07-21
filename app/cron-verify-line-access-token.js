@@ -1,6 +1,6 @@
 const cron = require('node-cron');
 const connection = require('./db');
-const lineLogin = require("line-login");
+const lineLogin = require('line-login');
 const config = require('../config.json');
 const login = new lineLogin(config.line_login);
 
