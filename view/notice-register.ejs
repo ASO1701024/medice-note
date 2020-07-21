@@ -69,28 +69,30 @@
                                 <small class="form-text text-muted">
                                     通知時に表示する薬情報を薬情報プレビューから選択します<br>(※ 重複した項目は自動的に削除されます)
                                 </small>
-                                <table id="medicine_table" class="table medicine-table">
-                                    <tbody>
-                                    <% if (typeof data.old.medicine_id !== "undefined") {
-                                    for (var mi = 0; mi < data.old.medicine_id.length; mi++) { %>
-                                        <tr>
-                                            <td class="pl-0">
-                                                <input type="text" class="form-control-plaintext" readonly value="<%= data.old.medicine_id[mi]['medicine_name'] %>">
-                                            </td>
-                                            <td class="p-0">
-                                                <input type="text" class="form-control-plaintext text-center" readonly value="<%= data.old.medicine_id[mi]['number'] %> 個">
-                                            </td>
-                                            <td class="pr-2 pl-2 text-center">
-                                                <a href="javascript:void(0)" class="btn btn-icon table-tr-delete">
-                                                    <i class="fas fa-times"></i>
-                                                </a>
-                                            </td>
-                                            <input type="hidden" name="medicine_id[]" value="<%= data.old.medicine_id[mi]['medicine_id'] %>">
-                                        </tr>
-                                    <% }
-                                    } %>
-                                    </tbody>
-                                </table>
+                                <div class="medicine-table-outer">
+                                    <table id="medicine_table" class="table medicine-table mb-0">
+                                        <tbody>
+                                        <% if (typeof data.old.medicine_id !== "undefined") {
+                                        for (var mi = 0; mi < data.old.medicine_id.length; mi++) { %>
+                                            <tr>
+                                                <td class="pl-0">
+                                                    <input type="text" class="form-control-plaintext" readonly value="<%= data.old.medicine_id[mi]['medicine_name'] %>">
+                                                </td>
+                                                <td class="p-0">
+                                                    <input type="text" class="form-control-plaintext text-center" readonly value="<%= data.old.medicine_id[mi]['number'] %> 個">
+                                                </td>
+                                                <td class="pr-2 pl-2 text-center">
+                                                    <a href="javascript:void(0)" class="btn btn-icon table-tr-delete">
+                                                        <i class="fas fa-times"></i>
+                                                    </a>
+                                                </td>
+                                                <input type="hidden" name="medicine_id[]" value="<%= data.old.medicine_id[mi]['medicine_id'] %>">
+                                            </tr>
+                                        <% }
+                                        } %>
+                                        </tbody>
+                                    </table>
+                                </div>
                                 <span class="form-error">
                                     <% if (typeof data.error.medicine_id !== "undefined") { %>
                                         <%= data.error.medicine_id %>

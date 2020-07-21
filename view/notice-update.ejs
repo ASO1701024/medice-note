@@ -48,9 +48,10 @@
                             <small class="form-text text-muted">
                                 通知時に表示する薬情報を選択します (※ 重複した項目は自動的に削除されます)
                             </small>
-                            <table id="medicine_table" class="table medicine-table">
-                                <tbody>
-                                <% if (typeof data.old.medicine_id !== "undefined") {
+                            <div class="medicine-table-outer">
+                                <table id="medicine_table" class="table medicine-table mb-0">
+                                    <tbody>
+                                    <% if (typeof data.old.medicine_id !== "undefined") {
                                     for (var mi = 0; mi < data.old.medicine_id.length; mi++) { %>
                                         <tr>
                                             <td class="pl-0">
@@ -67,9 +68,10 @@
                                             <input type="hidden" name="medicine_id[]" value="<%= data.old.medicine_id[mi]['medicine_id'] %>">
                                         </tr>
                                     <% }
-                                } %>
-                                </tbody>
-                            </table>
+                                    } %>
+                                    </tbody>
+                                </table>
+                            </div>
                             <span class="form-error">
                                 <% if (typeof data.error.medicine_id !== "undefined") { %>
                                     <%= data.error.medicine_id %>
