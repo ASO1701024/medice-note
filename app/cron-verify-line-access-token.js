@@ -15,7 +15,6 @@ module.exports = cron.schedule('0 0 0 1 * *', async () => {
 async function letAccessTokenEnable(userId, accessToken, refreshToken) {
     login.verify_access_token(accessToken).then(async () => {
         // verify_success
-        await insertUserMessage(userId, '機能: verify_access_token  ステータスコード: 200', 2);
     }).catch(async () => {
         // verify_filed
         await refreshAccessToken(refreshToken, userId);
@@ -26,8 +25,6 @@ async function refreshAccessToken(refreshToken, userId) {
     login.refresh_access_token(refreshToken)
         .then(async (result) => {
             // refresh_success
-            await insertUserMessage(userId, '機能: refresh_access_token  ステータスコード: 200', 2);
-
             let refreshTokenSQL = 'UPDATE line_login SET access_token = ?, refresh_token = ? WHERE user_id = ?';
             await connection.query(refreshTokenSQL, [result['access_token'], result['refresh_token'], userId]);
         })
