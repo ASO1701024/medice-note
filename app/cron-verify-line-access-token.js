@@ -5,7 +5,10 @@ const config = require('../config.json');
 const login = new lineLogin(config.line_login);
 
 module.exports = cron.schedule('0 0 0 1 * *', async () => {
-    let getLineLoginListSQL = 'SELECT user_id, access_token, refresh_token FROM line_login';
+    let getLineLoginListSQL =
+        'SELECT SQ.user_id, access_token, refresh_token ' +
+        'FROM line_login LL ' +
+        'RIGHT JOIN (SELECT user_id FROM user WHERE deleted_at IS NULL)SQ ON LL.user_id = SQ.user_id ';
     let lineLoginList = (await connection.query(getLineLoginListSQL, []))[0];
     for (let row of lineLoginList) {
         await letAccessTokenEnable(row['user_id'], row['access_token'], row['refresh_token']);
