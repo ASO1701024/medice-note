@@ -46,20 +46,20 @@ router.get('/account-setting/line-callback', async (ctx) => {
         let lineUserName = lineProfile.displayName;
 
         // Check your line_data already exists in the database
-        let lineLoginSQL = 'SELECT user_id FROM line_login WHERE user_id = ?;';
+        let lineLoginSQL = 'SELECT user_id FROM line_login WHERE user_id = ?';
         let lineUserData = (await connection.query(lineLoginSQL, [userId]))[0];
         if (lineUserData.length > 0) {
             // When already exists
-            let deleteLineLoginSQL = 'DELETE FROM line_login WHERE user_id = ?;';
+            let deleteLineLoginSQL = 'DELETE FROM line_login WHERE user_id = ?';
             await connection.query(deleteLineLoginSQL, [userId]);
-            let deleteLineNoticeUserId = 'DELETE FROM line_notice_user_id WHERE user_id = ?;';
+            let deleteLineNoticeUserId = 'DELETE FROM line_notice_user_id WHERE user_id = ?';
             await connection.query(deleteLineNoticeUserId, [userId]);
         }
 
         // Register line_data
-        let insertLineLoginSQL = 'INSERT INTO line_login VALUES(?,?,?,?);';
+        let insertLineLoginSQL = 'INSERT INTO line_login VALUES(?, ?, ?, ?)';
         await connection.query(insertLineLoginSQL, [userId, lineUserName, accessToken, refreshToken]);
-        let insertLineUserIdSQL = 'INSERT INTO line_notice_user_id VALUES(?,?);';
+        let insertLineUserIdSQL = 'INSERT INTO line_notice_user_id VALUES(?, ?)';
         await connection.query(insertLineUserIdSQL, [userId, lineUserId]);
     })
 
