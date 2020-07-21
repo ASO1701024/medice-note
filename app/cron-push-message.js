@@ -88,6 +88,6 @@ async function insertUserMessage(noticeId, resultMessage, resultFlg) {
     let getUserIdSQL = 'SELECT user_id FROM notice WHERE notice_id = ?';
     let userId = (await connection.query(getUserIdSQL, [noticeId]))[0][0]['user_id'];
 
-    let insertErrorSQL = 'INSERT INTO user_message VALUES (0,?,?,?)';
+    let insertErrorSQL = 'INSERT INTO user_message VALUES (0, ?, ?, ?)';
     await connection.query(insertErrorSQL, [userId, resultMessage, resultFlg]);
 }
