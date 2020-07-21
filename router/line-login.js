@@ -14,7 +14,7 @@ router.get('/account-setting/line-login', async (ctx, next) => {
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
     if (!userId) {
-        session.error = 'ログインしていないため続行できませんでした';
+        session.error.message = 'ログインしていないため続行できませんでした';
         return ctx.redirect('/login');
     }
     ctx.session.line_login_state = crypto.randomBytes(20).toString('hex');
@@ -29,7 +29,7 @@ router.get('/account-setting/line-callback', async (ctx) => {
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
     if (!userId) {
-        session.error = 'ログインしていないため続行できませんでした';
+        session.error.message = 'ログインしていないため続行できませんでした';
         return ctx.redirect('/login');
     }
     delete ctx.session.line_login_state;
