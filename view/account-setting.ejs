@@ -15,6 +15,25 @@
     </div>
 </div>
 
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-title">LINE通知</h4>
+    </div>
+    <div class="card-body">
+        <%if (typeof data.account.line_user_name !== 'undefined'){ %>
+            <p class="card-text"><%= data.account.line_user_name %>でログイン中</p>
+            <a class="line-log-out" href="/account-setting/line-logout">
+                <img src="/image/line_88.png">
+                <div></div>
+                <div>Log out</div>
+            </a>
+        <%} else {%>
+            <a href="/account-setting/line-login"><img class="line-login" src="/image/btn_login_base.png"></a>
+        <% }%>
+
+    </div>
+</div>
+
 <div class="card card-danger">
     <div class="card-header">
         <h4 class="card-title">アカウント削除</h4>
