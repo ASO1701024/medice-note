@@ -12,6 +12,10 @@ router.get('/', async (ctx) => {
     let userId = await app.getUserId(authId);
     result['data']['meta']['login_status'] = Boolean(userId);
     result['data']['meta']['site_title'] = 'トップページ - Medice Note';
+    result['data']['meta']['seo']['bool'] = true;
+    result['data']['meta']['seo']['description'] = 'お薬手帳をウェブサイトで管理できるサービスです';
+    result['data']['meta']['seo']['url'] = 'https://www.medice-note.vxx0.com';
+
     if (Boolean(userId)) {
         result['data']['meta']['group_list'] = await app.getGroupList(userId);
     }

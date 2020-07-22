@@ -29,6 +29,9 @@ router.get('/login', async (ctx, next) => {
     let result = app.initializeRenderResult();
     result['data']['meta']['login_status'] = false;
     result['data']['meta']['site_title'] = 'ログイン - Medice Note';
+    result['data']['meta']['seo']['bool'] = true;
+    result['data']['meta']['seo']['description'] = 'Medice Noteにログイン';
+    result['data']['meta']['seo']['url'] = 'https://www.medice-note.vxx0.com/login';
 
     if (session.success !== undefined) {
         result['data']['success'] = session.success;

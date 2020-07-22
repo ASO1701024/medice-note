@@ -12,13 +12,16 @@ router.get('/forgot-password', async (ctx) => {
 
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
-    if (authId || userId) {
+    if (userId) {
         return ctx.redirect('/');
     }
 
     let result = app.initializeRenderResult();
     result['data']['meta']['login_status'] = false;
     result['data']['meta']['site_title'] = 'パスワード再発行 - Medice Note';
+    result['data']['meta']['seo']['bool'] = true;
+    result['data']['meta']['seo']['description'] = 'Medice Noteのパスワードを再発行';
+    result['data']['meta']['seo']['url'] = 'https://www.medice-note.vxx0.com/forgot-password';
 
     if (session.success !== undefined) {
         result['data']['success'] = session.success;

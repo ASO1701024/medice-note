@@ -3,7 +3,6 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="description" content="お薬手帳をウェブサイトで管理できるサービスです">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
     <title><% if (typeof data.meta.site_title !== "undefined") { %><%= data.meta.site_title %><% } %></title>
     <link rel="stylesheet" href="/stisla/modules/bootstrap/css/bootstrap.min.css">
@@ -17,21 +16,23 @@
     <link rel="stylesheet" href="/stisla/css/components.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@300&display=swap">
-    <!-- Google / Search Engine Tags -->
-    <meta itemprop="name" content="<% if (typeof data.meta.site_title !== "undefined") { %><%= data.meta.site_title %><% } %>">
-    <meta itemprop="description" content="お薬手帳をウェブサイトで管理できるサービスです">
-    <meta itemprop="image" content="https://www.medice-note.vxx0.com/image/ogp.jpg">
-    <!-- Facebook Meta Tags -->
-    <meta property="og:url" content="https://www.medice-note.vxx0.com">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="<% if (typeof data.meta.site_title !== "undefined") { %><%= data.meta.site_title %><% } %>">
-    <meta property="og:description" content="お薬手帳をウェブサイトで管理できるサービスです">
-    <meta property="og:image" content="https://www.medice-note.vxx0.com/image/ogp.jpg">
-    <!-- Twitter Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="<% if (typeof data.meta.site_title !== "undefined") { %><%= data.meta.site_title %><% } %>">
-    <meta name="twitter:description" content="お薬手帳をウェブサイトで管理できるサービスです">
-    <meta name="twitter:image" content="https://www.medice-note.vxx0.com/image/ogp.jpg">
+    <% if (data.meta.seo.bool === true) { %>
+        <!-- Google / Search Engine Tags -->
+        <meta itemprop="name" content="<% if (typeof data.meta.site_title !== "undefined") { %><%= data.meta.site_title %><% } %>">
+        <meta itemprop="description" content="<%= data.meta.seo.description %>">
+        <meta itemprop="image" content="https://www.medice-note.vxx0.com/image/ogp.jpg">
+        <!-- Facebook Meta Tags -->
+        <meta property="og:url" content="<%= data.meta.seo.url %>">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="<% if (typeof data.meta.site_title !== "undefined") { %><%= data.meta.site_title %><% } %>">
+        <meta property="og:description" content="<%= data.meta.seo.description %>">
+        <meta property="og:image" content="https://www.medice-note.vxx0.com/image/ogp.jpg">
+        <!-- Twitter Meta Tags -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="<% if (typeof data.meta.site_title !== "undefined") { %><%= data.meta.site_title %><% } %>">
+        <meta name="twitter:description" content="<%= data.meta.seo.description %>">
+        <meta name="twitter:image" content="https://www.medice-note.vxx0.com/image/ogp.jpg">
+    <% } %>
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-171420901-1"></script>
     <script>
