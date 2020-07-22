@@ -16,14 +16,15 @@ router.get('/medicine-list', async (ctx) => {
         }
     }
 
-    let result = app.initializeRenderResult();
-
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
-    if (!authId || !userId) {
+    if (!userId) {
+        session.error.message = 'ログインしていないため続行できませんでした';
+
         return ctx.redirect('/login');
     }
 
+    let result = app.initializeRenderResult();
     result['data']['meta']['login_status'] = true;
     result['data']['meta']['site_title'] = '薬情報一覧 - Medice Note';
     result['data']['meta']['group_list'] = await app.getGroupList(userId);
@@ -42,7 +43,8 @@ router.get('/medicine-list', async (ctx) => {
         'date_format(starts_date, \'%Y年%c月%d日\') as starts_date, period, ' +
         'medicine_type.type_name, image, description, group_id FROM medicine ' +
         'LEFT JOIN medicine_type ON medicine.type_id = medicine_type.type_id ' +
-        'WHERE group_id in (SELECT group_id FROM medicine_group WHERE user_id = ?)'
+        'WHERE group_id in (SELECT group_id FROM medicine_group WHERE user_id = ?) ' +
+        'ORDER BY starts_date DESC';
 
     let [data] = await connection.query(sql, [userId]);
 

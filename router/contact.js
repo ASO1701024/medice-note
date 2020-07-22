@@ -5,7 +5,7 @@ const app = require('../app/app');
 const transporter = require('../app/mail');
 const config = require('../config.json');
 
-router.get('/contact', async (ctx, next) => {
+router.get('/contact', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
 
@@ -41,7 +41,7 @@ router.get('/contact', async (ctx, next) => {
     await ctx.render('contact', result);
 })
 
-router.post('/contact', async (ctx, next) => {
+router.post('/contact', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
 

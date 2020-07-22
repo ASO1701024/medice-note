@@ -6,6 +6,7 @@ const render = require('koa-ejs');
 const koaBody = require('koa-body');
 const session = require('koa-generic-session');
 const SQLite3Store = require('koa-sqlite3-session');
+const json = require('koa-json')
 const config = require('./config.json');
 
 let uploadCache = path.join(__dirname, '/upload_cache')
@@ -34,6 +35,9 @@ app.use(koaBody({
         keepExtensions: true
     }
 }));
+app.use(json({
+    pretty: true
+}));
 app.keys = config.session.key;
 app.use(session({
     store: new SQLite3Store(config.session.filename, {}),
@@ -41,6 +45,9 @@ app.use(session({
     secure: false
 }, app));
 app.proxy = true;
+
+require('./app/cron-push-message');
+require('./app/cron-verify-line-access-token');
 
 const indexRouter = require('./router/index');
 app.use(indexRouter.routes());
@@ -102,6 +109,18 @@ const groupRouter = require('./router/group');
 app.use(groupRouter.routes());
 app.use(groupRouter.allowedMethods());
 
+const noticeListRouter = require('./router/notice-list');
+app.use(noticeListRouter.routes());
+app.use(noticeListRouter.allowedMethods());
+
+const noticeRegisterRouter = require('./router/notice-register');
+app.use(noticeRegisterRouter.routes());
+app.use(noticeRegisterRouter.allowedMethods());
+
+const noticeUpdateRouter = require('./router/notice-update');
+app.use(noticeUpdateRouter.routes());
+app.use(noticeUpdateRouter.allowedMethods());
+
 const accountSettingRouter = require('./router/account-setting');
 app.use(accountSettingRouter.routes());
 app.use(accountSettingRouter.allowedMethods());
@@ -113,5 +132,13 @@ app.use(accountEditRouter.allowedMethods());
 const accountDeleteRouter = require('./router/account-delete');
 app.use(accountDeleteRouter.routes());
 app.use(accountDeleteRouter.allowedMethods());
+
+const lineLoginRouter = require('./router/line-login');
+app.use(lineLoginRouter.routes());
+app.use(lineLoginRouter.allowedMethods());
+
+const apiMedicineRouter = require('./router/api-medicine');
+app.use(apiMedicineRouter.routes());
+app.use(apiMedicineRouter.allowedMethods());
 
 app.listen(5000);

@@ -44,21 +44,21 @@ module.exports = {
         };
         // Message
         let errorMessage = {
-            'required.medicineName': "200文字以内で入力してください",
-            'max.medicineName': "200文字以内で入力してください",
-            'required.hospitalName': "100文字以内で入力してください",
-            'max.hospitalName': "100文字以内で入力してください",
-            'required.number': "0以上99以下の数字で入力してください",
-            'numeric.number': "0以上99以下の数字で入力してください",
-            'min.number': "0以上99以下の数字で入力してください",
-            'max.number': "0以上99以下の数字で入力してください",
-            'required.startsDate': "日付の書式で入力してください",
-            'date.startsDate': "日付の書式で入力してください",
-            'required.period': "0以上で1000以内の数字で入力してください",
-            'numeric.period': "0以上で1000以内の数字で入力してください",
-            'min.period': "0以上で1000以内の数字で入力してください",
-            'max.period': "0以上で1000以内の数字で入力してください",
-            'max.description': "255文字以内で入力してください"
+            'required.medicineName': '200文字以内で入力してください',
+            'max.medicineName': '200文字以内で入力してください',
+            'required.hospitalName': '100文字以内で入力してください',
+            'max.hospitalName': '100文字以内で入力してください',
+            'required.number': '0以上99以下の数字で入力してください',
+            'numeric.number': '0以上99以下の数字で入力してください',
+            'min.number': '0以上99以下の数字で入力してください',
+            'max.number': '0以上99以下の数字で入力してください',
+            'required.startsDate': '日付の書式で入力してください',
+            'date.startsDate': '日付の書式で入力してください',
+            'required.period': '0以上で1000以内の数字で入力してください',
+            'numeric.period': '0以上で1000以内の数字で入力してください',
+            'min.period': '0以上で1000以内の数字で入力してください',
+            'max.period': '0以上で1000以内の数字で入力してください',
+            'max.description': '255文字以内で入力してください'
         }
         // Validation
         let requestValidate = new validator(requests, rules, errorMessage);
@@ -179,5 +179,64 @@ module.exports = {
         let sql = 'SELECT group_id FROM medicine_group WHERE group_id = ? AND user_id = ?';
         let [group] = await connection.query(sql, [groupId, userId]);
         return group.length !== 0;
+    },
+    validationNoticeName: (noticeName) => {
+        let validation = new validator({
+            noticeName: noticeName
+        }, {
+            noticeName: 'required|string|min:1|max:100'
+        });
+        return validation.passes();
+    },
+    validationNoticeMedicineId: async (medicineId, userId) => {
+        if (medicineId === '' || medicineId === undefined || medicineId.length <= 0) return false;
+
+        for (let i = 0; i < medicineId.length; i++) {
+            let sql = 'SELECT medicine_id FROM medicine WHERE medicine_id = ? ' +
+                'AND group_id in (SELECT group_id FROM medicine_group WHERE user_id = ?)';
+            let [medicine] = await connection.query(sql, [medicineId[i], userId]);
+            if (medicine.length === 0) {
+                return false;
+            }
+        }
+        return true;
+    },
+    validationNoticeTime: (noticeTime) => {
+        if (noticeTime === '' || noticeTime === undefined || noticeTime.length <= 0) return false;
+
+        for (let i = 0; i < noticeTime.length; i++) {
+            let validation = new validator({
+                time: noticeTime[i]
+            }, {
+                time: ['required', 'regex:/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/']
+            });
+            if (validation.fails()) {
+                return false;
+            }
+        }
+        return true;
+    },
+    validationNoticeDay: (noticeWeek) => {
+        if (noticeWeek === '' || noticeWeek === undefined) return false;
+
+        for (let i = 0; i < noticeWeek.length; i++) {
+            let validation = new validator({
+                week: noticeWeek[i]
+            }, {
+                week: ['required', {'in': ['0', '1', '2', '3', '4', '5', '6']}]
+            });
+            if (validation.fails()) {
+                return false;
+            }
+        }
+        return true;
+    },
+    validationEndDate: (endDate) => {
+        let validation = new validator({
+            endDate: endDate
+        }, {
+            endDate: 'required|date'
+        });
+        return validation.passes();
     }
 }

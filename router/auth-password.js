@@ -5,7 +5,7 @@ const app = require('../app/app');
 const validator = require('validatorjs');
 const bcrypt = require('bcrypt');
 
-router.get('/auth-password/:auth_key', async (ctx, next) => {
+router.get('/auth-password/:auth_key', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
 
@@ -37,7 +37,7 @@ router.get('/auth-password/:auth_key', async (ctx, next) => {
     await ctx.render('auth-password', result);
 });
 
-router.post('/auth-password/:auth_key', async (ctx, next) => {
+router.post('/auth-password/:auth_key', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
 
