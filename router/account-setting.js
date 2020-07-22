@@ -12,9 +12,10 @@ router.get('/account-setting', async (ctx) => {
 
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
-    if (!authId || !userId) {
+    if (!userId) {
         session.error.message = 'ログインしていないため続行できませんでした';
-        return ctx.redirect('/');
+
+        return ctx.redirect('/login');
     }
 
     let result = app.initializeRenderResult();
@@ -53,7 +54,8 @@ router.get('/account-setting/line-logout', async (ctx) => {
     let userId = await app.getUserId(authId);
     if (!userId) {
         session.error.message = 'ログインしていないため続行できませんでした';
-        return ctx.redirect('/');
+
+        return ctx.redirect('/login');
     }
 
     let getAccessTokenSQL = 'SELECT access_token from line_login WHERE user_id = ?';
@@ -61,7 +63,8 @@ router.get('/account-setting/line-logout', async (ctx) => {
 
     if (accessToken.length === 0) {
         // When you have't logged in line
-        session.error.message = 'アカウント連携されていません'
+        session.error.message = 'アカウント連携されていません';
+
         return ctx.redirect('/account-setting');
     }
 
