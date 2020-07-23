@@ -23,6 +23,9 @@ router.get('/signup', async (ctx) => {
     let result = app.initializeRenderResult();
     result['data']['meta']['login_status'] = false;
     result['data']['meta']['site_title'] = 'アカウント登録 - Medice Note';
+    result['data']['meta']['seo']['bool'] = true;
+    result['data']['meta']['seo']['description'] = 'Medice Noteに登録';
+    result['data']['meta']['seo']['url'] = 'https://www.medice-note.vxx0.com/signup';
 
     if (session.success !== undefined) {
         result['data']['success'] = session.success;

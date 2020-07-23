@@ -159,6 +159,9 @@ module.exports = {
         result['data']['success'] = {};
         result['data']['error'] = {};
         result['data']['meta'] = {};
+        result['data']['meta']['browser_warning'] = false;
+        result['data']['meta']['seo'] = {};
+        result['data']['meta']['seo']['bool'] = false;
 
         return result;
     },

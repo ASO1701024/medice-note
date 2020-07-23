@@ -8,12 +8,15 @@ router.get('/', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
 
-    let result = app.initializeRenderResult();
-
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
+
+    let result = app.initializeRenderResult();
     result['data']['meta']['login_status'] = Boolean(userId);
     result['data']['meta']['site_title'] = 'トップページ - Medice Note';
+    result['data']['meta']['seo']['bool'] = true;
+    result['data']['meta']['seo']['description'] = 'お薬手帳をウェブサイトで管理できるサービスです';
+    result['data']['meta']['seo']['url'] = 'https://www.medice-note.vxx0.com';
 
     let ua = parser(ctx.request.header['user-agent']);
     if (ua.browser.name === undefined || !['chrome', 'firefox'].includes(ua.browser.name.toLowerCase())) {

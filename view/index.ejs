@@ -24,7 +24,7 @@
     </div>
 <% } %>
 
-<% if (typeof data.meta.browser_warning !== "undefined" && data.meta.browser_warning === true) { %>
+<% if (data.meta.browser_warning === true) { %>
     <div class="alert alert-warning">
         <div class="alert-title">注意</div>
         お使いのブラウザはサポートしていません<br>
@@ -68,7 +68,7 @@
     <% }) %>
 <% } %>
 
-<div class="col-12 mb-4" style="padding-left: unset; padding-right: unset;">
+<div class="col-12 mb-4 pl-0 pr-0">
     <div class="hero bg-primary text-white">
         <div class="hero-inner">
             <h2>こんにちは！</h2>

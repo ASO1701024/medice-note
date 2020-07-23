@@ -16,6 +16,23 @@
     <link rel="stylesheet" href="/stisla/css/components.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@300&display=swap">
+    <% if (data.meta.seo.bool === true) { %>
+        <!-- Google / Search Engine Tags -->
+        <meta itemprop="name" content="<% if (typeof data.meta.site_title !== "undefined") { %><%= data.meta.site_title %><% } %>">
+        <meta itemprop="description" content="<%= data.meta.seo.description %>">
+        <meta itemprop="image" content="https://www.medice-note.vxx0.com/image/ogp.jpg">
+        <!-- Facebook Meta Tags -->
+        <meta property="og:url" content="<%= data.meta.seo.url %>">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="<% if (typeof data.meta.site_title !== "undefined") { %><%= data.meta.site_title %><% } %>">
+        <meta property="og:description" content="<%= data.meta.seo.description %>">
+        <meta property="og:image" content="https://www.medice-note.vxx0.com/image/ogp.jpg">
+        <!-- Twitter Meta Tags -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="<% if (typeof data.meta.site_title !== "undefined") { %><%= data.meta.site_title %><% } %>">
+        <meta name="twitter:description" content="<%= data.meta.seo.description %>">
+        <meta name="twitter:image" content="https://www.medice-note.vxx0.com/image/ogp.jpg">
+    <% } %>
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-171420901-1"></script>
     <script>
