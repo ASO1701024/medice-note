@@ -106,3 +106,26 @@ input.form-control-plaintext {
     font-family: "Font Awesome 5 Free";
     padding-right: 10px;
 }
+.button-line {
+    color: #fff;
+    border-radius: 7px;
+    display: inline-block;
+    height: 40px;
+    width: 157px;
+    font-size: 20px;
+    line-height: 42px;
+    background-color: #00c300;
+    overflow: hidden;
+    text-decoration: none;
+}
+.button-line .fa-line {
+    font-size: 25px;
+}
+.button-line span {
+    display: inline-block;
+}
+.button-line:hover {
+    text-decoration: #fff;
+    color: #fff;
+    background-color: #00e000;
+}
