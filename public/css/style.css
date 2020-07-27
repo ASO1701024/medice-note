@@ -128,6 +128,7 @@ input.form-control-plaintext {
 }
 .button-line i {
     font-size: 30px;
+    margin-right: 5px;
 }
 .button-line:hover {
     text-decoration: none;
