@@ -114,25 +114,23 @@ input.form-control-plaintext {
     width: 70px;
 }
 .button-line {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    align-items: center;
     color: #fff;
     border-radius: 7px;
-    display: inline-block;
-    height: 40px;
-    width: 157px;
-    font-size: 20px;
-    line-height: 42px;
-    background-color: #00c300;
-    overflow: hidden;
-    text-decoration: none;
-}
-.button-line .fa-line {
     font-size: 25px;
+    background-color: #00c300;
+    text-decoration: none;
+    line-height: 45px;
+    padding-left: 5px;
+    padding-right: 10px;
 }
-.button-line span {
-    display: inline-block;
+.button-line i {
+    font-size: 30px;
 }
 .button-line:hover {
-    text-decoration: #fff;
+    text-decoration: none;
     color: #fff;
     background-color: #00e000;
 }
