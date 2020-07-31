@@ -11,12 +11,11 @@ module.exports = cron.schedule('0,30 * * * *', async () => {
     let dayOfWeek = dateObject.getDay();
 
     let getNoticeListSQL =
-        'SELECT SQ3.notice_id ' +
-        'FROM (SELECT notice_id FROM notice_time WHERE notice_time = ?)SQ ' +
-        'RIGHT JOIN (SELECT notice_id FROM notice_day WHERE day_of_week = ?)SQ2 ON SQ.notice_id = SQ2.notice_id ' +
-        'LEFT JOIN (SELECT notice_id, notice_period, user_id FROM notice WHERE is_enable = true)SQ3 ON SQ.notice_id = SQ3.notice_id ' +
-        'RIGHT JOIN (SELECT user_id FROM user WHERE deleted_at IS NULL)SQ4 ON SQ4.user_id = SQ4.user_id ' +
-        'WHERE SQ3.notice_period >= ?';
+        'SELECT SQ3.notice_id '+
+        'FROM (SELECT notice_id FROM notice_time WHERE notice_time = ?)SQ '+
+            'INNER JOIN (SELECT notice_id FROM notice_day WHERE day_of_week = ?)SQ2 ON SQ.notice_id = SQ2.notice_id '+
+            'INNER JOIN (SELECT notice_id, notice_period, user_id FROM notice WHERE is_enable = true AND notice_period >= ?)SQ3 ON SQ.notice_id = SQ3.notice_id '+
+            'INNER JOIN (SELECT user_id FROM user WHERE deleted_at IS NULL)SQ4 ON SQ4.user_id = SQ4.user_id'
     let noticeList = (await connection.query(getNoticeListSQL, [time, dayOfWeek, date]))[0];
 
     await pushNotice(noticeList);
