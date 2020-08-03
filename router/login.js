@@ -70,7 +70,7 @@ router.post('/login', async (ctx) => {
 
     user = user[0];
     if (user['is_enable'] === 0) {
-        session.error.no_escape = 'メールアドレス認証が行われていません<a href="#" class="alert-link">こちら</a>からメールアドレス認証を行ってください';
+        session.error.no_escape = 'メールアドレス認証が行われていません<a href="/renew-mail-auth" class="alert-link">こちら</a>からメールアドレス認証を行ってください';
     } else {
         let hashPassword = user['password'];
         if (bcrypt.compareSync(password, hashPassword)) {

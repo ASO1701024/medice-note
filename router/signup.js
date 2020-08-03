@@ -78,7 +78,7 @@ router.post('/signup', async (ctx) => {
 
     if (result.length !== 0) {
         if (result[0]['is_enable'] === 0) {
-            session.error.no_escape = 'メールアドレス認証が行われていません<a href="#" class="alert-link">こちら</a>からメールアドレス認証を行ってください';
+            session.error.no_escape = 'メールアドレス認証が行われていません<a href="/renew-mail-auth" class="alert-link">こちら</a>からメールアドレス認証を行ってください';
         } else {
             session.error.mail = '既に登録されているメールアドレスです';
         }

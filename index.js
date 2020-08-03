@@ -77,6 +77,10 @@ const authPasswordRouter = require('./router/auth-password');
 app.use(authPasswordRouter.routes());
 app.use(authPasswordRouter.allowedMethods());
 
+const renewMailAuthRouter = require('./router/renew-mail-auth');
+app.use(renewMailAuthRouter.routes());
+app.use(renewMailAuthRouter.allowedMethods());
+
 const contactRouter = require('./router/contact');
 app.use(contactRouter.routes());
 app.use(contactRouter.allowedMethods());

@@ -1,0 +1,39 @@
+<div class="section-header">
+    <h1>メールアドレス認証</h1>
+</div>
+
+<% if (typeof data.success.message !== "undefined") { %>
+    <div class="alert alert-success alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>×</span>
+            </button>
+            <%= data.success.message %>
+        </div>
+    </div>
+<% } %>
+
+<% if (typeof data.error.message !== "undefined") { %>
+    <div class="alert alert-danger alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>×</span>
+            </button>
+            <%= data.error.message %>
+        </div>
+    </div>
+<% } %>
+
+<div class="card">
+    <form class="/renew-mail-auth" method="post">
+        <div class="card-body pb-0">
+            <div class="form-group">
+                <label>メールアドレス</label>
+                <input type="email" class="form-control" name="mail" required>
+            </div>
+        </div>
+        <div class="card-footer pt-">
+            <button type="submit" class="btn btn-primary">送信</button>
+        </div>
+    </form>
+</div>
