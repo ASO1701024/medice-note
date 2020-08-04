@@ -126,6 +126,18 @@
                             </div>
                             <div class="form-group">
                                 <label class="control-label">曜日 *</label>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary btn-sm btn-danger">すべての曜日を選択</button>
+                                    <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#">平日のみ選択</a>
+                                        <a class="dropdown-item" href="#">土日のみ選択</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="#">全ての選択を解除</a>
+                                    </div>
+                                </div>
                                 <select class="form-control select2" multiple="" name="notice_day" required>
                                     <option value="0" <% if (typeof data.old.notice_day != "undefined" && data.old.notice_day.some(d => d == 0)) { %> selected <% } %>>日曜日</option>
                                     <option value="1" <% if (typeof data.old.notice_day != "undefined" && data.old.notice_day.some(d => d == 1)) { %> selected <% } %>>月曜日</option>
