@@ -58,8 +58,7 @@
                     </div>
                     <div class="form-group">
                         <label>飲む個数 *</label>
-                        <input type="number" class="form-control"
-                               name="number"
+                        <input type="number" class="form-control" name="number" min="1"
                         <% if (typeof data.old.number !== "undefined") { %> value="<%= data.old.number %>"
                         <% } else { %> value="1"
                                 <% } %>
@@ -103,7 +102,7 @@
                     </div>
                     <div class="form-group">
                         <label>処方期間 *</label>
-                        <input type="number" class="form-control" name="period"
+                        <input type="number" class="form-control" name="period" min="1"
                         <% if (typeof data.old.number !== "undefined") { %>
                                value="<%= data.old.number %>"
                         <% } else { %>
