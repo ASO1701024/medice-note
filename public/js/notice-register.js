@@ -78,6 +78,7 @@ $(document).on('click', '.action-week-weekday-select', function () {
     let options = $('select[name=notice_day] > option');
     for (let i = 0; i < options.length; i++) {
         let option = options[i];
+        $(option).removeAttr('selected');
         switch ($(option).attr('value')) {
             case '1':
             case '2':
@@ -95,6 +96,7 @@ $(document).on('click', '.action-week-holiday-select', function () {
     let options = $('select[name=notice_day] > option');
     for (let i = 0; i < options.length; i++) {
         let option = options[i];
+        $(option).removeAttr('selected');
         switch ($(option).attr('value')) {
             case '0':
             case '6':
