@@ -65,6 +65,57 @@ $(document).on('click', '.table-tr-delete', function () {
     $(this).closest('tr').remove();
 });
 
+$(document).on('click', '.action-week-all-select', function () {
+    let options = $('select[name=notice_day] > option');
+    for (let i = 0; i < options.length; i++) {
+        let option = options[i];
+        $(option).attr({selected: true});
+    }
+    $('select[name=notice_day]').trigger('change');
+});
+
+$(document).on('click', '.action-week-weekday-select', function () {
+    let options = $('select[name=notice_day] > option');
+    for (let i = 0; i < options.length; i++) {
+        let option = options[i];
+        $(option).removeAttr('selected');
+        switch ($(option).attr('value')) {
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+                $(option).attr({selected: true});
+                break;
+        }
+    }
+    $('select[name=notice_day]').trigger('change');
+});
+
+$(document).on('click', '.action-week-holiday-select', function () {
+    let options = $('select[name=notice_day] > option');
+    for (let i = 0; i < options.length; i++) {
+        let option = options[i];
+        $(option).removeAttr('selected');
+        switch ($(option).attr('value')) {
+            case '0':
+            case '6':
+                $(option).attr({selected: true});
+                break;
+        }
+    }
+    $('select[name=notice_day]').trigger('change');
+});
+
+$(document).on('click', '.action-week-all-deselect', function () {
+    let options = $('select[name=notice_day] > option');
+    for (let i = 0; i < options.length; i++) {
+        let option = options[i];
+        $(option).removeAttr('selected');
+    }
+    $('select[name=notice_day]').trigger('change');
+});
+
 window.onload = () => {
     fetch('/js/template/notice-medicine-info.html')
         .then(async (response) => {
