@@ -32,8 +32,7 @@
                 <div class="col-12 col-md-6 col-lg-6">
                     <div class="form-group">
                         <label>薬の名前 *</label>
-                        <input type="text" class="form-control"
-                               name="medicine_name" id="medicine_name"
+                        <input type="text" class="form-control" name="medicine_name" id="medicine_name" required
                         <% if (typeof data.old.medicine_name !== "undefined") { %>
                                value="<%= data.old.medicine_name %>"
                         <% } %>>
@@ -45,8 +44,7 @@
                     </div>
                     <div class="form-group">
                         <label>病院名 *</label>
-                        <input type="text" class="form-control"
-                               name="hospital_name" id="hospital_name"
+                        <input type="text" class="form-control" name="hospital_name" id="hospital_name" required
                         <% if (typeof data.old.hospital_name !== "undefined") { %> value="<%= data.old.hospital_name %>"
                                 <% } %>
                         >
@@ -58,7 +56,7 @@
                     </div>
                     <div class="form-group">
                         <label>飲む個数 *</label>
-                        <input type="number" class="form-control" name="number" min="1"
+                        <input type="number" class="form-control" name="number" min="1" required
                         <% if (typeof data.old.number !== "undefined") { %> value="<%= data.old.number %>"
                         <% } else { %> value="1"
                                 <% } %>
@@ -71,7 +69,7 @@
                     </div>
                     <div class="form-group">
                         <label>飲む時間 *</label>
-                        <select class="form-control select2" multiple="" name="take_time">
+                        <select class="form-control select2" multiple="" name="take_time" required>
                             <% if (typeof data.meta.take_time != "undefined") {
                             for (var tt = 0; tt < data.meta.take_time.length; tt++) { %>
                                 <option value="<%= data.meta.take_time[tt]['take_time_id'] %>"
@@ -87,36 +85,37 @@
                             <% } %>
                         </span>
                     </div>
-                    <div class="form-group">
-                        <label>処方日 *</label>
-                        <input type="date" class="form-control datepicker readonly-background" readonly
-                               name="starts_date"
-                        <% if (typeof data.old.starts_date !== "undefined") { %> value="<%= data.old.starts_date %>"
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label>処方日 *</label>
+                            <input type="date" class="form-control datepicker readonly-background" name="starts_date" required readonly
+                            <% if (typeof data.old.starts_date !== "undefined") { %> value="<%= data.old.starts_date %>"
+                                    <% } %>
+                            >
+                            <span class="form-error">
+                                <% if (typeof data.error.starts_date !== "undefined") { %>
+                                    <%= data.error.starts_date %>
                                 <% } %>
-                        >
-                        <span class="form-error">
-                            <% if (typeof data.error.starts_date !== "undefined") { %>
-                                <%= data.error.starts_date %>
-                            <% } %>
-                        </span>
-                    </div>
-                    <div class="form-group">
-                        <label>処方期間 *</label>
-                        <input type="number" class="form-control" name="period" min="1"
-                        <% if (typeof data.old.number !== "undefined") { %>
-                               value="<%= data.old.number %>"
-                        <% } else { %>
-                               value="1"
-                        <% } %>>
-                        <span class="form-error">
-                            <% if (typeof data.error.period !== "undefined") { %>
-                                <%= data.error.period %>
-                            <% } %>
-                        </span>
+                            </span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>処方期間 *</label>
+                            <input type="number" class="form-control" name="period" min="1" required
+                            <% if (typeof data.old.period !== "undefined") { %>
+                                   value="<%= data.old.period %>"
+                            <% } else { %>
+                                   value="1"
+                                    <% } %>>
+                            <span class="form-error">
+                                <% if (typeof data.error.period !== "undefined") { %>
+                                    <%= data.error.period %>
+                                <% } %>
+                            </span>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>種類 *</label>
-                        <select class="form-control select2" name="medicine_type">
+                        <select class="form-control select2" name="medicine_type" required>
                             <% if (typeof data.meta.medicine_type != "undefined") {
                                 for (var mt = 0; mt < data.meta.medicine_type.length; mt++) { %>
                                     <option value="<%= data.meta.medicine_type[mt]['type_id'] %>"
@@ -134,7 +133,7 @@
                     </div>
                     <div class="form-group">
                         <label>グループ *</label>
-                        <select class="form-control select2" name="group_id">
+                        <select class="form-control select2" name="group_id" required>
                             <% if (typeof data.meta.group_list != "undefined") {
                                 for (var gl = 0; gl < data.meta.group_list.length; gl++) {
                                     %>
