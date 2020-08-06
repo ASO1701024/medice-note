@@ -100,6 +100,15 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
     let medicineImage = '';
     let description = ctx.request.body.description || '';
 
+    let sql = 'SELECT image FROM medicine WHERE medicine_id = ?';
+    let [oldImage] = await connection.query(sql, [medicineId]);
+    if (oldImage.length !== 0) {
+        let oldImageFile = oldImage[0]['image'];
+        if (oldImageFile !== '' || oldImageFile !== undefined) {
+            medicineImage = oldImageFile;
+        }
+    }
+
     let uploadImage = ctx.request.files['medicine_image'];
     let uploadImageFlag = true;
     if (uploadImage['size'] !== 0) {
@@ -141,7 +150,7 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
 
     if (validationMedicine.result && validationTakeTime && validationMedicineType && validationGroupId && uploadImageFlag) {
         // Update Medicine
-        let sql = `
+        sql = `
             UPDATE medicine SET medicine_name = ?, hospital_name = ?, number = ?, starts_date = ?, period = ?,
                                 type_id = ?, group_id = ?, image = ?, description = ?
             WHERE medicine_id = ?`;
