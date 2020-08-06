@@ -141,8 +141,10 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
 
     if (validationMedicine.result && validationTakeTime && validationMedicineType && validationGroupId && uploadImageFlag) {
         // Update Medicine
-        let sql = 'UPDATE medicine SET medicine_name = ?, hospital_name = ?, number = ?, starts_date = ?, ' +
-            'period = ?, type_id = ?, group_id = ?, image = ?, description = ? WHERE medicine_id = ?';
+        let sql = `
+            UPDATE medicine SET medicine_name = ?, hospital_name = ?, number = ?, starts_date = ?, period = ?,
+                                type_id = ?, group_id = ?, image = ?, description = ?
+            WHERE medicine_id = ?`;
         await connection.query(sql, [medicineName, hospitalName, number, startsDate, period, medicineType, groupId, medicineImage, description, medicineId]);
 
         // Delete TakeTime
