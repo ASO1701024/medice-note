@@ -131,9 +131,9 @@ router.post('/medicine-register', async (ctx) => {
     let validationGroupId = await app.validationGroupId(groupId, userId);
 
     if (validationMedicine.result && validationTakeTime && validationMedicineType && validationGroupId && uploadImageFlag) {
-        let sql = 'INSERT INTO medicine' +
-            '(medicine_name, hospital_name, number, starts_date, period, type_id, image, description, group_id)' +
-            'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        let sql = `
+            INSERT INTO medicine (medicine_name, hospital_name, number, starts_date, period, type_id, image, description, group_id) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         let [medicine] = await connection.query(sql, [
             medicineName,
             hospitalName,
