@@ -1,42 +1,74 @@
-<main>
-    <h1>Medice Note</h1>
-    <% if (typeof data.success_message !== "undefined") { %>
-        <p class="success_message"><%= data.success_message %></p>
-    <% } %>
-    <% if (typeof data.error_message !== "undefined") { %>
-        <p class="error_message"><%= data.error_message %></p>
-    <% } %>
-    <form action="/signup" method="post">
-        <label>
-            <span class="label">ユーザー名</span>
-            <input type="text" name="user_name" required>
-            <span class="message">
-                <% if (typeof data.error_user_name !== "undefined") { %>
-                    <%= data.error_user_name %>
-                <% } %>
-            </span>
-        </label>
-        <label>
-            <span class="label">メールアドレス</span>
-            <input type="email" name="mail" required>
-            <span class="message">
-                <% if (typeof data.error_mail !== "undefined") { %>
-                    <%= data.error_mail %>
-                <% } %>
-            </span>
-        </label>
-        <label>
-            <span class="label">パスワード</span>
-            <input type="password" name="password" autocomplete="on" required>
-            <span class="message">
-                <% if (typeof data.error_password !== "undefined") { %>
-                    <%= data.error_password %>
-                <% } %>
-            </span>
-        </label>
-        <input type="submit" value="作成">
-        <p class="account_action">
-            <a href="/login">ログイン</a>
-        </p>
+<div class="section-header">
+    <h1>アカウント登録</h1>
+</div>
+
+<% if (typeof data.success.message !== "undefined") { %>
+    <div class="alert alert-success alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>×</span>
+            </button>
+            <%= data.success.message %>
+        </div>
+    </div>
+<% } %>
+
+<% if (typeof data.error.message !== "undefined") { %>
+    <div class="alert alert-danger alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>×</span>
+            </button>
+            <%= data.error.message %>
+        </div>
+    </div>
+<% } %>
+
+<% if (typeof data.error.no_escape !== "undefined") { %>
+    <div class="alert alert-danger alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>×</span>
+            </button>
+            <%- data.error.no_escape %>
+        </div>
+    </div>
+<% } %>
+
+<div class="card">
+    <form class="/signup" method="post">
+        <div class="card-body pb-0">
+            <div class="form-group">
+                <label>ユーザー名</label>
+                <input type="text" class="form-control" name="user_name" required>
+                <span class="form-error">
+                    <% if (typeof data.error.user_name !== "undefined") { %>
+                        <%= data.error.user_name %>
+                    <% } %>
+                </span>
+            </div>
+            <div class="form-group">
+                <label>メールアドレス</label>
+                <input type="email" class="form-control" name="mail" required>
+                <span class="form-error">
+                    <% if (typeof data.error.mail !== "undefined") { %>
+                        <%= data.error.mail %>
+                    <% } %>
+                </span>
+            </div>
+            <div class="form-group">
+                <label>パスワード</label>
+                <input type="password" class="form-control" name="password" autocomplete="on" required>
+                <span class="form-error">
+                    <% if (typeof data.error.password !== "undefined") { %>
+                        <%= data.error.password %>
+                    <% } %>
+                </span>
+            </div>
+        </div>
+        <div class="card-footer pt-">
+            <button type="submit" class="btn btn-primary">登録</button>
+            <a href="/login" class="ml-2">ログイン</a>
+        </div>
     </form>
-</main>
+</div>

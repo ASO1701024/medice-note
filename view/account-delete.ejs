@@ -1,9 +1,35 @@
-<main>
-    <form action="/account-delete" method="post">
-        <% if (typeof data.accountDelete.deny !== "undefined" && data.accountDelete.deny !== false) { %>
-            <p class="account_delete_deny_message"><%= data.accountDelete.deny %></p>
-        <% } %>
-        パスワード：<input type="text" name="password" value="">
-        <br><input type="submit" value="アカウント削除">
+<div class="section-header">
+    <h1>アカウント情報削除</h1>
+</div>
+
+<% if (typeof data.error.message !== "undefined") { %>
+    <div class="alert alert-danger alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>×</span>
+            </button>
+            <%= data.error.message %>
+        </div>
+    </div>
+<% } %>
+
+<div class="card">
+    <form class="/account-delete" method="post">
+        <div class="card-body pb-0">
+            <p class="text-muted">アカウント情報を削除するにはパスワードを入力してください</p>
+            <div class="form-group">
+                <label>パスワード</label>
+                <input type="password" class="form-control" name="password" autocomplete="on" required>
+                <span class="form-error">
+                    <% if (typeof data.error.password !== "undefined") { %>
+                        <%= data.error.password %>
+                    <% } %>
+                </span>
+            </div>
+        </div>
+        <div class="card-footer pt-">
+            <button type="submit" class="btn btn-primary">退会</button>
+            <a href="/" class="ml-2">キャンセル</a>
+        </div>
     </form>
-</main>
+</div>

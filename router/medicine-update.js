@@ -1,156 +1,195 @@
+const fs = require('fs');
+const path = require('path');
 const Router = require('koa-router');
 const router = new Router();
 const connection = require('../app/db');
 const app = require('../app/app');
-
-/* session
-    update_medicine_id: 更新する薬情報の薬ID
-    update_denied_error: 薬情報変更失敗時のエラーメッセージ　
-    update_denied_request: 薬情報変更失敗時のリクエスト内容
-*/
+const {v4: uuid} = require('uuid');
 
 router.get('/medicine-update/:medicine_id', async (ctx) => {
     let session = ctx.session;
-
-    let userId = await app.getUserId(session.auth_id);
-    if (userId === false) {
-        return ctx.redirect('/')
-    }
+    app.initializeSession(session);
     let medicineId = ctx.params['medicine_id'];
 
-    let result = {};
-    result['data'] = {};
-    if (session.update_denied_error) {
-        result['data']['errorMsg'] = session.update_denied_error;
-        session.update_denied_error = null;
+    let authId = session.auth_id;
+    let userId = await app.getUserId(authId);
+    if (!userId) {
+        session.error.message = 'ログインしていないため続行できませんでした';
+
+        return ctx.redirect('/login');
     }
 
-    let medicineData = await app.getMedicine(medicineId, userId);
-    if (medicineData === false) {
-        // 薬一覧に遷移するように後で変更する。
+    if (!await app.isHaveMedicine(medicineId, userId)) {
+        session.error.message = '薬情報が見つかりませんでした';
+
         return ctx.redirect('/');
     }
 
-    // renderに渡す為にデータを成形
-    result['data']['request'] = {};
-    result['data']['request']['medicineId'] = medicineId;
-    result['data']['request']['takeTime'] = [];
-    result['data']['request']['takeTime'] = medicineData[1];
-    for (let key in medicineData[0]) {
-        if (medicineData[0].hasOwnProperty(key)) {
-            result['data']['request'][key] = medicineData[0][key];
-        }
+    let result = app.initializeRenderResult();
+
+    let sql = 'SELECT type_id, type_name FROM medicine_type';
+    let [medicineType] = await connection.query(sql);
+    result['data']['meta']['medicine_type'] = medicineType;
+
+    sql = 'SELECT take_time_id, take_time_name FROM take_time';
+    let [takeTime] = await connection.query(sql);
+    result['data']['meta']['take_time'] = takeTime;
+
+    result['data']['meta']['login_status'] = true;
+    result['data']['meta']['site_title'] = '薬情報更新 - Medice Note';
+    result['data']['meta']['group_list'] = await app.getGroupList(userId);
+
+    result['data']['old'] = await app.getMedicineFromMedicineId(medicineId);
+    result['data']['meta']['css'] = [
+        '/stisla/modules/select2/dist/css/select2.min.css',
+        '/stisla/modules/bootstrap-daterangepicker/daterangepicker.css',
+        '/css/library/jquery-ui.min.css'
+    ];
+    result['data']['meta']['script'] = [
+        '/stisla/modules/select2/dist/js/select2.full.min.js',
+        '/stisla/modules/bootstrap-daterangepicker/daterangepicker.js',
+        '/js/library/jquery-ui.min.js',
+        '/js/medicine-form.js'
+    ];
+
+    if (session.old !== undefined && Object.keys(session.old).length !== 0) {
+        result['data']['old'] = session.old;
+        session.old = undefined;
     }
+
+    if (session.error !== undefined) {
+        result['data']['error'] = session.error;
+        session.error = undefined;
+    }
+
     await ctx.render('/medicine-update', result);
 })
 
 router.post('/medicine-update/:medicine_id', async (ctx) => {
     let session = ctx.session;
+    app.initializeSession(session);
 
-    let userId = await app.getUserId(session.auth_id);
-    if (userId === false) {
-        return ctx.redirect('/')
-    }
     let medicineId = ctx.params['medicine_id'];
 
-    let medicineData = app.getMedicine(medicineId, userId);
-    // 更新権限の有無の確認。間違えて使わないように確認後はnullで初期化。
-    if (medicineData === false) {
-        // 薬一覧に遷移するように後で変更する。
+    // Session
+    let authId = session.auth_id;
+    let userId = await app.getUserId(authId);
+    if (!userId) {
+        session.error.message = 'ログインしていないため続行できません';
+
+        return ctx.redirect('/login');
+    }
+
+    // Lookup MedicineId
+    if (!await app.isHaveMedicine(medicineId, userId)) {
+        session.error.message = '薬情報が見つかりませんでした';
+
         return ctx.redirect('/');
     }
-    medicineData = null;
 
-    // 必須項目
-    let medicineName = ctx.request.body['medicineName'];
-    let hospitalName = ctx.request.body['hospitalName'];
+    let medicineName = ctx.request.body['medicine_name'];
+    let hospitalName = ctx.request.body['hospital_name'];
     let number = ctx.request.body['number'];
-    let startsDate = ctx.request.body['startsDate'];
+    let takeTime = ctx.request.body['take_time'];
+    let startsDate = ctx.request.body['starts_date'];
     let period = ctx.request.body['period'];
-    let medicineType = ctx.request.body['medicineType'];
-    let takeTimeArray = ctx.request.body['takeTime'] || [];
+    let medicineType = ctx.request.body['medicine_type'];
+    let groupId = ctx.request.body['group_id'];
 
     // 任意項目
-    let image = "";
-    let description = ctx.request.body['description'] || '';
+    let medicineImage = '';
+    let description = ctx.request.body.description || '';
 
-    let getGroupId = 'SELECT group_id as groupId FROM medicine WHERE medicine_id = ?;';
-    let groupId = (await connection.query(getGroupId, [medicineId]))[0][0]['groupId'];
+    let sql = 'SELECT image FROM medicine WHERE medicine_id = ?';
+    let [oldImage] = await connection.query(sql, [medicineId]);
+    if (oldImage.length !== 0) {
+        let oldImageFile = oldImage[0]['image'];
+        if (oldImageFile !== '' || oldImageFile !== undefined) {
+            medicineImage = oldImageFile;
+        }
+    }
 
-    let validationArray = [medicineName, hospitalName, number,
-        startsDate, period, medicineType, image, description, String(groupId)];
-    let updateArgs = [medicineName, hospitalName, number,
-        startsDate, period, medicineType, image, description, medicineId];
+    let uploadImage = ctx.request.files['medicine_image'];
+    let uploadImageFlag = true;
+    if (uploadImage['size'] !== 0) {
+        if (1048576 < uploadImage['size']) {
+            uploadImageFlag = false;
+        }
 
-    // 検証パス時は値をDBに保存し、検証拒否時はエラーメッセージを表示
-    let validationPromise = [];
-    let validationResultArray = [];
-    validationPromise[0] = app.medicineValidation(validationArray, userId).then(result => validationResultArray[0] = result);
-    validationPromise[1] = app.takeTimeValidation(takeTimeArray).then(result => validationResultArray[1] = result);
-    await Promise.all(validationPromise);
-    // 更新情報検証成功時
-    if (validationResultArray[0].is_success && validationResultArray[1].is_success) {
-        let sql = 'UPDATE medicine ' +
-            'SET medicine_name=?,hospital_name=?,number=?,' +
-            'starts_date=?,period=?,type_id=?,image=?,description=? ' +
-            'WHERE medicine_id = ?';
-        await connection.query(sql, updateArgs);
+        switch (app.getExt(uploadImage['name'])) {
+            case 'jpeg':
+            case 'jpg':
+            case 'png':
+                break;
+            default:
+                uploadImageFlag = false;
+                break;
+        }
 
-        // 現在のtake_timeテーブルに登録されている情報を取得
-        let currentTakeTimeSQL = 'SELECT take_time_id as takeTimeId FROM medicine_take_time WHERE medicine_id = ?;';
-        let currentTakeTimeResult = (await connection.query(currentTakeTimeSQL, [medicineId]))[0];
-        let currentTakeTimeArray = [];
-        for (let row of currentTakeTimeResult) {
-            currentTakeTimeArray.push(row['takeTimeId']);
-        }
-        // 削除する項目の判定
-        let updateTakeTime = [[], []]
-        for (let row of currentTakeTimeArray) {
-            updateTakeTime[0].push(row);
-            if (takeTimeArray.indexOf(row) < 0) {
-                updateTakeTime[1].push('DELETE');
-            } else {
-                updateTakeTime[1].push('NO_CHANGE');
-            }
-        }
-        // 追加すべき項目の判定
-        for (let row of takeTimeArray) {
-            if (currentTakeTimeArray.indexOf(row) < 0) {
-                updateTakeTime[0].push(row);
-                updateTakeTime[1].push('INSERT');
-            }
-        }
-        for (let index in updateTakeTime[0]) {
-            if (updateTakeTime[0].hasOwnProperty(index)) {
-                switch (updateTakeTime[1][index]) {
-                    case 'NO_CHANGE':
-                        continue;
-                    case 'DELETE': {
-                        let sql = 'DELETE FROM medicine_take_time WHERE medicine_id = ? AND take_time_id = ?;'
-                        await connection.query(sql, [medicineId, updateTakeTime[0][index]]);
-                        break;
-                    }
-                    case 'INSERT': {
-                        let sql = 'INSERT INTO medicine_take_time VALUES(?,?);'
-                        await connection.query(sql, [medicineId, updateTakeTime[0][index]]);
-                        break;
-                    }
-                }
-            } else {
-                console.log("it dose not have own property");
-            }
-        }
-        return ctx.redirect('/medicine-update/' + medicineId);
-    } else {
-        // 更新情報検証失敗時
-        if (validationResultArray[1].errors.array === '') {
-            validationResultArray[0].errors.takeTime = validationResultArray[1].errors.items[0];
+        if (!uploadImageFlag) {
+            fs.unlinkSync(uploadImage['path']);
         } else {
-            validationResultArray[0].errors.takeTime = validationResultArray[1].errors.array;
+            medicineImage = uuid().split('-').join('') + uuid().split('-').join('') + '.' + app.getExt(uploadImage['name']);
+            fs.renameSync(uploadImage['path'], path.join(__dirname, '../public/upload/', medicineImage));
         }
-        validationResultArray[0].request.takeTime = takeTimeArray;
-        session.update_denied_request = validationResultArray[0].request;
-        session.update_denied_error = validationResultArray[0].errors;
+    } else {
+        fs.unlinkSync(uploadImage['path']);
+    }
+
+    let validationMedicine = await app.validationMedicine([
+        medicineName,
+        hospitalName,
+        number,
+        startsDate,
+        period,
+        description
+    ]);
+    let validationTakeTime = await app.validationTakeTime(takeTime);
+    let validationMedicineType = await app.validationMedicineType(medicineType);
+    let validationGroupId = await app.validationGroupId(groupId, userId);
+
+    if (validationMedicine.result && validationTakeTime && validationMedicineType && validationGroupId && uploadImageFlag) {
+        // Update Medicine
+        sql = `
+            UPDATE medicine SET medicine_name = ?, hospital_name = ?, number = ?, starts_date = ?, period = ?,
+                                type_id = ?, group_id = ?, image = ?, description = ?
+            WHERE medicine_id = ?`;
+        await connection.query(sql, [medicineName, hospitalName, number, startsDate, period, medicineType, groupId, medicineImage, description, medicineId]);
+
+        // Delete TakeTime
+        sql = 'DELETE FROM medicine_take_time WHERE medicine_id = ?';
+        await connection.query(sql, [medicineId]);
+
+        // Insert TakeTime
+        for (const item of takeTime) {
+            let sql = 'INSERT INTO medicine_take_time (medicine_id, take_time_id) VALUES (?, ?)';
+            await connection.query(sql, [medicineId, item]);
+        }
+
+        session.success.message = '薬情報を更新しました';
+
+        return ctx.redirect('/medicine-list');
+    } else {
+        session.old = {};
+        session.error = validationMedicine.error;
+        session.old.medicine_id = medicineId;
+        if (medicineName !== '') session.old.medicine_name = medicineName;
+        if (hospitalName !== '') session.old.hospital_name = hospitalName;
+        if (number !== '') session.old.number = number;
+        if (takeTime !== '' && takeTime !== undefined && takeTime.length > 0) session.old.take_time = (typeof takeTime === "string") ? [takeTime] : takeTime;
+        if (startsDate !== '') session.old.starts_date = startsDate;
+        if (period !== '') session.old.period = period;
+        if (medicineType !== '') session.old.type_id = medicineType;
+        if (groupId !== '') session.old.group_id = groupId;
+        if (description !== '') session.old.description = description;
+        if (!uploadImageFlag) session.error.medicine_image = '1MB以内のJPEG・JPG・PNG・ファイルを選択してください';
+
+        if (!validationTakeTime) session.error.take_time = '飲む時間が正しく選択されていません';
+        if (!validationMedicineType) session.error.medicine_type = '種類が正しく選択されていません';
+        if (!validationGroupId) session.error.group_id = 'グループが正しく選択されていません';
+
+        session.error.message = '薬情報の更新に失敗しました';
+
         return ctx.redirect('/medicine-update/' + medicineId);
     }
 })

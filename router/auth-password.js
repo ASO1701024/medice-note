@@ -1,57 +1,60 @@
 const Router = require('koa-router');
 const router = new Router();
 const connection = require('../app/db');
+const app = require('../app/app');
 const validator = require('validatorjs');
 const bcrypt = require('bcrypt');
 
-router.get('/auth-password/:auth_key', async (ctx, next) => {
+router.get('/auth-password/:auth_key', async (ctx) => {
     let session = ctx.session;
+    app.initializeSession(session);
 
-    let authKey = ctx.params.auth_key;
+    let authKey = ctx.params['auth_key'];
 
     let sql = 'SELECT * FROM user_reset_password_key WHERE reset_password_key = ? AND expires_at >= ?';
     let [auth] = await connection.query(sql, [authKey, new Date()]);
     if (auth.length === 0) {
-        session.error_message = '認証キーが見つかりませんでした';
+        session.error.message = '認証キーが見つかりませんでした';
 
         return ctx.redirect('/forgot-password');
     }
 
-    let result = {};
-    result['data'] = {};
-
+    let result = app.initializeRenderResult();
+    result['data']['meta']['login_status'] = false;
+    result['data']['meta']['site_title'] = 'パスワード再発行 - Medice Note';
     result['data']['auth_key'] = authKey;
 
-    if (session.success_message !== undefined) {
-        result['data']['success_message'] = session.success_message;
-        session.success_message = undefined;
+    if (session.success !== undefined) {
+        result['data']['success'] = session.success;
+        session.success = undefined;
     }
 
-    if (session.error_message !== undefined) {
-        result['data']['error_message'] = session.error_message;
-        session.error_message = undefined;
+    if (session.error !== undefined) {
+        result['data']['error'] = session.error;
+        session.error = undefined;
     }
 
     await ctx.render('auth-password', result);
 });
 
-router.post('/auth-password/:auth_key', async (ctx, next) => {
+router.post('/auth-password/:auth_key', async (ctx) => {
     let session = ctx.session;
+    app.initializeSession(session);
 
-    let authKey = ctx.params.auth_key;
-    let password = ctx.request.body.password;
-    let passwordVerify = ctx.request.body.password_verify;
+    let authKey = ctx.params['auth_key'];
+    let password = ctx.request.body['password'];
+    let passwordVerify = ctx.request.body['password_verify'];
 
     let sql = 'SELECT * FROM user_reset_password_key WHERE reset_password_key = ? AND expires_at >= ?';
     let [auth] = await connection.query(sql, [authKey, new Date()]);
     if (auth.length === 0) {
-        session.error_message = '認証キーが見つかりませんでした';
+        session.error.message = '認証キーが見つかりませんでした';
 
         return ctx.redirect('/forgot-password');
     }
 
     if (password !== passwordVerify) {
-        session.error_message = 'パスワードが異なっています';
+        session.error.message = 'パスワードが異なっています';
 
         return ctx.redirect('/auth-password/' + authKey);
     }
@@ -63,9 +66,9 @@ router.post('/auth-password/:auth_key', async (ctx, next) => {
     });
 
     if (passwordValidate.fails()) {
-        session.error_password = '5文字以上100文字以下で入力';
+        session.error.password = '5文字以上100文字以下で入力';
 
-        return ctx.redirect('/auth-forgot/' + authKey);
+        return ctx.redirect('/auth-password/' + authKey);
     }
 
     let userId = auth[0].user_id;
@@ -75,7 +78,7 @@ router.post('/auth-password/:auth_key', async (ctx, next) => {
     sql = 'DELETE FROM user_reset_password_key WHERE reset_password_key = ?';
     await connection.query(sql, [authKey]);
 
-    session.success_message = 'パスワードを変更しました';
+    session.success.message = 'パスワードを変更しました';
 
     ctx.redirect('/login');
 });

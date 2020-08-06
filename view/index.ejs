@@ -1,3 +1,145 @@
-<div>
-    <p><%= message %></p>
+<div class="section-header">
+    <h1>トップページ</h1>
+</div>
+
+<% if (typeof data.success.message !== "undefined") { %>
+    <div class="alert alert-success alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>×</span>
+            </button>
+            <%= data.success.message %>
+        </div>
+    </div>
+<% } %>
+
+<% if (typeof data.error.message !== "undefined") { %>
+    <div class="alert alert-danger alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>×</span>
+            </button>
+            <%= data.error.message %>
+        </div>
+    </div>
+<% } %>
+
+<% if (data.meta.browser_warning === true) { %>
+    <div class="alert alert-warning">
+        <div class="alert-title">注意</div>
+        お使いのブラウザはサポートしていません<br>
+        <a href="https://www.google.co.jp/chrome/" target="_blank" rel="noopener" class="alert-link">Google Chrome</a>か
+        <a href="https://www.mozilla.org/ja/firefox/" target="_blank" rel="noopener" class="alert-link">Mozilla Firefox</a>の最新版をご利用ください
+    </div>
+<% } %>
+
+<% if (typeof data.meta.message !== "undefined") { %>
+    <% data.meta.message.info.forEach(d => { %>
+        <div class="alert alert-primary alert-dismissible show fade">
+            <div class="alert-body">
+                <button class="close" data-dismiss="alert">
+                    <span>×</span>
+                </button>
+                <%= d %>
+            </div>
+        </div>
+    <% }) %>
+
+    <% data.meta.message.success.forEach(d => { %>
+        <div class="alert alert-success alert-dismissible show fade">
+            <div class="alert-body">
+                <button class="close" data-dismiss="alert">
+                    <span>×</span>
+                </button>
+                <%= d %>
+            </div>
+        </div>
+    <% }) %>
+
+    <% data.meta.message.fail.forEach(d => { %>
+        <div class="alert alert-danger alert-dismissible show fade">
+            <div class="alert-body">
+                <button class="close" data-dismiss="alert">
+                    <span>×</span>
+                </button>
+                <%= d %>
+            </div>
+        </div>
+    <% }) %>
+<% } %>
+
+<div class="col-12 mb-4 pl-0 pr-0">
+    <div class="hero bg-primary text-white">
+        <div class="hero-inner">
+            <h2>こんにちは！</h2>
+            <p class="lead">
+                このアプリはお薬手帳のウェブアプリ版です
+            </p>
+            <% if (typeof data.meta.login_status !== "undefined" && data.meta.login_status == false) { %>
+                <div class="mt-4">
+                    <a href="/signup" class="btn btn-outline-white btn-lg btn-icon icon-left">
+                        <i class="far fa-user"></i> アカウント作成
+                    </a>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<% if (typeof data.meta.login_status !== "undefined" && data.meta.login_status == true) { %>
+    <div class="row">
+        <div class="col-12 col-md-6 col-lg-6">
+            <div class="section-body">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text">お薬手帳に登録されている薬情報を閲覧します</p>
+                        <a href="/medicine-list" class="card-link">薬情報一覧</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-6">
+            <div class="section-body">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text">お薬手帳に薬情報を登録します</p>
+                        <a href="/medicine-register" class="card-link">薬情報登録</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-6">
+            <div class="section-body">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text">登録されている通知情報を閲覧します</p>
+                        <a href="/notice-list" class="card-link">通知一覧</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-6">
+            <div class="section-body">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text">通知情報を登録します</p>
+                        <a href="/notice-register" class="card-link">通知登録</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<% } %>
+
+<div class="section-body">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">お困りですか？</h4>
+        </div>
+        <div class="card-body">
+            <p class="card-text">不明な点、ご要望などございましたらお気軽にサポートまでお問い合わせください</p>
+            <a href="/contact" class="card-link">お問い合わせ</a>
+        </div>
+    </div>
 </div>

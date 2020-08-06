@@ -3,198 +3,241 @@ const validator = require('validatorjs');
 
 module.exports = {
     getUserId: async (authId) => {
+        if (authId === undefined) return false;
         let sql = 'SELECT user_id FROM session WHERE session_id = ? AND expired_at >= ?';
         let [auth] = await connection.query(sql, [authId, new Date()]);
         if (auth.length === 0) {
             return false;
         }
-        return auth[0].user_id;
+        return auth[0]['user_id'];
     },
-    getMedicineAll: async (userId) => {
-        let sql =
-            'SELECT medicine_id, medicine_name, number, period, image ' +
-            'FROM medicine M LEFT JOIN medicine_group MG ON M.group_id = MG.group_id ' +
-            'WHERE MG.user_id = ?;';
-        let medicineData = await connection.query(sql, [userId]);
-        if (medicineData.length === 0) {
+    getDefaultGroup: async (userId) => {
+        let sql = 'SELECT group_id FROM medicine_group WHERE user_id = ? AND is_deletable = 1';
+        let [group] = await connection.query(sql, [userId]);
+        if (group.length === 0) {
             return false;
         }
-        return medicineData[0];
+        return group[0]['group_id'];
     },
-    medicineValidation: async (items, userId) => {
-        // データをvalidationするために整形
+    getGroupList: async (userId) => {
+        let sql = 'SELECT group_id, group_name FROM medicine_group WHERE user_id = ?';
+        let [group] = await connection.query(sql, [userId]);
+        return group;
+    },
+    validationMedicine: async (array) => {
         let requests = {
-            medicineName: String(items[0]),
-            hospitalName: items[1],
-            number: items[2],
-            startsDate: items[3],
-            period: items[4],
-            medicineType: items[5],
-            image: items[6],
-            description: items[7],
-            groupId: items[8]
+            medicineName: array[0],
+            hospitalName: array[1],
+            number: array[2],
+            startsDate: array[3],
+            period: array[4],
+            description: array[5]
         };
-        // 存在するmedicineTypeIdを取得。
-        let sql = 'SELECT type_id FROM medicine_type;';
-        let typeListResult = (await connection.query(sql))[0];
-        let typeList = [];
-        for (let row of typeListResult) {
-            typeList.push(String(row['type_id']));
-        }
-        // 更新権限を持つgroup_idを取得
-        sql = 'SELECT group_id FROM medicine_group WHERE user_id = ?;';
-        let groupListResult = (await connection.query(sql, [userId]))[0]
-        let groupList = [];
-        for (let row of groupListResult) {
-            groupList.push(String(row['group_id']));
-        }
-        // validationのルール
+        // Rule
         let rules = {
-            medicineName: 'required|max:250',
+            medicineName: 'required|max:200',
             hospitalName: 'required|max:100',
-            number: 'required|numeric|max:100',
-            startsDate: 'required|date', //
+            number: 'required|numeric|min:0|max:99',
+            startsDate: 'required|date',
             period: 'required|numeric|min:0|max:1000',
-            medicineType: ['required', 'numeric', {'in': typeList}],
-            image: 'max:100',
-            description: 'max:255',
-            groupId: ['numeric', {'in': groupList}],
+            description: 'max:255'
         };
-        // エラーメッセージ
+        // Message
         let errorMessage = {
-            'required.medicineName': "薬の名前は必須項目です",
-            'required.hospitalName': "病院名は必須項目です",
-            'required.number': "個数は必須項目です",
-            'required.startsDate': "処方日は必須項目です",
-            'required.period': "何日分は必須項目です",
-            'required.medicineType': "種類は必須項目です",
-            'numeric.number': "個数は数字で入力して下さい",
-            'numeric.period': "何日分は数字で入力して下さい",
-            'numeric.medicineType': "種類は選択肢から選んで下さい",
-            'numeric.groupId': "グループは選択肢から選んで下さい",
-            'max.medicineName': "薬の名前は250文字以内で入力して下さい",
-            'max.hospitalName': "病院名は100文字以下で入力して下さい",
-            'max.number': "飲む個数は100個以下を入力して下さい",
-            'max.period': "飲む期間は1000日以下を入力して下さい",
-            'max.description': "説明は250文字以下で入力して下さい",
-            'min.startsDate': "処方日は日付の形式で入力して下さい",
-            'min.period': "何日分は1以上の数字を入力して下さい",
-            'in.medicineType': "種類はリストから選択して下さい",
-            'in.groupId': "グループはリストから選択して下さい",
-            'date.startsDate': "処方日はリストから選択して下さい",
+            'required.medicineName': '200文字以内で入力してください',
+            'max.medicineName': '200文字以内で入力してください',
+            'required.hospitalName': '100文字以内で入力してください',
+            'max.hospitalName': '100文字以内で入力してください',
+            'required.number': '0以上99以下の数字で入力してください',
+            'numeric.number': '0以上99以下の数字で入力してください',
+            'min.number': '0以上99以下の数字で入力してください',
+            'max.number': '0以上99以下の数字で入力してください',
+            'required.startsDate': '日付の書式で入力してください',
+            'date.startsDate': '日付の書式で入力してください',
+            'required.period': '0以上で1000以内の数字で入力してください',
+            'numeric.period': '0以上で1000以内の数字で入力してください',
+            'min.period': '0以上で1000以内の数字で入力してください',
+            'max.period': '0以上で1000以内の数字で入力してください',
+            'max.description': '255文字以内で入力してください'
         }
-        // validation実行
+        // Validation
         let requestValidate = new validator(requests, rules, errorMessage);
 
-        // validationの結果を取り出してresultに代入
-        let result = {errors: {}, is_success: false, request: {}};
+        let result = {
+            error: {},
+            result: false
+        };
         await requestValidate.checkAsync(() => {
-            // 検証成功時処理
-            result.is_success = true;
+            // Success
+            result.result = true;
         }, () => {
-            // 検証拒否時処理
-            result.is_success = false;
-            result.errors.medicineName = requestValidate.errors.first('medicineName');
-            result.errors.hospitalName = requestValidate.errors.first('hospitalName');
-            result.errors.number = requestValidate.errors.first('number');
-            result.errors.startsDate = requestValidate.errors.first('startsDate');
-            result.errors.period = requestValidate.errors.first('period');
-            result.errors.medicineType = requestValidate.errors.first('medicineType');
-            result.errors.image = requestValidate.errors.first('image')
-            result.errors.description = requestValidate.errors.first('description');
-            result.errors.groupId = requestValidate.errors.first('groupId');
-            result.request = requests;
-        })
-
-        return result;
-    },
-    takeTimeValidation: async (items) => {
-        let result = {errors: {array: "", items: []}, is_success: false, request: []};
-        // 配列が空でないか確認
-        let arrayRequest = {array: items};
-        let arrayRules = {array: 'required'};
-        let arrayErrorMessage = {'required': "飲む時間は必須項目です"};
-        let arrayValidate = new validator(arrayRequest, arrayRules, arrayErrorMessage);
-        await arrayValidate.checkAsync(() => {
-            // 検証成功時処理
-            result.is_success = true;
-        }, () => {
-            // 検証拒否時処理
-            result.is_success = false;
-            result.errors.array = arrayValidate.errors.first('array');
-            result.request = items;
-        })
-        // 配列が空の場合は拒否
-        if (result.is_success === false) {
-            return result
-        }
-
-        // 存在するtakeTimeIdをDBから取得。
-        let sql = 'SELECT take_time_id FROM take_time;';
-        let typeListResult = (await connection.query(sql))[0];
-        let typeList = [];
-        for (let row of typeListResult) {
-            typeList.push(String(row['take_time_id']));
-        }
-
-        let itemValidatorList = [];
-        for (let row of items) {
-            let itemRequest = {item: row};
-            let itemRules = {item: ['numeric', {'in': typeList}]};
-            let itemErrorMessage = {
-                'numeric': "飲む時間はチェックボックスから選択して下さい",
-                'in': "飲む時間はチェックボックスから選択して下さい",
+            // Error
+            result.result = false;
+            if (requestValidate.errors.first('medicineName')) {
+                result.error.medicine_name = requestValidate.errors.first('medicineName');
             }
-            itemValidatorList.push(new validator(itemRequest, itemRules, itemErrorMessage));
-        }
-        for (let row of itemValidatorList) {
-            await row.checkAsync(() => {
-            }, () => {
-                result.is_success = false;
-                result.errors.items.push(row.errors.first('item'));
-                if (result.request.length === 0) {
-                    result.request = items;
-                }
-            });
-        }
+            if (requestValidate.errors.first('hospitalName')) {
+                result.error.hospital_name = requestValidate.errors.first('hospitalName');
+            }
+            if (requestValidate.errors.first('number')) {
+                result.error.number = requestValidate.errors.first('number');
+            }
+            if (requestValidate.errors.first('startsDate')) {
+                result.error.starts_date = requestValidate.errors.first('startsDate');
+            }
+            if (requestValidate.errors.first('period')) {
+                result.error.period = requestValidate.errors.first('period');
+            }
+            if (requestValidate.errors.first('description')) {
+                result.error.description = requestValidate.errors.first('description');
+            }
+        })
+
         return result;
     },
-    getMedicine: async (medicineId, userId) => {
-        // medicineテーブルのmedicine_id以外を取得
-        let sql =
-            'SELECT ' +
-            'medicine_id as medicineId,' +
-            'medicine_name as medicineName,' +
-            'hospital_name as hospitalName,' +
-            'number,' +
-            'DATE_FORMAT(starts_date, "%Y-%m-%d") as startsDate,' +
-            'period,' +
-            'type_id as medicineType,' +
-            'image,' +
-            'description,' +
-            'group_id as groupId ' +
-            'FROM medicine M ' +
-            'WHERE M.group_id in (SELECT group_id FROM medicine_group WHERE user_id = ?) ' +
-            'AND medicine_id = ?';
-        let medicineResult = (await connection.query(sql, [userId, medicineId]))[0][0];
+    validationTakeTime: async (array) => {
+        if (array === '' || array === undefined) return false;
 
-        // 存在しないmedicine_idの指定、もしくは自分以外が作成した薬情報を指定した時の処理
-        if (typeof medicineResult === 'undefined') {
+        for (let i = 0; i < array.length; i++) {
+            let sql = 'SELECT take_time_id FROM take_time WHERE take_time_id = ?';
+            let [data] = await connection.query(sql, [array[i]]);
+            if (data.length === 0) {
+                return false;
+            }
+        }
+        return true;
+    },
+    validationMedicineType: async (item) => {
+        let sql = 'SELECT type_id FROM medicine_type WHERE type_id = ?';
+        let [data] = await connection.query(sql, [item]);
+        return data.length !== 0;
+    },
+    getExt: (filename) => {
+        let pos = filename.lastIndexOf('.');
+        if (pos === -1) return '';
+        return filename.slice(pos + 1);
+    },
+    isHaveMedicine: async (medicineId, userId) => {
+        let sql = 'SELECT medicine_id FROM medicine WHERE medicine_id = ? ' +
+            'AND group_id in (SELECT group_id FROM medicine_group WHERE user_id = ?)';
+        let [medicine] = await connection.query(sql, [medicineId, userId]);
+        return medicine.length !== 0;
+    },
+    getMedicineFromMedicineId: async (medicineId) => {
+        let sql = 'SELECT medicine_id, medicine_name, hospital_name, number, ' +
+            'date_format(starts_date, \'%Y-%m-%d\') as starts_date, period, type_id, group_id, image, description ' +
+            'FROM medicine ' +
+            'WHERE medicine_id = ?';
+        let [medicine] = await connection.query(sql, [medicineId]);
+        if (medicine.length === 0) {
             return false;
-        } else {
-            // medicine_take_timeテーブルの情報を取得
-            let sql =
-                'SELECT take_time_id as medicineTakeTime ' +
-                'FROM medicine_take_time ' +
-                'WHERE medicine_id = ? ' +
-                'ORDER BY take_time_id;'
-            let takeTimeResult = (await connection.query(sql, [medicineResult['medicineId']]))[0];
-            let takeTimeArray = [];
-            for (let row of takeTimeResult) {
-                takeTimeArray.push(String(row['medicineTakeTime']));
-            }
-
-            return [medicineResult, takeTimeArray];
         }
+        sql = 'SELECT take_time_id FROM medicine_take_time WHERE medicine_id = ?';
+        let [takeTime] = await connection.query(sql, [medicineId]);
+        let array = [];
+        for (let i = 0; i < takeTime.length; i++) {
+            array.push(takeTime[i]['take_time_id']);
+        }
+        return {
+            medicine_id: medicine[0]['medicine_id'],
+            medicine_name: medicine[0]['medicine_name'],
+            hospital_name: medicine[0]['hospital_name'],
+            number: medicine[0]['number'],
+            starts_date: medicine[0]['starts_date'],
+            period: medicine[0]['period'],
+            type_id: medicine[0]['type_id'],
+            group_id: medicine[0]['group_id'],
+            image: medicine[0]['period'],
+            description: medicine[0]['description'],
+            take_time: array
+        };
+    },
+    initializeRenderResult: () => {
+        let result = {};
+        result['data'] = {};
+        result['data']['old'] = {};
+        result['data']['success'] = {};
+        result['data']['error'] = {};
+        result['data']['meta'] = {};
+        result['data']['meta']['browser_warning'] = false;
+        result['data']['meta']['seo'] = {};
+        result['data']['meta']['seo']['bool'] = false;
+
+        return result;
+    },
+    initializeSession: (session) => {
+        if (session.error === undefined) {
+            session.error = {};
+        }
+        if (session.success === undefined) {
+            session.success = {};
+        }
+        if (session.old === undefined) {
+            session.old = {};
+        }
+    },
+    validationGroupId: async (groupId, userId) => {
+        let sql = 'SELECT group_id FROM medicine_group WHERE group_id = ? AND user_id = ?';
+        let [group] = await connection.query(sql, [groupId, userId]);
+        return group.length !== 0;
+    },
+    validationNoticeName: (noticeName) => {
+        let validation = new validator({
+            noticeName: noticeName
+        }, {
+            noticeName: 'required|string|min:1|max:100'
+        });
+        return validation.passes();
+    },
+    validationNoticeMedicineId: async (medicineId, userId) => {
+        if (medicineId === '' || medicineId === undefined || medicineId.length <= 0) return false;
+
+        for (let i = 0; i < medicineId.length; i++) {
+            let sql = 'SELECT medicine_id FROM medicine WHERE medicine_id = ? ' +
+                'AND group_id in (SELECT group_id FROM medicine_group WHERE user_id = ?)';
+            let [medicine] = await connection.query(sql, [medicineId[i], userId]);
+            if (medicine.length === 0) {
+                return false;
+            }
+        }
+        return true;
+    },
+    validationNoticeTime: (noticeTime) => {
+        if (noticeTime === '' || noticeTime === undefined || noticeTime.length <= 0) return false;
+
+        for (let i = 0; i < noticeTime.length; i++) {
+            let validation = new validator({
+                time: noticeTime[i]
+            }, {
+                time: ['required', 'regex:/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/']
+            });
+            if (validation.fails()) {
+                return false;
+            }
+        }
+        return true;
+    },
+    validationNoticeDay: (noticeWeek) => {
+        if (noticeWeek === '' || noticeWeek === undefined) return false;
+
+        for (let i = 0; i < noticeWeek.length; i++) {
+            let validation = new validator({
+                week: noticeWeek[i]
+            }, {
+                week: ['required', {'in': ['0', '1', '2', '3', '4', '5', '6']}]
+            });
+            if (validation.fails()) {
+                return false;
+            }
+        }
+        return true;
+    },
+    validationEndDate: (endDate) => {
+        let validation = new validator({
+            endDate: endDate
+        }, {
+            endDate: 'required|date'
+        });
+        return validation.passes();
     }
 }
