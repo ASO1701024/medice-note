@@ -1,9 +1,8 @@
 const Router = require('koa-router');
 const router = new Router();
 const app = require('../app/app');
-const connection = require('../app/db');
 
-router.get('/calendar', async (ctx) => {
+router.get('/medicine-calendar', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
 
@@ -15,9 +14,18 @@ router.get('/calendar', async (ctx) => {
 
         return ctx.redirect('/login');
     }
+
     let result = app.initializeRenderResult();
     result['data']['meta']['login_status'] = true;
-    result['data']['meta']['site_title'] = 'カレンダー - Medice Note';
+    result['data']['meta']['site_title'] = 'お薬カレンダー - Medice Note';
+    result['data']['meta']['css'] = [
+        '/stisla/modules/fullcalendar/fullcalendar.min.css'
+    ];
+    result['data']['meta']['script'] = [
+        '/stisla/modules/fullcalendar/fullcalendar.min.js',
+        '/stisla/modules/fullcalendar/locale/ja.js',
+        '/js/medicine-calendar.js'
+    ];
 
     if (session.error !== undefined) {
         result['data']['error'] = session.error;
@@ -29,13 +37,7 @@ router.get('/calendar', async (ctx) => {
         session.success = undefined;
     }
 
-    if (session.old !== undefined) {
-        result['data']['old'] = session.old;
-        session.old = undefined;
-    }
-
-    await ctx.render('/calendar', result);
-
+    await ctx.render('medicine-calendar', result);
 })
 
 module.exports = router;

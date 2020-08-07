@@ -56,9 +56,9 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="nav-link" href="/calendar">
+                                <a class="nav-link" href="/medicine-calendar">
                                     <i class="far fa-calendar-alt"></i>
-                                    <span>カレンダー</span>
+                                    <span>お薬カレンダー</span>
                                 </a>
                             </li>
                             <li class="menu-header">グループ</li>
@@ -135,7 +135,6 @@
                     <% } %>
                 </aside>
             </div>
-
             <div class="main-content">
                 <section class="section">
                     <%- body %>
@@ -160,7 +159,7 @@
     <% if (typeof data.meta.script !== "undefined") { %>
         <% for (var s = 0; s < data.meta.script.length; s++) { %>
             <script src="<%= data.meta.script[s] %>"></script>
-        <% }%>
+        <% } %>
     <% } %>
     <script src="/stisla/js/stisla.js"></script>
     <script src="/stisla/js/scripts.js"></script>

@@ -98,6 +98,10 @@ const medicineDeleteRouter = require('./router/medicine-delete');
 app.use(medicineDeleteRouter.routes());
 app.use(medicineDeleteRouter.allowedMethods());
 
+const calenderRouter = require('./router/medicine-calendar');
+app.use(calenderRouter.routes());
+app.use(calenderRouter.allowedMethods());
+
 const groupListRouter = require('./router/group-list');
 app.use(groupListRouter.routes());
 app.use(groupListRouter.allowedMethods());
@@ -133,10 +137,6 @@ app.use(accountDeleteRouter.allowedMethods());
 const apiMedicineRouter = require('./router/api-medicine');
 app.use(apiMedicineRouter.routes());
 app.use(apiMedicineRouter.allowedMethods());
-
-const calenderRouter = require('./router/calendar');
-app.use(calenderRouter.routes());
-app.use(calenderRouter.allowedMethods());
 
 const apiCalenderRouter = require('./router/api-calendar');
 app.use(apiCalenderRouter.routes());
