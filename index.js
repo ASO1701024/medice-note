@@ -50,6 +50,7 @@ const indexRouter = require('./router/index');
 app.use(indexRouter.routes());
 app.use(indexRouter.allowedMethods());
 
+// Account
 const signupRouter = require('./router/signup');
 app.use(signupRouter.routes());
 app.use(signupRouter.allowedMethods());
@@ -78,13 +79,14 @@ const contactRouter = require('./router/contact');
 app.use(contactRouter.routes());
 app.use(contactRouter.allowedMethods());
 
-const medicineRouter = require('./router/medicine');
-app.use(medicineRouter.routes());
-app.use(medicineRouter.allowedMethods());
-
+// Medicine
 const medicineListRouter = require('./router/medicine-list');
 app.use(medicineListRouter.routes());
 app.use(medicineListRouter.allowedMethods());
+
+const medicineRouter = require('./router/medicine');
+app.use(medicineRouter.routes());
+app.use(medicineRouter.allowedMethods());
 
 const medicineRegisterRouter = require('./router/medicine-register');
 app.use(medicineRegisterRouter.routes());
@@ -102,6 +104,7 @@ const calenderRouter = require('./router/medicine-calendar');
 app.use(calenderRouter.routes());
 app.use(calenderRouter.allowedMethods());
 
+// Group
 const groupListRouter = require('./router/group-list');
 app.use(groupListRouter.routes());
 app.use(groupListRouter.allowedMethods());
@@ -110,6 +113,7 @@ const groupRouter = require('./router/group');
 app.use(groupRouter.routes());
 app.use(groupRouter.allowedMethods());
 
+// Notice
 const noticeListRouter = require('./router/notice-list');
 app.use(noticeListRouter.routes());
 app.use(noticeListRouter.allowedMethods());
@@ -122,6 +126,7 @@ const noticeUpdateRouter = require('./router/notice-update');
 app.use(noticeUpdateRouter.routes());
 app.use(noticeUpdateRouter.allowedMethods());
 
+// Account
 const accountSettingRouter = require('./router/account-setting');
 app.use(accountSettingRouter.routes());
 app.use(accountSettingRouter.allowedMethods());
@@ -134,6 +139,7 @@ const accountDeleteRouter = require('./router/account-delete');
 app.use(accountDeleteRouter.routes());
 app.use(accountDeleteRouter.allowedMethods());
 
+// API
 const apiMedicineRouter = require('./router/api-medicine');
 app.use(apiMedicineRouter.routes());
 app.use(apiMedicineRouter.allowedMethods());
