@@ -48,28 +48,30 @@
                             <small class="form-text text-muted">
                                 通知時に表示する薬情報を選択します (※ 重複した項目は自動的に削除されます)
                             </small>
-                            <table id="medicine_table" class="table medicine-table">
-                                <tbody>
-                                <% if (typeof data.old.medicine_id !== "undefined") {
-                                    for (var mi = 0; mi < data.old.medicine_id.length; mi++) { %>
-                                        <tr>
-                                            <td class="pl-0">
-                                                <input type="text" class="form-control-plaintext" readonly value="<%= data.old.medicine_id[mi]['medicine_name'] %>">
-                                            </td>
-                                            <td class="p-0">
-                                                <input type="text" class="form-control-plaintext text-center" readonly value="<%= data.old.medicine_id[mi]['number'] %> 個">
-                                            </td>
-                                            <td class="pr-2 pl-2 text-center">
-                                                <a href="javascript:void(0)" class="btn btn-icon table-tr-delete">
-                                                    <i class="fas fa-times"></i>
-                                                </a>
-                                            </td>
-                                            <input type="hidden" name="medicine_id[]" value="<%= data.old.medicine_id[mi]['medicine_id'] %>">
-                                        </tr>
-                                    <% }
-                                } %>
-                                </tbody>
-                            </table>
+                            <div class="medicine-table-outer">
+                                <table id="medicine_table" class="table medicine-table mb-0">
+                                    <tbody>
+                                    <% if (typeof data.old.medicine_id !== "undefined") {
+                                        for (var mi = 0; mi < data.old.medicine_id.length; mi++) { %>
+                                            <tr>
+                                                <td class="pl-0">
+                                                    <input type="text" class="form-control-plaintext" readonly value="<%= data.old.medicine_id[mi]['medicine_name'] %>">
+                                                </td>
+                                                <td class="p-0">
+                                                    <input type="text" class="form-control-plaintext text-center" readonly value="<%= data.old.medicine_id[mi]['number'] %> 個">
+                                                </td>
+                                                <td class="pr-2 pl-2 text-center">
+                                                    <a href="javascript:void(0)" class="btn btn-icon table-tr-delete">
+                                                        <i class="fas fa-times"></i>
+                                                    </a>
+                                                </td>
+                                                <input type="hidden" name="medicine_id[]" value="<%= data.old.medicine_id[mi]['medicine_id'] %>">
+                                            </tr>
+                                        <% }
+                                    } %>
+                                    </tbody>
+                                </table>
+                            </div>
                             <span class="form-error">
                                 <% if (typeof data.error.medicine_id !== "undefined") { %>
                                     <%= data.error.medicine_id %>
@@ -77,7 +79,7 @@
                             </span>
                         </div>
                         <div class="form-group">
-                            <label class="control-label">時間</label>
+                            <label class="control-label">時間 *</label>
                             <select class="form-control select2" name="notice_time" multiple required>
                                 <% for (var t = 0; t < 24; t++) {
                                     var hour = '';
@@ -102,7 +104,23 @@
                             </span>
                         </div>
                         <div class="form-group">
-                            <label class="control-label">曜日 *</label>
+                            <div class="d-block">
+                                <label class="control-label">曜日 *</label>
+                                <div class="float-right mb-2">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary btn-sm btn-danger action-week-all-select">すべての曜日を選択</button>
+                                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
+                                            <span class="sr-only">Toggle Dropdown</span>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item action-week-weekday-select" href="javascript:void(0)">平日のみ選択</a>
+                                            <a class="dropdown-item action-week-holiday-select" href="javascript:void(0)">土日のみ選択</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item action-week-all-deselect" href="javascript:void(0)">全ての選択を解除</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <select class="form-control select2" multiple="" name="notice_day" required>
                                 <option value="0" <% if (typeof data.old.notice_day != "undefined" && data.old.notice_day.some(d => d == 0)) { %> selected <% } %>>日曜日</option>
                                 <option value="1" <% if (typeof data.old.notice_day != "undefined" && data.old.notice_day.some(d => d == 1)) { %> selected <% } %>>月曜日</option>

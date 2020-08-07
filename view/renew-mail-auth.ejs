@@ -1,5 +1,5 @@
 <div class="section-header">
-    <h1>パスワード再発行</h1>
+    <h1>メールアドレス認証</h1>
 </div>
 
 <% if (typeof data.success.message !== "undefined") { %>
@@ -25,25 +25,15 @@
 <% } %>
 
 <div class="card">
-    <form class="/auth-password/<%= data.auth_key %>" method="post">
+    <form class="/renew-mail-auth" method="post">
         <div class="card-body pb-0">
             <div class="form-group">
-                <label>パスワード</label>
-                <input type="password" class="form-control" name="password" required>
-                <span class="form-error">
-                    <% if (typeof data.error.password !== "undefined") { %>
-                        <%= data.error.password %>
-                    <% } %>
-                </span>
-            </div>
-
-            <div class="form-group">
-                <label>パスワード（確認）</label>
-                <input type="password" class="form-control" name="password_verify" required>
+                <label>メールアドレス</label>
+                <input type="email" class="form-control" name="mail" required>
             </div>
         </div>
         <div class="card-footer pt-">
-            <button type="submit" class="btn btn-primary">変更</button>
+            <button type="submit" class="btn btn-primary">送信</button>
         </div>
     </form>
 </div>

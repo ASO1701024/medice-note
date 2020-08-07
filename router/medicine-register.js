@@ -26,11 +26,13 @@ router.get('/medicine-register', async (ctx) => {
     result['data']['meta']['group_list'] = await app.getGroupList(userId);
     result['data']['meta']['css'] = [
         '/stisla/modules/select2/dist/css/select2.min.css',
-        'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'
+        '/stisla/modules/bootstrap-daterangepicker/daterangepicker.css',
+        '/css/library/jquery-ui.min.css'
     ];
     result['data']['meta']['script'] = [
         '/stisla/modules/select2/dist/js/select2.full.min.js',
-        'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+        '/stisla/modules/bootstrap-daterangepicker/daterangepicker.js',
+        '/js/library/jquery-ui.min.js',
         '/js/medicine-form.js'
     ];
 
@@ -85,7 +87,7 @@ router.post('/medicine-register', async (ctx) => {
     let groupId = ctx.request.body['group_id'];
 
     // Any
-    let medicineImage = "";
+    let medicineImage = '';
     let description = ctx.request.body.description || '';
 
     let uploadImage = ctx.request.files['medicine_image'];
@@ -129,9 +131,9 @@ router.post('/medicine-register', async (ctx) => {
     let validationGroupId = await app.validationGroupId(groupId, userId);
 
     if (validationMedicine.result && validationTakeTime && validationMedicineType && validationGroupId && uploadImageFlag) {
-        let sql = 'INSERT INTO medicine' +
-            '(medicine_name, hospital_name, number, starts_date, period, type_id, image, description, group_id)' +
-            'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        let sql = `
+            INSERT INTO medicine (medicine_name, hospital_name, number, starts_date, period, type_id, image, description, group_id) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         let [medicine] = await connection.query(sql, [
             medicineName,
             hospitalName,

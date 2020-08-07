@@ -6,5 +6,5 @@
 * 山本
 * 田中
 ## リンク
-* [アプリ](https://medice-note.vxx0.com/)
+* [アプリ](https://www.medice-note.vxx0.com/)
 * [アプリAPI](https://api.medice-note.vxx0.com/)

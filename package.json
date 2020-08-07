@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@line/bot-sdk": "^7.0.0",
     "bcrypt": "^4.0.1",
     "koa": "^2.12.0",
     "koa-body": "^4.1.1",
@@ -20,8 +21,11 @@
     "koa-router": "^8.0.8",
     "koa-sqlite3-session": "^1.0.4",
     "koa-static": "^5.0.0",
+    "line-login": "^1.0.14",
     "mysql2": "^2.1.0",
+    "node-cron": "^2.0.3",
     "nodemailer": "^6.4.8",
+    "ua-parser-js": "^0.7.21",
     "uuid": "^8.1.0",
     "validatorjs": "^3.18.1"
   },

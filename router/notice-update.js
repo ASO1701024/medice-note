@@ -36,8 +36,7 @@ router.get('/notice-update/:notice_id', async (ctx) => {
         '/stisla/modules/select2/dist/js/select2.full.min.js',
         '/stisla/modules/bootstrap-daterangepicker/daterangepicker.js',
         '/js/library/handlebars.min.js',
-        '/js/notice-register.js',
-        '/js/app.js'
+        '/js/notice-register.js'
     ];
 
     sql = 'SELECT notice_name, date_format(notice_period, \'%Y-%c-%d\') as end_date FROM notice WHERE notice_id = ?';
@@ -118,6 +117,22 @@ router.post('/notice-update/:notice_id', async (ctx) => {
     let noticeTime = ctx.request.body['notice_time'];
     let noticeDay = ctx.request.body['notice_day'];
     let endDate = ctx.request.body['end_date'];
+
+    if (typeof medicineId === "string") {
+        medicineId = [medicineId];
+    } else if (typeof medicineId === "undefined") {
+        medicineId = [];
+    }
+    if (typeof noticeTime === "string") {
+        noticeTime = [noticeTime];
+    } else if (typeof noticeTime === "undefined") {
+        noticeTime = [];
+    }
+    if (typeof noticeDay === "string") {
+        noticeDay = [noticeDay];
+    } else if (typeof noticeDay === "undefined") {
+        noticeDay = [];
+    }
 
     medicineId = Array.from(new Set(medicineId));
     noticeTime = Array.from(new Set(noticeTime));

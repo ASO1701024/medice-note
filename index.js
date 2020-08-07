@@ -46,6 +46,9 @@ app.use(session({
 }, app));
 app.proxy = true;
 
+require('./app/cron-push-message');
+require('./app/cron-verify-line-access-token');
+
 const indexRouter = require('./router/index');
 app.use(indexRouter.routes());
 app.use(indexRouter.allowedMethods());
@@ -74,6 +77,10 @@ app.use(forgotPasswordRouter.allowedMethods());
 const authPasswordRouter = require('./router/auth-password');
 app.use(authPasswordRouter.routes());
 app.use(authPasswordRouter.allowedMethods());
+
+const renewMailAuthRouter = require('./router/renew-mail-auth');
+app.use(renewMailAuthRouter.routes());
+app.use(renewMailAuthRouter.allowedMethods());
 
 const contactRouter = require('./router/contact');
 app.use(contactRouter.routes());
@@ -140,6 +147,10 @@ app.use(accountDeleteRouter.routes());
 app.use(accountDeleteRouter.allowedMethods());
 
 // API
+const lineLoginRouter = require('./router/line-login');
+app.use(lineLoginRouter.routes());
+app.use(lineLoginRouter.allowedMethods());
+
 const apiMedicineRouter = require('./router/api-medicine');
 app.use(apiMedicineRouter.routes());
 app.use(apiMedicineRouter.allowedMethods());

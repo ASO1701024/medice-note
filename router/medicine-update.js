@@ -42,11 +42,13 @@ router.get('/medicine-update/:medicine_id', async (ctx) => {
     result['data']['old'] = await app.getMedicineFromMedicineId(medicineId);
     result['data']['meta']['css'] = [
         '/stisla/modules/select2/dist/css/select2.min.css',
-        'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'
+        '/stisla/modules/bootstrap-daterangepicker/daterangepicker.css',
+        '/css/library/jquery-ui.min.css'
     ];
     result['data']['meta']['script'] = [
         '/stisla/modules/select2/dist/js/select2.full.min.js',
-        'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+        '/stisla/modules/bootstrap-daterangepicker/daterangepicker.js',
+        '/js/library/jquery-ui.min.js',
         '/js/medicine-form.js'
     ];
 
@@ -95,8 +97,17 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
     let groupId = ctx.request.body['group_id'];
 
     // 任意項目
-    let medicineImage = "";
+    let medicineImage = '';
     let description = ctx.request.body.description || '';
+
+    let sql = 'SELECT image FROM medicine WHERE medicine_id = ?';
+    let [oldImage] = await connection.query(sql, [medicineId]);
+    if (oldImage.length !== 0) {
+        let oldImageFile = oldImage[0]['image'];
+        if (oldImageFile !== '' || oldImageFile !== undefined) {
+            medicineImage = oldImageFile;
+        }
+    }
 
     let uploadImage = ctx.request.files['medicine_image'];
     let uploadImageFlag = true;
@@ -139,8 +150,10 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
 
     if (validationMedicine.result && validationTakeTime && validationMedicineType && validationGroupId && uploadImageFlag) {
         // Update Medicine
-        let sql = 'UPDATE medicine SET medicine_name = ?, hospital_name = ?, number = ?, starts_date = ?, ' +
-            'period = ?, type_id = ?, group_id = ?, image = ?, description = ? WHERE medicine_id = ?';
+        sql = `
+            UPDATE medicine SET medicine_name = ?, hospital_name = ?, number = ?, starts_date = ?, period = ?,
+                                type_id = ?, group_id = ?, image = ?, description = ?
+            WHERE medicine_id = ?`;
         await connection.query(sql, [medicineName, hospitalName, number, startsDate, period, medicineType, groupId, medicineImage, description, medicineId]);
 
         // Delete TakeTime

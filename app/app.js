@@ -44,21 +44,21 @@ module.exports = {
         };
         // Message
         let errorMessage = {
-            'required.medicineName': "200文字以内で入力してください",
-            'max.medicineName': "200文字以内で入力してください",
-            'required.hospitalName': "100文字以内で入力してください",
-            'max.hospitalName': "100文字以内で入力してください",
-            'required.number': "0以上99以下の数字で入力してください",
-            'numeric.number': "0以上99以下の数字で入力してください",
-            'min.number': "0以上99以下の数字で入力してください",
-            'max.number': "0以上99以下の数字で入力してください",
-            'required.startsDate': "日付の書式で入力してください",
-            'date.startsDate': "日付の書式で入力してください",
-            'required.period': "0以上で1000以内の数字で入力してください",
-            'numeric.period': "0以上で1000以内の数字で入力してください",
-            'min.period': "0以上で1000以内の数字で入力してください",
-            'max.period': "0以上で1000以内の数字で入力してください",
-            'max.description': "255文字以内で入力してください"
+            'required.medicineName': '200文字以内で入力してください',
+            'max.medicineName': '200文字以内で入力してください',
+            'required.hospitalName': '100文字以内で入力してください',
+            'max.hospitalName': '100文字以内で入力してください',
+            'required.number': '0以上99以下の数字で入力してください',
+            'numeric.number': '0以上99以下の数字で入力してください',
+            'min.number': '0以上99以下の数字で入力してください',
+            'max.number': '0以上99以下の数字で入力してください',
+            'required.startsDate': '日付の書式で入力してください',
+            'date.startsDate': '日付の書式で入力してください',
+            'required.period': '0以上で1000以内の数字で入力してください',
+            'numeric.period': '0以上で1000以内の数字で入力してください',
+            'min.period': '0以上で1000以内の数字で入力してください',
+            'max.period': '0以上で1000以内の数字で入力してください',
+            'max.description': '255文字以内で入力してください'
         }
         // Validation
         let requestValidate = new validator(requests, rules, errorMessage);
@@ -159,6 +159,9 @@ module.exports = {
         result['data']['success'] = {};
         result['data']['error'] = {};
         result['data']['meta'] = {};
+        result['data']['meta']['browser_warning'] = false;
+        result['data']['meta']['seo'] = {};
+        result['data']['meta']['seo']['bool'] = false;
 
         return result;
     },

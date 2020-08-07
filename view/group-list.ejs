@@ -31,7 +31,7 @@
                 <h4>グループ追加</h4>
             </div>
             <div class="card-body">
-                <form action="/group-list/add" method="post">
+                <form action="/group-add" method="post">
                     <div class="card-body pb-0">
                         <div class="form-group">
                             <label class="control-label">グループ名</label>
@@ -56,7 +56,7 @@
                         <p class="text-muted">登録されているグループ情報が見つかりませんでした</p>
                     <% } else { %>
                         <div class="table-responsive">
-                            <table id="medicine-list" class="table table-bordered table-md">
+                            <table class="group-list table table-bordered table-md">
                                 <tbody>
                                     <tr class="text-center" data-sort-method="none">
                                         <th>グループ名</th>
@@ -65,19 +65,19 @@
                                     </tr>
                                     <% for (var i = 0; i < data.group_list.length; i++) { %>
                                         <tr>
-                                            <td style="width: calc(100% - (70px * 2));">
+                                            <td>
                                                 <input type="hidden" name="group_id" form="form_<%= data.group_list[i]['group_id'] %>" value="<%= data.group_list[i]['group_id'] %>">
                                                 <input type="text" name="group_name" form="form_<%= data.group_list[i]['group_id'] %>" class="form-control" value="<%= data.group_list[i]['group_name'] %>">
                                             </td>
-                                            <td style="width: 70px;">
-                                                <form action="/group-list/edit" id="form_<%= data.group_list[i]['group_id'] %>" method="post">
+                                            <td>
+                                                <form action="/group-edit" id="form_<%= data.group_list[i]['group_id'] %>" method="post">
                                                     <button type="submit" class="btn btn-primary">編集</button>
                                                 </form>
                                             </td>
-                                            <td style="width: 70px;">
-                                                <form action="/group-list/delete" method="post">
+                                            <td>
+                                                <form action="/group-delete" method="post">
                                                     <input type="hidden" name="group_id" value="<%= data.group_list[i]['group_id'] %>">
-                                                    <button type="submit" class="btn btn-danger">削除</button>
+                                                    <button type="button" class="btn btn-danger group-delete">削除</button>
                                                 </form>
                                             </td>
                                         </tr>

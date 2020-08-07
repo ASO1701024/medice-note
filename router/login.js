@@ -23,6 +23,9 @@ router.get('/login', async (ctx) => {
     let result = app.initializeRenderResult();
     result['data']['meta']['login_status'] = false;
     result['data']['meta']['site_title'] = 'ログイン - Medice Note';
+    result['data']['meta']['seo']['bool'] = true;
+    result['data']['meta']['seo']['description'] = 'Medice Noteにログイン';
+    result['data']['meta']['seo']['url'] = 'https://www.medice-note.vxx0.com/login';
 
     if (session.success !== undefined) {
         result['data']['success'] = session.success;
@@ -53,6 +56,9 @@ router.post('/login', async (ctx) => {
         new Date()
     ]);
 
+    sql = 'DELETE FROM session WHERE expired_at <= ?';
+    await connection.query(sql, [new Date()]);
+
     // Lookup Account
     sql = 'SELECT user_id, password, is_enable FROM user WHERE mail = ? AND deleted_at IS NULL';
     let [user] = await connection.query(sql, [mail]);
@@ -63,8 +69,8 @@ router.post('/login', async (ctx) => {
     }
 
     user = user[0];
-    if (user['is_enable'] === false) {
-        session.error.message = 'メールアドレスが認証されていません';
+    if (user['is_enable'] === 0) {
+        session.error.no_escape = 'メールアドレス認証が行われていません<a href="/renew-mail-auth" class="alert-link">こちら</a>からメールアドレス認証を行ってください';
     } else {
         let hashPassword = user['password'];
         if (bcrypt.compareSync(password, hashPassword)) {
@@ -72,7 +78,7 @@ router.post('/login', async (ctx) => {
             let date = new Date();
             date.setDate(date.getDate() + 30);
 
-            sql = "INSERT INTO session VALUES (?, ?, ?)";
+            sql = 'INSERT INTO session VALUES (?, ?, ?)';
             await connection.query(sql, [user['user_id'], sessionId, date]);
 
             session.auth_id = sessionId;

@@ -23,6 +23,9 @@ router.get('/signup', async (ctx) => {
     let result = app.initializeRenderResult();
     result['data']['meta']['login_status'] = false;
     result['data']['meta']['site_title'] = 'アカウント登録 - Medice Note';
+    result['data']['meta']['seo']['bool'] = true;
+    result['data']['meta']['seo']['description'] = 'Medice Noteに登録';
+    result['data']['meta']['seo']['url'] = 'https://www.medice-note.vxx0.com/signup';
 
     if (session.success !== undefined) {
         result['data']['success'] = session.success;
@@ -70,11 +73,15 @@ router.post('/signup', async (ctx) => {
     }
 
     // 重複
-    let sql = 'SELECT user_id FROM user WHERE mail = ?';
+    let sql = 'SELECT is_enable FROM user WHERE mail = ?';
     let [result] = await connection.query(sql, [mail]);
 
     if (result.length !== 0) {
-        session.error.mail = '既に登録されているメールアドレスです';
+        if (result[0]['is_enable'] === 0) {
+            session.error.no_escape = 'メールアドレス認証が行われていません<a href="/renew-mail-auth" class="alert-link">こちら</a>からメールアドレス認証を行ってください';
+        } else {
+            session.error.mail = '既に登録されているメールアドレスです';
+        }
 
         return ctx.redirect('/signup');
     }

@@ -8,22 +8,27 @@ router.get('/group-list', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
 
-    let result = app.initializeRenderResult();
-
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
     if (!userId) {
+        session.error.message = 'ログインしていないため続行できませんでした';
+
         return ctx.redirect('/login');
     }
 
     let sql = 'SELECT group_id, group_name FROM medicine_group WHERE user_id = ? AND is_deletable = false';
     let [group] = await connection.query(sql, [userId]);
 
+    let result = app.initializeRenderResult();
     result['data']['group_list'] = group;
 
     result['data']['meta']['login_status'] = true;
     result['data']['meta']['site_title'] = 'グループ情報 - Medice Note';
     result['data']['meta']['group_list'] = await app.getGroupList(userId);
+    result['data']['meta']['script'] = [
+        '/stisla/modules/sweetalert/sweetalert.min.js',
+        '/js/group-list.js',
+    ];
 
     if (session.success !== undefined) {
         result['data']['success'] = session.success;
@@ -38,13 +43,15 @@ router.get('/group-list', async (ctx) => {
     await ctx.render('group-list', result);
 })
 
-router.post('/group-list/add', async (ctx) => {
+router.post('/group-add', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
 
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
     if (!userId) {
+        session.error.message = 'ログインしていないため続行できませんでした';
+
         return ctx.redirect('/login');
     }
 
@@ -67,13 +74,15 @@ router.post('/group-list/add', async (ctx) => {
     ctx.redirect('/group-list');
 })
 
-router.post('/group-list/edit', async (ctx) => {
+router.post('/group-edit', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
 
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
     if (!userId) {
+        session.error.message = 'ログインしていないため続行できませんでした';
+
         return ctx.redirect('/login');
     }
 
@@ -105,13 +114,15 @@ router.post('/group-list/edit', async (ctx) => {
     ctx.redirect('/group-list');
 })
 
-router.post('/group-list/delete', async (ctx) => {
+router.post('/group-delete', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
 
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
     if (!userId) {
+        session.error.message = 'ログインしていないため続行できませんでした';
+
         return ctx.redirect('/login');
     }
 
