@@ -134,4 +134,12 @@ const apiMedicineRouter = require('./router/api-medicine');
 app.use(apiMedicineRouter.routes());
 app.use(apiMedicineRouter.allowedMethods());
 
+const calenderRouter = require('./router/calendar');
+app.use(calenderRouter.routes());
+app.use(calenderRouter.allowedMethods());
+
+const apiCalenderRouter = require('./router/api-calendar');
+app.use(apiCalenderRouter.routes());
+app.use(apiCalenderRouter.allowedMethods());
+
 app.listen(5000);
