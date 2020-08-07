@@ -1,0 +1,44 @@
+<div class="section-header">
+    <h1>カレンダー</h1>
+</div>
+
+<link href='/fullcalendar/lib/main.min.css' rel='stylesheet' />
+<script src='/fullcalendar/lib/main.min.js'></script>
+
+<% if (typeof data.success.message !== "undefined") { %>
+    <div class="alert alert-success alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>×</span>
+            </button>
+            <%= data.success.message %>
+        </div>
+    </div>
+<% } %>
+
+<% if (typeof data.error.message !== "undefined") { %>
+    <div class="alert alert-danger alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>×</span>
+            </button>
+            <%= data.error.message %>
+        </div>
+    </div>
+<% } %>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let calendarEl = document.getElementById('calendar');
+        let calendar = new FullCalendar.Calendar(calendarEl, {
+            locale : 'ja',
+            events: '/api/calendar',
+            initialView: 'dayGridMonth'
+        });
+        calendar.render();
+    });
+</script>
+
+<div class="card">
+    <div id='calendar'></div>
+</div>
