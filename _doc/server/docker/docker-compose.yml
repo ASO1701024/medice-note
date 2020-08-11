@@ -1,0 +1,11 @@
+version: "3"
+services:
+  web:
+    container_name: "centos_nginx"
+    ports:
+      - "8080:80"
+    build:
+      context: "./"
+      dockerfile: "Dockerfile"
+    privileged: true
+    command: /sbin/init
