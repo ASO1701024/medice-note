@@ -318,7 +318,7 @@ systemctl restart nginx
 
 ## NodeJS Install
 ```
-curl -sL https://rpm.nodesource.com/setup_14.x | bash -
+curl -sL https://rpm.nodesource.com/setup_12.x | bash -
 yum install nodejs
 npm install
 ```
@@ -326,4 +326,34 @@ npm install
 ### Forever Install
 ```
 npm install forever -g
+```
+
+### Forever
+```
+# list
+forever list
+# start
+forever start index.js
+# stop
+forever stop 0
+# restart
+forever restart 0
+```
+
+## TimeZone
+### TimeZone Change
+```
+timedatectl set-timezone Asia/Tokyo
+```
+### TimeZone Check
+```
+timedatectl
+>       Local time: 月 2020-08-17 14:27:56 JST
+>   Universal time: 月 2020-08-17 05:27:56 UTC
+>         RTC time: 月 2020-08-17 05:27:56
+>        Time zone: Asia/Tokyo (JST, +0900)
+>      NTP enabled: yes
+> NTP synchronized: yes
+>  RTC in local TZ: no
+>       DST active: n/a
 ```
