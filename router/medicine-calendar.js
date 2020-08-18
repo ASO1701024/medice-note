@@ -18,6 +18,7 @@ router.get('/medicine-calendar', async (ctx) => {
     let result = app.initializeRenderResult();
     result['data']['meta']['login_status'] = true;
     result['data']['meta']['site_title'] = 'お薬カレンダー - Medice Note';
+    result['data']['meta']['group_list'] = await app.getGroupList(userId);
     result['data']['meta']['css'] = [
         '/stisla/modules/fullcalendar/fullcalendar.min.css'
     ];
