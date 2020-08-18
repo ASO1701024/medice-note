@@ -1,0 +1,30 @@
+{
+  "db": {
+    "host": "127.0.0.1",
+    "port": 3306,
+    "user": "",
+    "password": "",
+    "database": ""
+  },
+  "mail": {
+    "host": "",
+    "port": 465,
+    "secure": true,
+    "auth": {
+      "user": "",
+      "pass": ""
+    }
+  },
+  "session": {
+    "key": [
+      "",
+      ""
+    ],
+    "filename": "session.db"
+  },
+  "line": {
+    "LINE_LOGIN_CHANNEL_ID": "",
+    "LINE_LOGIN_CHANNEL_SECRET": "",
+    "LINE_LOGIN_CALLBACK_URL": ""
+  }
+}
