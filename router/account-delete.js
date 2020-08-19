@@ -45,7 +45,7 @@ router.post('/account-delete', async (ctx) => {
 
     let password = ctx.request.body['password'];
 
-    let sql = 'SELECT password FROM user WHERE user_id != ?';
+    let sql = 'SELECT password FROM user WHERE user_id = ?';
     let [user] = await connection.query(sql, [userId]);
     let hashPassword = user[0]['password'];
     if (!bcrypt.compareSync(password, hashPassword)) {
