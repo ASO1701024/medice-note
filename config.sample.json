@@ -1,0 +1,33 @@
+{
+  "db": {
+    "host": "",
+    "port": 3306,
+    "user": "",
+    "password": "",
+    "database": ""
+  },
+  "mail": {
+    "host": "",
+    "port": 465,
+    "secure": true,
+    "auth": {
+      "user": "",
+      "pass": ""
+    }
+  },
+  "session": {
+    "key": [
+      "SECRET_KEY",
+      "SECRET_KEY"
+    ],
+    "filename": "session.db"
+  },
+  "line_login": {
+    "channel_id": "",
+    "channel_secret": "",
+    "callback_url": ""
+  },
+  "line_bot": {
+    "channelAccessToken": ""
+  }
+}

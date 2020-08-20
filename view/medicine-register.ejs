@@ -1,101 +1,174 @@
-<main>
-    <h1>登録テスト</h1>
-    <form action="/medicine-register" method="post">
-        <% if (typeof data !== "undefined" && data.errorMsg.medicineName !== false) { %>
-            <p class="medicine_register_error_message"><%= data.errorMsg.medicineName %></p>
-        <% } %>
-        <% if (typeof data !== "undefined" && data.errorMsg.medicineName == false) { %>
-            薬名 <input type="text" name="medicineName" value="<%= data.request.medicineName %>"><br>
-        <% }else{ %>
-            薬名 <input type="text" name="medicineName" value=""><br>
-        <% } %>
+<div class="section-header">
+    <h1>薬情報登録</h1>
+</div>
 
-        <% if (typeof data !== "undefined" && data.errorMsg.hospitalName !== false) { %>
-            <p class="medicine_register_error_message"><%= data.errorMsg.hospitalName %></p>
-        <% } %>
-        <% if (typeof data !== "undefined" && data.errorMsg.hospitalName == false) { %>
-            病院名 <input type="text" name="hospitalName" value="<%= data.request.hospitalName %>"><br>
-        <% }else{ %>
-            病院名 <input type="text" name="hospitalName" value=""><br>
-        <% } %>
+<% if (typeof data.success.message !== "undefined") { %>
+    <div class="alert alert-success alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>×</span>
+            </button>
+            <%= data.success.message %>
+        </div>
+    </div>
+<% } %>
 
-        <% if (typeof data !== "undefined" && data.errorMsg.number !== false) { %>
-            <p class="medicine_register_error_message"><%= data.errorMsg.number %></p>
-        <% } %>
-        <% if (typeof data !== "undefined" && data.errorMsg.number == false) { %>
-            飲む個数 <input type="text" name="number" value="<%= data.request.number %>"><br>
-        <% }else{ %>
-            飲む個数 <input type="text" name="number" value=""><br>
-        <% } %>
+<% if (typeof data.error.message !== "undefined") { %>
+    <div class="alert alert-danger alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>×</span>
+            </button>
+            <%= data.error.message %>
+        </div>
+    </div>
+<% } %>
 
-        <% if (typeof data !== "undefined" && data.errorMsg.takeTime !== false) { %>
-            <p class="medicine_register_error_message"><%= data.errorMsg.takeTime %></p>
-        <% } %>
-        <% if (typeof data !== "undefined" && Object.keys(data.request.takeTime).filter((key) => {
-            return data.request.takeTime[key] === '1'
-        }).length > 0) { %>
-            飲む時間  朝<input type="checkbox" name="takeTime[]" value="1" checked="checked">
-        <% }else{ %>
-            飲む時間  朝<input type="checkbox" name="takeTime[]" value="1">
-        <% } %>
-        <% if (typeof data !== "undefined" && Object.keys(data.request.takeTime).filter((key) => {
-            return data.request.takeTime[key] === '2'
-        }).length > 0) { %>
-            昼<input type="checkbox" name="takeTime[]" value="2" checked="checked">
-        <% }else{ %>
-            昼<input type="checkbox" name="takeTime[]" value="2">
-        <% } %>
-        <% if (typeof data !== "undefined" && Object.keys(data.request.takeTime).filter((key) => {
-            return data.request.takeTime[key] === '3'
-        }).length > 0) { %>
-            食前<input type="checkbox" name="takeTime[]" value="3" checked="checked">
-        <% }else{ %>
-            食前<input type="checkbox" name="takeTime[]" value="3">
-        <% } %>
-        <% if (typeof data !== "undefined" && Object.keys(data.request.takeTime).filter((key) => {
-            return data.request.takeTime[key] === '4'
-        }).length > 0) { %>
-            食後<input type="checkbox" name="takeTime[]" value="4" checked="checked"><br>
-        <% }else{ %>
-            食後<input type="checkbox" name="takeTime[]" value="4"><br>
-        <% } %>
-
-        <% if (typeof data !== "undefined" && data.errorMsg.startsDate !== false) { %>
-            <p class="medicine_register_error_message"><%= data.errorMsg.startsDate %></p>
-        <% } %>
-        <% if (typeof data !== "undefined" && data.errorMsg.startsDate == false) { %>
-            処方日 <input type="date" name="startsDate" value="<%= data.request.startsDate %>">年<br>
-        <% }else{ %>
-            処方日 <input type="date" name="startsDate" value="">年<br>
-        <% } %>
-
-        <% if (typeof data !== "undefined" && data.errorMsg.period !== false) { %>
-            <p class="medicine_register_error_message"><%= data.errorMsg.period %></p>
-        <% } %>
-        <% if (typeof data !== "undefined" && data.errorMsg.period == false) { %>
-            処方期間 <input type="text" name="period" value="<%= data.request.period %>">日<br>
-        <% }else{ %>
-            処方期間 <input type="text" name="period" value="">日<br>
-        <% } %>
-
-        <!--種別：錠剤とか粉薬とか、を<select>でvalueは1,2,3...-->
-        <% if (typeof data !== "undefined" && data.errorMsg.medicineType !== false) { %>
-            <p class="medicine_register_error_message"><%= data.errorMsg.medicineType %></p>
-        <% } %>
-        <% if (typeof data !== "undefined" && data.errorMsg.medicineType == false) { %>
-            種別 <input type="text" name="medicineType" value="<%= data.request.medicineType %>"><br>
-        <% }else{ %>
-            種別 <input type="text" name="medicineType" value=""><br>
-        <% } %>
-
-        <% if (typeof data !== "undefined" && data.errorMsg.description !== false) { %>
-            <p class="medicine_register_error_message"><%= data.errorMsg.description %></p>
-        <% } %>
-        <% if (typeof data !== "undefined" && data.errorMsg.description == false) { %>
-            説明 <input type="text" name="description" value="<%= data.request.description %>"><br>
-        <% }else{ %>
-            説明 <input type="text" name="description" value=""><br>
-        <% } %>
-        <input type="submit" value="登録">
+<div class="card">
+    <form action="/medicine-register" method="post" enctype="multipart/form-data">
+        <div class="card-body pb-0">
+            <p class="text-muted">* : 必須項目</p>
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-6">
+                    <div class="form-group">
+                        <label>薬の名前 *</label>
+                        <input type="text" class="form-control" name="medicine_name" id="medicine_name" required
+                            <% if (typeof data.old.medicine_name !== "undefined") { %> value="<%= data.old.medicine_name %>" <% } %>>
+                        <span class="form-error">
+                            <% if (typeof data.error.medicine_name !== "undefined") { %>
+                                <%= data.error.medicine_name %>
+                            <% } %>
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <label>病院名 *</label>
+                        <input type="text" class="form-control" name="hospital_name" id="hospital_name" required
+                            <% if (typeof data.old.hospital_name !== "undefined") { %> value="<%= data.old.hospital_name %>" <% } %>>
+                        <span class="form-error">
+                            <% if (typeof data.error.hospital_name !== "undefined") { %>
+                                <%= data.error.hospital_name %>
+                            <% } %>
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <label>飲む個数 *</label>
+                        <input type="number" class="form-control" min="1" name="number" required
+                            <% if (typeof data.old.number !== "undefined") { %> value="<%= data.old.number %>" <% } else { %> value="1" <% } %>>
+                        <span class="form-error">
+                            <% if (typeof data.error.number !== "undefined") { %>
+                                <%= data.error.number %>
+                            <% } %>
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <label>飲む時間 *</label>
+                        <select class="form-control select2" multiple="" name="take_time" required>
+                            <% if (typeof data.meta.take_time != "undefined") {
+                                for (var tt = 0; tt < data.meta.take_time.length; tt++) { %>
+                                    <option value="<%= data.meta.take_time[tt]['take_time_id'] %>"
+                                    <% if (typeof data.old.take_time != "undefined" && data.old.take_time.some(d => d == data.meta.take_time[tt]['take_time_id'])) { %> selected <% } %>>
+                                        <%= data.meta.take_time[tt]['take_time_name'] %>
+                                    </option>
+                                <% }
+                            } %>
+                        </select>
+                        <span class="form-error">
+                            <% if (typeof data.error.take_time !== "undefined") { %>
+                                <%= data.error.take_time %>
+                            <% } %>
+                        </span>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label>処方日 *</label>
+                            <input type="text" class="form-control datepicker readonly-background" name="starts_date" required readonly
+                                <% if (typeof data.old.starts_date !== "undefined") { %> value="<%= data.old.starts_date %>" <% } %>>
+                            <span class="form-error">
+                                <% if (typeof data.error.starts_date !== "undefined") { %>
+                                    <%= data.error.starts_date %>
+                                <% } %>
+                            </span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>処方期間 (日) *</label>
+                            <input type="number" class="form-control" min="1" name="period" required
+                                <% if (typeof data.old.period !== "undefined") { %> value="<%= data.old.period %>" <% } else { %> value="1" <% } %>>
+                            <span class="form-error">
+                                <% if (typeof data.error.period !== "undefined") { %>
+                                    <%= data.error.period %>
+                                <% } %>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>種類 *</label>
+                        <select class="form-control select2" name="medicine_type" required>
+                            <% if (typeof data.meta.medicine_type != "undefined") {
+                                for (var mt = 0; mt < data.meta.medicine_type.length; mt++) {
+                                    %>
+                                    <option value="<%= data.meta.medicine_type[mt]['type_id'] %>"
+                                    <% if (typeof data.old.medicine_type !== "undefined" && data.old.medicine_type == data.meta.medicine_type[mt]['type_id']) { %> selected <% } %>>
+                                        <%= data.meta.medicine_type[mt]['type_name'] %>
+                                    </option>
+                                    <%
+                                }
+                            } %>
+                        </select>
+                        <span class="form-error">
+                            <% if (typeof data.error.medicine_type !== "undefined") { %>
+                                <%= data.error.medicine_type %>
+                            <% } %>
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <label>グループ *</label>
+                        <select class="form-control select2" name="group_id">
+                            <% if (typeof data.meta.group_list != "undefined") {
+                                for (var gl = 0; gl < data.meta.group_list.length; gl++) {
+                                    %>
+                                        <option value="<%= data.meta.group_list[gl]['group_id'] %>"
+                                            <% if (typeof data.old.group_id !== "undefined" && data.old.group_id == data.meta.group_list[gl]['group_id']) { %> selected <% } %>>
+                                            <%= data.meta.group_list [gl]['group_name'] %>
+                                        </option>
+                                    <%
+                                }
+                            } %>
+                        </select>
+                        <span class="form-error">
+                            <% if (typeof data.error.group_id !== "undefined") { %>
+                                <%= data.error.group_id %>
+                            <% } %>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-6">
+                    <div class="form-group">
+                        <label>薬画像</label>
+                        <div class="custom-file">
+                            <input type="file" name="medicine_image" class="custom-file-input" id="medicine-image">
+                            <label class="custom-file-label" id="medicine-image-label">ファイルを選択</label>
+                        </div>
+                        <span class="form-error">
+                            <% if (typeof data.error.medicine_image !== "undefined") { %>
+                                <%= data.error.medicine_image %>
+                            <% } %>
+                        </span>
+                        <div class="form-text text-muted">1MB以内のJPEG・PNGファイルを選択 (個人情報が含まれる画像はアップロードしないでください)</div>
+                    </div>
+                    <div class="form-group">
+                        <label>説明</label>
+                        <textarea class="form-control" name="description"><% if (typeof data.old.description !== "undefined") { %><%= data.old.description %><% } %></textarea>
+                        <span class="form-error">
+                            <% if (typeof data.error.description !== "undefined") { %>
+                                <%= data.error.description %>
+                            <% } %>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer pt-">
+            <button type="submit" class="btn btn-primary">登録</button>
+        </div>
     </form>
-</main>
+</div>

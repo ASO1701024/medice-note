@@ -1,24 +1,64 @@
-<main>
+<div class="section-header">
     <h1>お問い合わせ</h1>
-    <% if (typeof data.success_message !== "undefined") { %>
-        <p class="success_message"><%= data.success_message %></p>
-    <% } %>
-    <% if (typeof data.error_message !== "undefined") { %>
-        <p class="error_message"><%= data.error_message %></p>
-    <% } %>
+</div>
+
+<% if (typeof data.success.message !== "undefined") { %>
+    <div class="alert alert-success alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>×</span>
+            </button>
+            <%= data.success.message %>
+        </div>
+    </div>
+<% } %>
+
+<% if (typeof data.error.message !== "undefined") { %>
+    <div class="alert alert-danger alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>×</span>
+            </button>
+            <%= data.error.message %>
+        </div>
+    </div>
+<% } %>
+
+<div class="card">
     <form action="/contact" method="post">
-        <label>
-            <span class="label">メールアドレス</span>
-            <input type="email" name="mail" required>
-        </label>
-        <label>
-            <span class="label">件名</span>
-            <input type="text" name="subject" required>
-        </label>
-        <label>
-            <span class="label">内容</span>
-            <textarea name="detail"></textarea>
-        </label>
-        <input type="submit" value="送信">
+        <div class="card-body pb-0">
+            <div class="form-group">
+                <label>メールアドレス</label>
+                <input type="email" class="form-control" name="mail"
+                    <% if (typeof data.old.mail !== "undefined") { %> value="<%= data.old.mail %>" <% } %> required>
+                <span class="form-error">
+                    <% if (typeof data.error.mail !== "undefined") { %>
+                        <%= data.error.mail %>
+                    <% } %>
+                </span>
+            </div>
+            <div class="form-group">
+                <label>件名</label>
+                <input type="text" class="form-control" name="subject"
+                    <% if (typeof data.old.subject !== "undefined") { %> value="<%= data.old.subject %>" <% } %> required>
+                <span class="form-error">
+                    <% if (typeof data.error.subject !== "undefined") { %>
+                        <%= data.error.subject %>
+                    <% } %>
+                </span>
+            </div>
+            <div class="form-group">
+                <label>内容</label>
+                <textarea class="form-control" name="detail" required><% if (typeof data.old.detail !== "undefined") { %><%= data.old.detail %><% } %></textarea>
+                <span class="form-error">
+                    <% if (typeof data.error.detail !== "undefined") { %>
+                        <%= data.error.detail %>
+                    <% } %>
+                </span>
+            </div>
+        </div>
+        <div class="card-footer pt-">
+            <button type="submit" class="btn btn-primary">送信</button>
+        </div>
     </form>
-</main>
+</div>

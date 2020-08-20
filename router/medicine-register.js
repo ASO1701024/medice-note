@@ -1,90 +1,179 @@
+const fs = require('fs');
+const path = require('path');
+const {v4: uuid} = require('uuid');
 const Router = require('koa-router');
 const router = new Router();
 const app = require('../app/app');
 const connection = require('../app/db');
 
-/* session
-register_denied_request: 薬登録失敗時、送信された登録情報をHTMLのformのvalueに設定して表示
-register_denied_error: 薬登録失敗時のエラーメッセージ　
-*/
-
 router.get('/medicine-register', async (ctx) => {
+    // Session
     let session = ctx.session;
+    app.initializeSession(session);
 
-    let userId = await app.getUserId(session.auth_id);
-    if (userId === false) {
-        return ctx.redirect('/')
+    // Login Check
+    let authId = session.auth_id;
+    let userId = await app.getUserId(authId);
+    if (!userId) {
+        session.error.message = 'ログインしていないため続行できませんでした';
+
+        return ctx.redirect('/login');
     }
 
-    let result = {};
-    if (session.register_denied_error) {
-        result['data'] = {};
-        result['data']['errorMsg'] = session.register_denied_error;
-        result['data']['request'] = session.register_denied_request;
+    let result = app.initializeRenderResult();
+    result['data']['meta']['login_status'] = true;
+    result['data']['meta']['site_title'] = '薬情報登録 - Medice Note';
+    result['data']['meta']['group_list'] = await app.getGroupList(userId);
+    result['data']['meta']['css'] = [
+        '/stisla/modules/select2/dist/css/select2.min.css',
+        '/stisla/modules/bootstrap-daterangepicker/daterangepicker.css',
+        '/css/library/jquery-ui.min.css'
+    ];
+    result['data']['meta']['script'] = [
+        '/stisla/modules/select2/dist/js/select2.full.min.js',
+        '/stisla/modules/bootstrap-daterangepicker/daterangepicker.js',
+        '/js/library/jquery-ui.min.js',
+        '/js/medicine-form.js'
+    ];
+
+    let sql = 'SELECT type_id, type_name FROM medicine_type';
+    let [medicineType] = await connection.query(sql);
+    result['data']['meta']['medicine_type'] = medicineType;
+
+    sql = 'SELECT take_time_id, take_time_name FROM take_time';
+    let [takeTime] = await connection.query(sql);
+    result['data']['meta']['take_time'] = takeTime;
+
+    if (session.error !== undefined) {
+        result['data']['error'] = session.error;
+        session.error = undefined;
     }
-    session.register_denied_error = null;
-    session.register_denied_request = null;
+
+    if (session.success !== undefined) {
+        result['data']['success'] = session.success;
+        session.success = undefined;
+    }
+
+    if (session.old !== undefined) {
+        result['data']['old'] = session.old;
+        session.old = undefined;
+    }
 
     await ctx.render('/medicine-register', result);
 })
 
 router.post('/medicine-register', async (ctx) => {
+    // Session
     let session = ctx.session;
+    app.initializeSession(session);
 
-    let userId = await app.getUserId(session.auth_id);
-    if (userId === false) {
-        return ctx.redirect('/')
+    // Login Check
+    let authId = session.auth_id;
+    let userId = await app.getUserId(authId);
+    if (!userId) {
+        session.error.message = 'ログインしていないため続行できませんでした';
+
+        return ctx.redirect('/login');
     }
 
-    // medicineテーブルに登録する項目
-    // 必須項目
-    let medicineName = ctx.request.body['medicineName'];
-    let hospitalName = ctx.request.body['hospitalName'];
+    // Required
+    let medicineName = ctx.request.body['medicine_name'];
+    let hospitalName = ctx.request.body['hospital_name'];
     let number = ctx.request.body['number'];
-    let startsDate = ctx.request.body['startsDate'];
+    let takeTime = ctx.request.body['take_time'];
+    let startsDate = ctx.request.body['starts_date'];
     let period = ctx.request.body['period'];
-    let medicineType = ctx.request.body['medicineType'];
-    // 任意項目
-    let image = "";
-    let description = ctx.request.body['description'] || '';
+    let medicineType = ctx.request.body['medicine_type'];
+    let groupId = ctx.request.body['group_id'];
 
-    // medicine_take_timeテーブルに登録する項目
-    let takeTimeArray = ctx.request.body['takeTime'] || [];
+    // Any
+    let medicineImage = '';
+    let description = ctx.request.body.description || '';
 
-    // 削除不能の初期グループのgroup_idを取得
-    let sql = 'SELECT group_id FROM medicine_group WHERE user_id = ? AND is_deletable = 1;';
-    let groupId = (await connection.query(sql, [userId]))[0][0]['group_id'];
-
-    let medicineArray = [medicineName, hospitalName, number,
-        startsDate, period, medicineType, image, description, groupId];
-    // 検証パス時は値をDBに保存し、検証拒否時はエラーメッセージを表示
-    let validationPromise = [];
-    let validationResultArray = [];
-    validationPromise[0] = app.medicineValidation(medicineArray, userId).then(result => validationResultArray[0] = result);
-    validationPromise[1] = app.takeTimeValidation(takeTimeArray).then(result => validationResultArray[1] = result);
-    await Promise.all(validationPromise);
-
-    if (validationResultArray[0].is_success && validationResultArray[1].is_success) {
-        // medicineを登録し、medicine_idを取得
-        let medicineSQL = 'INSERT INTO medicine VALUES(0,?,?,?,?,?,?,?,?,?);';
-        let medicineInsertResult = await connection.query(medicineSQL, medicineArray);
-        let insertId = medicineInsertResult[0].insertId;
-        // medicine_take_timeを登録
-        let takeTimeSQL = 'INSERT INTO medicine_take_time VALUES(?,?);';
-        // 1行ずつコミットしないとエラーが出るので、毎回awaitしてます。本来はtransactionとか使うそうな。
-        for (let takeTime of takeTimeArray) {
-            await connection.query(takeTimeSQL, [insertId, takeTime]);
+    let uploadImage = ctx.request.files['medicine_image'];
+    let uploadImageFlag = true;
+    if (uploadImage['size'] !== 0) {
+        if (1048576 < uploadImage['size']) {
+            uploadImageFlag = false;
         }
-        return ctx.redirect('/medicine-register');
-    } else {
-        if (validationResultArray[1].errors.array === '') {
-            validationResultArray[0].errors.takeTime = validationResultArray[1].errors.items[0];
+
+        switch (app.getExt(uploadImage['name'])) {
+            case 'jpeg':
+            case 'jpg':
+            case 'png':
+                break;
+            default:
+                uploadImageFlag = false;
+                break;
+        }
+
+        if (!uploadImageFlag) {
+            fs.unlinkSync(uploadImage['path']);
         } else {
-            validationResultArray[0].errors.takeTime = validationResultArray[1].errors.array;
+            medicineImage = uuid().split('-').join('') + uuid().split('-').join('') + '.' + app.getExt(uploadImage['name']);
+            fs.renameSync(uploadImage['path'], path.join(__dirname, '../public/upload/', medicineImage));
         }
-        validationResultArray[0].request.takeTime = takeTimeArray;
-        session.register_denied_request = validationResultArray[0].request;
-        session.register_denied_error = validationResultArray[0].errors;
+    } else {
+        fs.unlinkSync(uploadImage['path']);
+    }
+
+    // Validation
+    let validationMedicine = await app.validationMedicine([
+        medicineName,
+        hospitalName,
+        number,
+        startsDate,
+        period,
+        description
+    ]);
+    let validationTakeTime = await app.validationTakeTime(takeTime);
+    let validationMedicineType = await app.validationMedicineType(medicineType);
+    let validationGroupId = await app.validationGroupId(groupId, userId);
+
+    if (validationMedicine.result && validationTakeTime && validationMedicineType && validationGroupId && uploadImageFlag) {
+        let sql = `
+            INSERT INTO medicine (medicine_name, hospital_name, number, starts_date, period, type_id, image, description, group_id) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        let [medicine] = await connection.query(sql, [
+            medicineName,
+            hospitalName,
+            number,
+            startsDate,
+            period,
+            medicineType,
+            medicineImage,
+            description,
+            groupId
+        ]);
+        let medicineId = medicine.insertId;
+        for (const item of takeTime) {
+            let sql = 'INSERT INTO medicine_take_time (medicine_id, take_time_id) VALUES (?, ?)';
+            await connection.query(sql, [medicineId, item]);
+        }
+
+        session.success.message = '薬情報を登録しました';
+
+        return ctx.redirect('/medicine-list');
+    } else {
+        session.old = {};
+        session.error = validationMedicine.error;
+        if (medicineName !== '') session.old.medicine_name = medicineName;
+        if (hospitalName !== '') session.old.hospital_name = hospitalName;
+        if (number !== '') session.old.number = number;
+        if (takeTime !== '' && takeTime !== undefined && takeTime.length > 0) session.old.take_time = (typeof takeTime === "string") ? [takeTime] : takeTime;
+        if (startsDate !== '') session.old.starts_date = startsDate;
+        if (period !== '') session.old.period = period;
+        if (medicineType !== '') session.old.medicine_type = medicineType;
+        if (groupId !== '') session.old.group_id = groupId;
+        if (description !== '') session.old.description = description;
+        if (!uploadImageFlag) session.error.medicine_image = '1MB以内のJPEG・JPG・PNG・ファイルを選択してください';
+
+        if (!validationTakeTime) session.error.take_time = '飲む時間が正しく選択されていません';
+        if (!validationMedicineType) session.error.medicine_type = '種類が正しく選択されていません';
+        if (!validationGroupId) session.error.medicine_group = '薬グループが正しく選択されていません';
+
+        session.error.message = '薬情報登録に失敗しました';
+
         return ctx.redirect('/medicine-register');
     }
 })
