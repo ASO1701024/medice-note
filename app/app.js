@@ -218,7 +218,7 @@ module.exports = {
         return true;
     },
     validationNoticeDay: (noticeWeek) => {
-        if (noticeWeek === '' || noticeWeek === undefined) return false;
+        if (noticeWeek === '' || noticeWeek === undefined || noticeWeek.length <= 0) return false;
 
         for (let i = 0; i < noticeWeek.length; i++) {
             let validation = new validator({
