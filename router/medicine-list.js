@@ -7,15 +7,6 @@ router.get('/medicine-list', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
 
-    let viewStyle = 'table'
-    if (ctx.request.query['style'] !== undefined) {
-        switch (ctx.request.query['style']) {
-            case 'table':
-            case 'thumbnail':
-                viewStyle = ctx.request.query['style'];
-        }
-    }
-
     let authId = session.auth_id;
     let userId = await app.getUserId(authId);
     if (!userId) {
@@ -31,25 +22,18 @@ router.get('/medicine-list', async (ctx) => {
     result['data']['meta']['script'] = [
         '/stisla/modules/sweetalert/sweetalert.min.js',
         '/js/medicine-delete-alert.js',
-        '/js/library/tablesort.min.js',
-        '/js/library/tablesort.date.min.js',
-        '/js/medicine-list-sort.js'
-    ];
-    result['data']['meta']['css'] = [
-        '/css/library/tablesort.css'
     ];
 
-    let sql = 'SELECT medicine_id, medicine_name, hospital_name, number, ' +
-        'date_format(starts_date, \'%Y年%c月%d日\') as starts_date, period, ' +
-        'medicine_type.type_name, image, description, group_id FROM medicine ' +
-        'LEFT JOIN medicine_type ON medicine.type_id = medicine_type.type_id ' +
-        'WHERE group_id in (SELECT group_id FROM medicine_group WHERE user_id = ?) ' +
-        'ORDER BY starts_date DESC';
+
+    let sql = `
+    SELECT medicine_id, medicine_name, hospital_name, number, date_format(starts_date, '%Y年%c月%d日') as starts_date, period,
+           medicine_type.type_name, image, description, group_id
+    FROM medicine
+    LEFT JOIN medicine_type ON medicine.type_id = medicine_type.type_id
+    WHERE group_id = ?
+    ORDER BY starts_date DESC`;
 
     let [data] = await connection.query(sql, [userId]);
-
-    result['data']['meta']['view_style'] = viewStyle;
-    result['data']['meta']['view_switch'] = '/medicine-list';
     result['data']['medicine_list'] = data;
 
     if (session.success !== undefined) {
