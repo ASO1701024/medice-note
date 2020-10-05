@@ -66,7 +66,7 @@
                                                     薬情報が削除されたため通知項目が見つかりませんでした
                                                 <% } else { %>
                                                     <% data.notice_list[nl]['medicine'].forEach(m => { %>
-                                                        ・<%= m %><br>
+                                                        ・<%= m %>（<%= data.notice_list[nl]['number'] %>個）<br>
                                                     <% }) %>
                                                 <% } %>
                                             </p>
@@ -97,11 +97,17 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-12 col-md-6 col-lg-6">
-                                    <a href="/notice-update/<%= data.notice_list[nl]['notice_id'] %>" class="card-link">編集</a>
-                                    <a href="javascript:noticeDelete(<%= data.notice_list[nl]['notice_id'] %>)" class="card-link link-danger">削除</a>
+                                <div class="col-12 col-sm-6 text-center">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <a href="/notice-update/<%= data.notice_list[nl]['notice_id'] %>" class="btn card-link">編集</a>
+                                        </div>
+                                        <div class="col-6">
+                                            <a href="javascript:noticeDelete(<%= data.notice_list[nl]['notice_id'] %>)" class="btn card-link link-danger">削除</a>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-12 col-md-6 col-lg-6 text-right">
+                                <div class="col-12 col-sm-6 text-right text-sm-center">
                                     <% if (data.notice_list[nl]['is_enable']) { %>
                                         <a href="javascript:noticeToggleFalse(<%= data.notice_list[nl]['notice_id'] %>)" class="btn btn-icon icon-left">
                                             <i class="fas fa-bell-slash"></i> 無効化
