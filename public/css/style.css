@@ -135,3 +135,6 @@ input.form-control-plaintext {
     color: #fff;
     background-color: #00e000;
 }
+.custom-file {
+    overflow: hidden;
+}
