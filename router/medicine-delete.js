@@ -42,7 +42,7 @@ router.get('/medicine-delete/:medicine_id', async (ctx) => {
 
     session.success.message = '薬情報を削除しました';
 
-    ctx.redirect('/medicine-list');
+    ctx.redirect('/');
 })
 
 module.exports = router;

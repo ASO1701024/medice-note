@@ -20,7 +20,7 @@ router.get('/medicine/:medicine_id', async (ctx) => {
     if (!await app.isHaveMedicine(medicineId, userId)) {
         session.error.message = '薬情報が見つかりませんでした';
 
-        return ctx.redirect('/medicine-list');
+        return ctx.redirect('/');
     }
 
     let result = app.initializeRenderResult();

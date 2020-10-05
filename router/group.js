@@ -19,7 +19,7 @@ router.get('/group/:group_id', async (ctx) => {
     if (!await app.validationGroupId(groupId, userId)) {
         session.error = 'グループ情報が見つかりませんでした';
 
-        return ctx.redirect('/medicine-list');
+        return ctx.redirect('/');
     }
 
     let result = app.initializeRenderResult();

@@ -24,6 +24,50 @@
     </div>
 <% } %>
 
+<% if (data.meta.browser_warning === true) { %>
+    <div class="alert alert-warning">
+        <div class="alert-title">注意</div>
+        お使いのブラウザはサポートしていません<br>
+        <a href="https://www.google.co.jp/chrome/" target="_blank" rel="noopener" class="alert-link">Google Chrome</a>か
+        <a href="https://www.mozilla.org/ja/firefox/" target="_blank" rel="noopener" class="alert-link">Mozilla Firefox</a>の最新版をご利用ください
+    </div>
+<% } %>
+
+<% if (typeof data.meta.message !== "undefined") { %>
+    <% data.meta.message.info.forEach(d => { %>
+        <div class="alert alert-primary alert-dismissible show fade">
+            <div class="alert-body">
+                <button class="close" data-dismiss="alert">
+                    <span>×</span>
+                </button>
+                <%= d %>
+            </div>
+        </div>
+    <% }) %>
+
+    <% data.meta.message.success.forEach(d => { %>
+        <div class="alert alert-success alert-dismissible show fade">
+            <div class="alert-body">
+                <button class="close" data-dismiss="alert">
+                    <span>×</span>
+                </button>
+                <%= d %>
+            </div>
+        </div>
+    <% }) %>
+
+    <% data.meta.message.fail.forEach(d => { %>
+        <div class="alert alert-danger alert-dismissible show fade">
+            <div class="alert-body">
+                <button class="close" data-dismiss="alert">
+                    <span>×</span>
+                </button>
+                <%= d %>
+            </div>
+        </div>
+    <% }) %>
+<% } %>
+
 <% if (typeof data.medicine_list !== "undefined") { %>
     <% if (Object.keys(data.medicine_list).length === 0) { %>
         <div class="col-12 mb-4 pl-0 pr-0">
@@ -106,11 +150,6 @@
                                             <p class="mb-1"><%= medicine['description'] %></p>
                                         <% } %>
                                     </div>
-<!--                                    <style>-->
-<!--                                        .a {-->
-<!--                                            box-shadow: 0 4px 8px rgba(85, 170, 241, 0.4);-->
-<!--                                        }-->
-<!--                                    </style>-->
                                     <div class="row">
                                         <div class="col-6">
                                         </div>
