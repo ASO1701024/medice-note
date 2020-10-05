@@ -84,7 +84,7 @@
                     <% if (data.medicine.description === undefined || data.medicine.description == '') { %>
                         <p>登録されていません</p>
                     <% } else { %>
-                        <p><%= data.medicine.description %></p>
+                        <p><%- data.medicine.description %></p>
                     <% } %>
                 </div>
             </div>
