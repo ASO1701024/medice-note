@@ -25,7 +25,7 @@ router.get('/medicine-list', async (ctx) => {
     ];
     result['data']['meta']['script_delay'] = [
         '/js/medicine-list.js'
-    ]
+    ];
 
     let sql = `
         SELECT medicine_id, medicine_name, hospital_name, number, date_format(starts_date, '%Y年%c月%d日') as starts_date, period,
@@ -51,7 +51,14 @@ router.get('/medicine-list', async (ctx) => {
         data[i]['take_time'] = takeTimeArray.join(' ・ ');
     }
 
-    result['data']['medicine_list'] = data;
+    let dayArray = [];
+    for (let i = 0; i < data.length; i++) {
+        if (!Array.isArray(dayArray[data[i]['starts_date']])) {
+            dayArray[data[i]['starts_date']] = [];
+        }
+        dayArray[data[i]['starts_date']].push(data[i]);
+    }
+    result['data']['medicine_list'] = dayArray;
 
     if (session.success !== undefined) {
         result['data']['success'] = session.success;
