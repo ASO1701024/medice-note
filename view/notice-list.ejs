@@ -98,8 +98,8 @@
                             </div>
                             <div class="row">
                                 <div class="col-12 col-md-6 col-lg-6">
-                                    <a href="/notice-update/<%= data.notice_list[nl]['notice_id'] %>" class="card-link">編集</a>
-                                    <a href="javascript:noticeDelete(<%= data.notice_list[nl]['notice_id'] %>)" class="card-link link-danger">削除</a>
+                                    <a href="/notice-update/<%= data.notice_list[nl]['notice_id'] %>" class="btn card-link">編集</a>
+                                    <a href="javascript:noticeDelete(<%= data.notice_list[nl]['notice_id'] %>)" class="btn card-link link-danger">削除</a>
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-6 text-right">
                                     <% if (data.notice_list[nl]['is_enable']) { %>
