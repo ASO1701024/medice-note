@@ -29,10 +29,11 @@ router.get('/medicine-list', async (ctx) => {
 
     let sql = `
         SELECT medicine_id, medicine_name, hospital_name, number, date_format(starts_date, '%Y年%c月%d日') as starts_date, period,
-               medicine_type.type_name, image, description, group_id
+               medicine_type.type_name, image, description, medicine.group_id, medicine_group.group_name
         FROM medicine
         LEFT JOIN medicine_type ON medicine.type_id = medicine_type.type_id
-        WHERE group_id = ?
+        LEFT JOIN medicine_group ON medicine.group_id = medicine_group.group_id
+        WHERE medicine.group_id in (SELECT group_id FROM medicine_group WHERE user_id = ?)
         ORDER BY starts_date DESC`;
 
     let [data] = await connection.query(sql, [userId]);

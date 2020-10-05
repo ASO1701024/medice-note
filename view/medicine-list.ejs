@@ -46,11 +46,13 @@
                 <a href="javascript:void(0)" class="btn btn-icon icon-left btn-primary mr-2" id="modal-setting-button">
                     <i class="fas fa-tasks"></i> 表示設定
                 </a>
-                <a href="javascript:void(0)" class="btn btn-icon icon-left btn-primary">
+                <a href="javascript:void(0)" class="btn btn-icon icon-left btn-primary"><!--  mr-2 -->
                     <i class="fas fa-bell"></i> 通知設定
                 </a>
+<!--                <a href="javascript:void(0)" class="btn btn-icon icon-left btn-danger">-->
+<!--                    <i class="fas fa-trash"></i> 削除-->
+<!--                </a>-->
             </div>
-
             <%
             Object.keys(data.medicine_list).forEach(function (key) { %>
                 <h2 class="section-title"><%= key %></h2>
@@ -72,39 +74,48 @@
                                     </div>
                                 </div>
                                 <div class="article-details">
-                                    <div class="form-group mb-1">
+                                    <div class="form-group mb-1" data-list-name="hospital_name">
                                         <label>病院名</label>
                                         <p class="mb-1"><%= medicine['hospital_name'] %></p>
                                     </div>
-                                    <div class="form-group mb-1">
+                                    <div class="form-group mb-1" data-list-name="number">
                                         <label>飲む個数</label>
                                         <p class="mb-1"><%= medicine['number'] %> 個</p>
                                     </div>
-                                    <div class="form-group mb-1">
+                                    <div class="form-group mb-1" data-list-name="take_time">
                                         <label>飲む時間</label>
                                         <p class="mb-1"><%= medicine['take_time'] %></p>
                                     </div>
-                                    <div class="form-group mb-1">
+                                    <div class="form-group mb-1" data-list-name="date">
                                         <label>処方日数</label>
                                         <p class="mb-1"><%= medicine['starts_date'] %> から <%= medicine['period'] %> 日分</p>
                                     </div>
-                                    <div class="form-group mb-1">
+                                    <div class="form-group mb-1" data-list-name="type_name">
                                         <label>種類</label>
                                         <p class="mb-1"><%= medicine['type_name'] %></p>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group mb-1" data-list-name="group">
+                                        <label>グループ</label>
+                                        <p class="mb-1"><a href="/group/<%= medicine['group_id'] %>"><%= medicine['group_name'] %></a></p>
+                                    </div>
+                                    <div class="form-group mb-1" data-list-name="description">
                                         <label>説明</label>
                                         <% if (medicine['description'] === undefined || medicine['description'] === '') { %>
-                                            <p>登録されていません</p>
+                                            <p class="mb-1">登録されていません</p>
                                         <% } else { %>
-                                            <p><%= medicine['description'] %></p>
+                                            <p class="mb-1"><%= medicine['description'] %></p>
                                         <% } %>
                                     </div>
+<!--                                    <style>-->
+<!--                                        .a {-->
+<!--                                            box-shadow: 0 4px 8px rgba(85, 170, 241, 0.4);-->
+<!--                                        }-->
+<!--                                    </style>-->
                                     <div class="row">
                                         <div class="col-6">
-                                            <a href="/medicine-update/<%= medicine['medicine_id'] %>" class="card-link">編集</a>
                                         </div>
                                         <div class="col-6 text-right">
+                                            <a href="/medicine-update/<%= medicine['medicine_id'] %>" class="card-link">編集</a>
                                             <a href="javascript:medicineDelete(<%= medicine['medicine_id'] %>)" class="card-link link-danger">削除</a>
                                         </div>
                                     </div>
@@ -123,10 +134,6 @@
         <form class="modal-part" id="modal-setting-layout">
             <p>この設定はブラウザごとに保存されます</p>
             <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" name="checkboxMedicineName" id="checkboxMedicineName" checked disabled>
-                <label class="custom-control-label" for="checkboxMedicineName">薬名</label>
-            </div>
-            <div class="custom-control custom-checkbox">
                 <input type="checkbox" class="custom-control-input" name="checkboxHospitalName" id="checkboxHospitalName" checked>
                 <label class="custom-control-label" for="checkboxHospitalName">病院名</label>
             </div>
@@ -137,6 +144,10 @@
             <div class="custom-control custom-checkbox">
                 <input type="checkbox" class="custom-control-input" name="checkboxTakeTime" id="checkboxTakeTime">
                 <label class="custom-control-label" for="checkboxTakeTime">飲む時間</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" name="checkboxStartsDate" id="checkboxDate">
+                <label class="custom-control-label" for="checkboxDate">処方日数</label>
             </div>
             <div class="custom-control custom-checkbox">
                 <input type="checkbox" class="custom-control-input" name="checkboxTypeName" id="checkboxTypeName">
