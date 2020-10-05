@@ -29,17 +29,19 @@ router.get('/notice-list', async (ctx) => {
     for (let i = 0; i < notice.length; i++) {
         let noticeId = notice[i]['notice_id'];
 
-        sql = 'SELECT medicine_name FROM notice_medicine ' +
-            'LEFT JOIN medicine ON notice_medicine.medicine_id = medicine.medicine_id ' +
-            'WHERE notice_id = ?';
+        sql = `
+            SELECT medicine_name, number FROM notice_medicine
+            LEFT JOIN medicine ON notice_medicine.medicine_id = medicine.medicine_id
+            WHERE notice_id = ?`;
         let [medicine] = await connection.query(sql, [noticeId]);
         notice[i]['medicine'] = [];
+        notice[i]['number'] = [];
         medicine.forEach(d => {
             notice[i]['medicine'].push(d['medicine_name']);
+            notice[i]['number'].push(d['number']);
         })
 
-        sql = 'SELECT time_format(notice_time, \'%H:%i\') as notice_time FROM notice_time ' +
-            'WHERE notice_id = ?';
+        sql = 'SELECT time_format(notice_time, \'%H:%i\') as notice_time FROM notice_time WHERE notice_id = ?';
         let [time] = await connection.query(sql, [noticeId]);
         notice[i]['time'] = [];
         time.forEach(d => {
