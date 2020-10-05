@@ -2,6 +2,7 @@ const Router = require('koa-router');
 const router = new Router();
 const app = require('../app/app');
 const connection = require('../app/db');
+const nl2br  = require('nl2br');
 
 router.get('/medicine/:medicine_id', async (ctx) => {
     let session = ctx.session;
@@ -43,6 +44,7 @@ router.get('/medicine/:medicine_id', async (ctx) => {
         'WHERE medicine_id = ?';
     let [data] = await connection.query(sql, [medicineId]);
     result['data']['medicine'] = data[0];
+    result['data']['medicine']['description'] = nl2br(result['data']['medicine']['description']);
 
     sql = 'SELECT take_time_name FROM medicine_take_time ' +
         'LEFT JOIN take_time ON medicine_take_time.take_time_id = take_time.take_time_id ' +
