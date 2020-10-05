@@ -188,6 +188,11 @@
     <% } %>
     <script src="/stisla/js/stisla.js"></script>
     <script src="/stisla/js/scripts.js"></script>
+    <% if (typeof data.meta.script_delay !== "undefined") { %>
+        <% for (var sd = 0; sd < data.meta.script_delay.length; sd++) { %>
+            <script src="<%= data.meta.script_delay[sd] %>"></script>
+        <% } %>
+    <% } %>
 </body>
 
 </html>
