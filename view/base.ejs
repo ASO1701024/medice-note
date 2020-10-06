@@ -57,11 +57,11 @@
                     <div class="sidebar-brand sidebar-gone-show">
                         <a href="/">Medice Note</a>
                     </div>
-                    <% if (typeof data.meta.login_status !== "undefined" && data.meta.login_status == true) { %>
+                    <% if (typeof data.meta.login_status !== "undefined" && data.meta.login_status === true) { %>
                         <ul class="sidebar-menu">
                             <li class="menu-header">お薬</li>
                             <li>
-                                <a class="nav-link" href="/medicine-list">
+                                <a class="nav-link" href="/">
                                     <i class="fas fa-list"></i>
                                     <span>薬情報一覧</span>
                                 </a>
