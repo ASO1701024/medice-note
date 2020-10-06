@@ -88,10 +88,6 @@ app.use(contactRouter.routes());
 app.use(contactRouter.allowedMethods());
 
 // Medicine
-// const medicineListRouter = require('./router/medicine-list');
-// app.use(medicineListRouter.routes());
-// app.use(medicineListRouter.allowedMethods());
-
 const medicineRouter = require('./router/medicine');
 app.use(medicineRouter.routes());
 app.use(medicineRouter.allowedMethods());
