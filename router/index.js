@@ -52,10 +52,14 @@ router.get('/', async (ctx) => {
         result['data']['meta']['group_list'] = await app.getGroupList(userId);
         result['data']['meta']['script'] = [
             '/stisla/modules/sweetalert/sweetalert.min.js',
-            '/js/medicine-delete-alert.js'
+            '/js/medicine-delete-alert.js',
+            '/js/library/notyf.min.js'
         ];
         result['data']['meta']['script_delay'] = [
             '/js/medicine-list.js'
+        ];
+        result['data']['meta']['css'] = [
+            '/css/library/notyf.min.css'
         ];
 
         sql = `

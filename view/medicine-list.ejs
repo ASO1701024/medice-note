@@ -90,9 +90,11 @@
                 <a href="javascript:void(0)" class="btn btn-icon icon-left btn-primary mr-2" id="modal-setting-button">
                     <i class="fas fa-tasks"></i> 表示設定
                 </a>
-<!--                <a href="javascript:void(0)" class="btn btn-icon icon-left btn-primary">-->
-                    <!--  mr-2 -->
-<!--                    <i class="fas fa-bell"></i> 通知設定-->
+                <a href="javascript:void(0)" class="btn btn-icon icon-left btn-primary mr-2" id="notice-setting-button">
+                    <i class="fas fa-bell"></i> 通知設定
+                </a>
+<!--                <a href="/medicine-register" class="btn btn-icon icon-left btn-primary mr-2">-->
+<!--                    <i class="fas fa-plus"></i> 追加-->
 <!--                </a>-->
 <!--                <a href="javascript:void(0)" class="btn btn-icon icon-left btn-danger">-->
 <!--                    <i class="fas fa-trash"></i> 削除-->
@@ -107,15 +109,21 @@
                         <div class="col-12 col-sm-6 col-md-6 col-xl-3">
                             <article class="article">
                                 <div class="article-header">
-                                    <div class="article-image"
+                                    <div class="article-image" onclick="location.href = '/medicine/<%= medicine['medicine_id'] %>';"
                                          data-background="<% if (medicine['image'] !== '') { %>/upload/<%= medicine['image'] %><% } else { } %>">
                                     </div>
+<!--                                    <div class="article-title">-->
+<!--                                        <h2>-->
+<!--                                            <a href="/medicine/<%= medicine['medicine_id'] %>">-->
+<!--                                                <%= medicine['medicine_name'] %>-->
+<!--                                            </a>-->
+<!--                                        </h2>-->
+<!--                                    </div>-->
                                     <div class="article-title">
-                                        <h2>
-                                            <a href="/medicine/<%= medicine['medicine_id'] %>">
-                                                <%= medicine['medicine_name'] %>
-                                            </a>
-                                        </h2>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="checkboxMedicineId_<%= medicine['medicine_id'] %>" data-medicine-id="<%= medicine['medicine_id'] %>">
+                                            <label class="custom-control-label" for="checkboxMedicineId_<%= medicine['medicine_id'] %>"><%= medicine['medicine_name'] %></label>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="article-details">
@@ -153,9 +161,10 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-6">
+                                            <a href="/medicine/<%= medicine['medicine_id'] %>" class="card-link">詳細</a>
+                                            <a href="/medicine-update/<%= medicine['medicine_id'] %>" class="card-link">編集</a>
                                         </div>
                                         <div class="col-6 text-right">
-                                            <a href="/medicine-update/<%= medicine['medicine_id'] %>" class="card-link">編集</a>
                                             <a href="javascript:medicineDelete(<%= medicine['medicine_id'] %>)" class="card-link link-danger">削除</a>
                                         </div>
                                     </div>

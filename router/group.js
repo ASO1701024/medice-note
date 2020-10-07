@@ -29,9 +29,13 @@ router.get('/group/:group_id', async (ctx) => {
     result['data']['meta']['script'] = [
         '/stisla/modules/sweetalert/sweetalert.min.js',
         '/js/medicine-delete-alert.js',
+        '/js/library/notyf.min.js'
     ];
     result['data']['meta']['script_delay'] = [
         '/js/medicine-list.js'
+    ];
+    result['data']['meta']['css'] = [
+        '/css/library/notyf.min.css'
     ];
 
     let sql = `
