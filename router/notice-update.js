@@ -35,7 +35,6 @@ router.get('/notice-update/:notice_id', async (ctx) => {
     result['data']['meta']['script'] = [
         '/stisla/modules/select2/dist/js/select2.full.min.js',
         '/stisla/modules/bootstrap-daterangepicker/daterangepicker.js',
-        '/js/library/handlebars.min.js',
         '/js/notice-register.js'
     ];
 
