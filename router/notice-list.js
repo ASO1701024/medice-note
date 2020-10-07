@@ -60,6 +60,10 @@ router.get('/notice-list', async (ctx) => {
 
     result['data']['notice_list'] = notice;
 
+    sql = 'SELECT user_id FROM line_login WHERE user_id = ?';
+    let [lineLogin] = await connection.query(sql, [userId]);
+    result['data']['meta']['line_login'] = lineLogin.length !== 0;
+
     if (session.success !== undefined) {
         result['data']['success'] = session.success;
         session.success = undefined;
