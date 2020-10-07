@@ -35,10 +35,11 @@ router.get('/notice-list', async (ctx) => {
             WHERE notice_id = ?`;
         let [medicine] = await connection.query(sql, [noticeId]);
         notice[i]['medicine'] = [];
-        notice[i]['number'] = [];
         medicine.forEach(d => {
-            notice[i]['medicine'].push(d['medicine_name']);
-            notice[i]['number'].push(d['number']);
+            notice[i]['medicine'].push({
+                'medicine_name': d['medicine_name'],
+                'number': d['number']
+            })
         })
 
         sql = 'SELECT time_format(notice_time, \'%H:%i\') as notice_time FROM notice_time WHERE notice_id = ?';
