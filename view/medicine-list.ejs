@@ -93,12 +93,6 @@
                 <a href="javascript:void(0)" class="btn btn-icon icon-left btn-primary mr-2" id="notice-setting-button">
                     <i class="fas fa-bell"></i> 通知設定
                 </a>
-<!--                <a href="/medicine-register" class="btn btn-icon icon-left btn-primary mr-2">-->
-<!--                    <i class="fas fa-plus"></i> 追加-->
-<!--                </a>-->
-<!--                <a href="javascript:void(0)" class="btn btn-icon icon-left btn-danger">-->
-<!--                    <i class="fas fa-trash"></i> 削除-->
-<!--                </a>-->
             </div>
             <%
             Object.keys(data.medicine_list).forEach(function (key) { %>
@@ -112,13 +106,6 @@
                                     <div class="article-image" onclick="location.href = '/medicine/<%= medicine['medicine_id'] %>';"
                                          data-background="<% if (medicine['image'] !== '') { %>/upload/<%= medicine['image'] %><% } else { } %>">
                                     </div>
-<!--                                    <div class="article-title">-->
-<!--                                        <h2>-->
-<!--                                            <a href="/medicine/<%= medicine['medicine_id'] %>">-->
-<!--                                                <%= medicine['medicine_name'] %>-->
-<!--                                            </a>-->
-<!--                                        </h2>-->
-<!--                                    </div>-->
                                     <div class="article-title">
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input" id="checkboxMedicineId_<%= medicine['medicine_id'] %>" data-medicine-id="<%= medicine['medicine_id'] %>">
