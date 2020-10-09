@@ -148,10 +148,6 @@ app.use(lineLoginRouter.routes());
 app.use(lineLoginRouter.allowedMethods());
 
 // API
-const apiMedicineRouter = require('./router/api-medicine');
-app.use(apiMedicineRouter.routes());
-app.use(apiMedicineRouter.allowedMethods());
-
 const apiCalenderRouter = require('./router/api-calendar');
 app.use(apiCalenderRouter.routes());
 app.use(apiCalenderRouter.allowedMethods());
