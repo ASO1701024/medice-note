@@ -24,8 +24,52 @@
     </div>
 <% } %>
 
+<% if (data.meta.browser_warning === true) { %>
+    <div class="alert alert-warning">
+        <div class="alert-title">注意</div>
+        お使いのブラウザはサポートしていません<br>
+        <a href="https://www.google.co.jp/chrome/" target="_blank" rel="noopener" class="alert-link">Google Chrome</a>か
+        <a href="https://www.mozilla.org/ja/firefox/" target="_blank" rel="noopener" class="alert-link">Mozilla Firefox</a>の最新版をご利用ください
+    </div>
+<% } %>
+
+<% if (typeof data.meta.message !== "undefined") { %>
+    <% data.meta.message.info.forEach(d => { %>
+        <div class="alert alert-primary alert-dismissible show fade">
+            <div class="alert-body">
+                <button class="close" data-dismiss="alert">
+                    <span>×</span>
+                </button>
+                <%= d %>
+            </div>
+        </div>
+    <% }) %>
+
+    <% data.meta.message.success.forEach(d => { %>
+        <div class="alert alert-success alert-dismissible show fade">
+            <div class="alert-body">
+                <button class="close" data-dismiss="alert">
+                    <span>×</span>
+                </button>
+                <%= d %>
+            </div>
+        </div>
+    <% }) %>
+
+    <% data.meta.message.fail.forEach(d => { %>
+        <div class="alert alert-danger alert-dismissible show fade">
+            <div class="alert-body">
+                <button class="close" data-dismiss="alert">
+                    <span>×</span>
+                </button>
+                <%= d %>
+            </div>
+        </div>
+    <% }) %>
+<% } %>
+
 <% if (typeof data.medicine_list !== "undefined") { %>
-    <% if (data.medicine_list.length === 0) { %>
+    <% if (Object.keys(data.medicine_list).length === 0) { %>
         <div class="col-12 mb-4 pl-0 pr-0">
             <div class="hero bg-primary text-white">
                 <div class="hero-inner">
@@ -41,91 +85,132 @@
             </div>
         </div>
     <% } else { %>
-        <div class="card">
-            <div class="card-header">
-                <h4></h4>
-                <div class="card-header-action">
-                    <a href="<%= data.meta.view_switch %>?style=table"
-                       class="btn <% if (data.meta.view_style == 'table') { %> active <% } %>">
-                        <i class="fas fa-table" style="padding-right: 5px"></i>テーブル
-                    </a>
-                    <a href="<%= data.meta.view_switch %>?style=thumbnail"
-                       class="btn <% if (data.meta.view_style == 'thumbnail') { %> active <% } %>">
-                        <i class="fas fa-grip-horizontal" style="padding-right: 5px"></i>サムネイル
-                    </a>
+        <div class="section-body">
+            <div class="row" style="justify-content: flex-end; padding: 0 16px;">
+                <a href="javascript:void(0)" class="btn btn-icon icon-left btn-primary mr-2" id="modal-setting-button">
+                    <i class="fas fa-tasks"></i> 表示設定
+                </a>
+                <a href="javascript:void(0)" class="btn btn-icon icon-left btn-primary mr-2" id="notice-setting-button">
+                    <i class="fas fa-bell"></i> 通知設定
+                </a>
+<!--                <a href="/medicine-register" class="btn btn-icon icon-left btn-primary mr-2">-->
+<!--                    <i class="fas fa-plus"></i> 追加-->
+<!--                </a>-->
+<!--                <a href="javascript:void(0)" class="btn btn-icon icon-left btn-danger">-->
+<!--                    <i class="fas fa-trash"></i> 削除-->
+<!--                </a>-->
+            </div>
+            <%
+            Object.keys(data.medicine_list).forEach(function (key) { %>
+                <h2 class="section-title"><%= key %></h2>
+                <div class="row">
+                    <%
+                    data.medicine_list[key].forEach(function (medicine) { %>
+                        <div class="col-12 col-sm-6 col-md-6 col-xl-3">
+                            <article class="article">
+                                <div class="article-header">
+                                    <div class="article-image" onclick="location.href = '/medicine/<%= medicine['medicine_id'] %>';"
+                                         data-background="<% if (medicine['image'] !== '') { %>/upload/<%= medicine['image'] %><% } else { } %>">
+                                    </div>
+<!--                                    <div class="article-title">-->
+<!--                                        <h2>-->
+<!--                                            <a href="/medicine/<%= medicine['medicine_id'] %>">-->
+<!--                                                <%= medicine['medicine_name'] %>-->
+<!--                                            </a>-->
+<!--                                        </h2>-->
+<!--                                    </div>-->
+                                    <div class="article-title">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="checkboxMedicineId_<%= medicine['medicine_id'] %>" data-medicine-id="<%= medicine['medicine_id'] %>">
+                                            <label class="custom-control-label" for="checkboxMedicineId_<%= medicine['medicine_id'] %>"><%= medicine['medicine_name'] %></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="article-details">
+                                    <div class="form-group mb-1" data-list-name="hospital_name">
+                                        <label>病院名</label>
+                                        <p class="mb-1"><%= medicine['hospital_name'] %></p>
+                                    </div>
+                                    <div class="form-group mb-1" data-list-name="number">
+                                        <label>飲む個数</label>
+                                        <p class="mb-1"><%= medicine['number'] %> 個</p>
+                                    </div>
+                                    <div class="form-group mb-1" data-list-name="take_time">
+                                        <label>飲む時間</label>
+                                        <p class="mb-1"><%= medicine['take_time'] %></p>
+                                    </div>
+                                    <div class="form-group mb-1" data-list-name="date">
+                                        <label>処方日数</label>
+                                        <p class="mb-1"><%= medicine['starts_date'] %> から <%= medicine['period'] %> 日分</p>
+                                    </div>
+                                    <div class="form-group mb-1" data-list-name="type_name">
+                                        <label>種類</label>
+                                        <p class="mb-1"><%= medicine['type_name'] %></p>
+                                    </div>
+                                    <div class="form-group mb-1" data-list-name="group">
+                                        <label>グループ</label>
+                                        <p class="mb-1"><a href="/group/<%= medicine['group_id'] %>"><%= medicine['group_name'] %></a></p>
+                                    </div>
+                                    <div class="form-group mb-1" data-list-name="description">
+                                        <label>説明</label>
+                                        <% if (medicine['description'] === undefined || medicine['description'] === '') { %>
+                                            <p class="mb-1">登録されていません</p>
+                                        <% } else { %>
+                                            <p class="mb-1"><%= medicine['description'] %></p>
+                                        <% } %>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <a href="/medicine/<%= medicine['medicine_id'] %>" class="card-link">詳細</a>
+                                            <a href="/medicine-update/<%= medicine['medicine_id'] %>" class="card-link">編集</a>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <a href="javascript:medicineDelete(<%= medicine['medicine_id'] %>)" class="card-link link-danger">削除</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    <%
+                    });
+                    %>
                 </div>
-            </div>
-            <div class="card-body pb-0">
-                <% if (data.meta.view_style == 'table') { %>
-                    <div class="table-responsive">
-                        <table id="medicine-list" class="table table-bordered table-md">
-                            <tbody>
-                            <tr class="text-center" data-sort-method="none">
-                                <th>薬名</th>
-                                <th>病院名</th>
-                                <th>個数</th>
-                                <th>処方日</th>
-                                <th>期間</th>
-                                <th>種類</th>
-                                <th data-sort-method="none"></th>
-                                <th data-sort-method="none"></th>
-                            </tr>
-                            <% for (var t = 0; t < data.medicine_list.length; t++) { %>
-                                <tr>
-                                    <td><a href="/medicine/<%= data.medicine_list[t]['medicine_id'] %>"><%= data.medicine_list[t]['medicine_name'] %></a></td>
-                                    <td><%= data.medicine_list[t]['hospital_name'] %></td>
-                                    <td><%= data.medicine_list[t]['number'] %>個</td>
-                                    <td><%= data.medicine_list[t]['starts_date'] %></td>
-                                    <td><%= data.medicine_list[t]['period'] %>日</td>
-                                    <td><%= data.medicine_list[t]['type_name'] %></td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-primary" onclick="location.href = '/medicine-update/<%= data.medicine_list[t]['medicine_id'] %>'">編集</button>
-                                    </td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-danger" onclick="medicineDelete(<%= data.medicine_list[t]['medicine_id'] %>)">削除</button>
-                                    </td>
-                                </tr>
-                            <% } %>
-                            </tbody>
-                        </table>
-                    </div>
-                <% } else if (data.meta.view_style === 'thumbnail') { %>
-                    <div class="row">
-                        <% for (var i = 0; i < data.medicine_list.length; i++) { %>
-                            <div class="col-12 col-sm-6 col-md-6 col-xl-3">
-                                <article class="article">
-                                    <div class="article-header">
-                                        <div class="article-image"
-                                             data-background="<% if (data.medicine_list[i]['image'] !== '') { %>/upload/<%= data.medicine_list[i]['image'] %><% } else { } %>">
-                                        </div>
-                                        <div class="article-title">
-                                            <h2>
-                                                <a href="/medicine/<%= data.medicine_list[i]['medicine_id'] %>">
-                                                    <%= data.medicine_list[i]['medicine_name'] %>
-                                                </a>
-                                            </h2>
-                                        </div>
-                                    </div>
-                                    <div class="article-details">
-                                        <p><%= data.medicine_list[i]['hospital_name'] %></p>
-                                        <p><%= data.medicine_list[i]['starts_date'] %> から <%= data.medicine_list[i]['period'] %> 日分</p>
-                                        <p>種類：<%= data.medicine_list[i]['type_name'] %></p>
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <a href="/medicine/<%= data.medicine_list[i]['medicine_id'] %>" class="card-link">詳細</a>
-                                                <a href="/medicine-update/<%= data.medicine_list[i]['medicine_id'] %>" class="card-link">編集</a>
-                                            </div>
-                                            <div class="col-6 text-right">
-                                                <a href="javascript:medicineDelete(<%= data.medicine_list[i]['medicine_id'] %>)" class="card-link link-danger">削除</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
-                            </div>
-                        <% } %>
-                    </div>
-                <% } %>
-            </div>
+            <%
+            }); %>
         </div>
+
+        <!-- setting modal -->
+        <form class="modal-part" id="modal-setting-layout">
+            <p>この設定はブラウザごとに保存されます</p>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" name="checkboxHospitalName" id="checkboxHospitalName" checked>
+                <label class="custom-control-label" for="checkboxHospitalName">病院名</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" name="checkboxNumber" id="checkboxNumber" checked>
+                <label class="custom-control-label" for="checkboxNumber">飲む個数</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" name="checkboxTakeTime" id="checkboxTakeTime">
+                <label class="custom-control-label" for="checkboxTakeTime">飲む時間</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" name="checkboxStartsDate" id="checkboxDate">
+                <label class="custom-control-label" for="checkboxDate">処方日数</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" name="checkboxTypeName" id="checkboxTypeName">
+                <label class="custom-control-label" for="checkboxTypeName">種類</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" name="checkboxGroup" id="checkboxGroup">
+                <label class="custom-control-label" for="checkboxGroup">グループ</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" name="checkboxDescription" id="checkboxDescription">
+                <label class="custom-control-label" for="checkboxDescription">説明</label>
+            </div>
+        </form>
+        <!-- end setting modal -->
     <% } %>
 <% } %>

@@ -138,3 +138,7 @@ input.form-control-plaintext {
 .custom-file {
     overflow: hidden;
 }
+.article-title .custom-checkbox label {
+    font-size: 16px;
+    color: #fff;
+}

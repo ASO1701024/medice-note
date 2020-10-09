@@ -33,41 +33,6 @@
     </div>
 <% } %>
 
-<% if (typeof data.meta.message !== "undefined") { %>
-    <% data.meta.message.info.forEach(d => { %>
-        <div class="alert alert-primary alert-dismissible show fade">
-            <div class="alert-body">
-                <button class="close" data-dismiss="alert">
-                    <span>×</span>
-                </button>
-                <%= d %>
-            </div>
-        </div>
-    <% }) %>
-
-    <% data.meta.message.success.forEach(d => { %>
-        <div class="alert alert-success alert-dismissible show fade">
-            <div class="alert-body">
-                <button class="close" data-dismiss="alert">
-                    <span>×</span>
-                </button>
-                <%= d %>
-            </div>
-        </div>
-    <% }) %>
-
-    <% data.meta.message.fail.forEach(d => { %>
-        <div class="alert alert-danger alert-dismissible show fade">
-            <div class="alert-body">
-                <button class="close" data-dismiss="alert">
-                    <span>×</span>
-                </button>
-                <%= d %>
-            </div>
-        </div>
-    <% }) %>
-<% } %>
-
 <div class="col-12 mb-4 pl-0 pr-0">
     <div class="hero bg-primary text-white">
         <div class="hero-inner">
@@ -75,62 +40,14 @@
             <p class="lead">
                 このアプリはお薬手帳のウェブアプリ版です
             </p>
-            <% if (typeof data.meta.login_status !== "undefined" && data.meta.login_status == false) { %>
-                <div class="mt-4">
-                    <a href="/signup" class="btn btn-outline-white btn-lg btn-icon icon-left">
-                        <i class="far fa-user"></i> アカウント作成
-                    </a>
-                </div>
-            <% } %>
+            <div class="mt-4">
+                <a href="/signup" class="btn btn-outline-white btn-lg btn-icon icon-left">
+                    <i class="far fa-user"></i> アカウント作成
+                </a>
+            </div>
         </div>
     </div>
 </div>
-
-<% if (typeof data.meta.login_status !== "undefined" && data.meta.login_status == true) { %>
-    <div class="row">
-        <div class="col-12 col-md-6 col-lg-6">
-            <div class="section-body">
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-text">お薬手帳に登録されている薬情報を閲覧します</p>
-                        <a href="/medicine-list" class="card-link">薬情報一覧</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-md-6 col-lg-6">
-            <div class="section-body">
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-text">お薬手帳に薬情報を登録します</p>
-                        <a href="/medicine-register" class="card-link">薬情報登録</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-md-6 col-lg-6">
-            <div class="section-body">
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-text">登録されている通知情報を閲覧します</p>
-                        <a href="/notice-list" class="card-link">通知一覧</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-md-6 col-lg-6">
-            <div class="section-body">
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-text">通知情報を登録します</p>
-                        <a href="/notice-register" class="card-link">通知登録</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-<% } %>
 
 <div class="section-body">
     <div class="card">

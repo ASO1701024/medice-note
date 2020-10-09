@@ -57,11 +57,11 @@
                     <div class="sidebar-brand sidebar-gone-show">
                         <a href="/">Medice Note</a>
                     </div>
-                    <% if (typeof data.meta.login_status !== "undefined" && data.meta.login_status == true) { %>
+                    <% if (typeof data.meta.login_status !== "undefined" && data.meta.login_status === true) { %>
                         <ul class="sidebar-menu">
                             <li class="menu-header">お薬</li>
                             <li>
-                                <a class="nav-link" href="/medicine-list">
+                                <a class="nav-link" href="/">
                                     <i class="fas fa-list"></i>
                                     <span>薬情報一覧</span>
                                 </a>
@@ -100,10 +100,6 @@
                                 <a class="nav-link" href="/notice-list">
                                     <i class="fas fa-bell"></i>
                                     <span>通知一覧</span>
-                                </a>
-                                <a class="nav-link" href="/notice-register">
-                                    <i class="fas fa-plus"></i>
-                                    <span>通知登録</span>
                                 </a>
                             </li>
                             <li class="menu-header">その他</li>
@@ -188,6 +184,11 @@
     <% } %>
     <script src="/stisla/js/stisla.js"></script>
     <script src="/stisla/js/scripts.js"></script>
+    <% if (typeof data.meta.script_delay !== "undefined") { %>
+        <% for (var sd = 0; sd < data.meta.script_delay.length; sd++) { %>
+            <script src="<%= data.meta.script_delay[sd] %>"></script>
+        <% } %>
+    <% } %>
 </body>
 
 </html>
