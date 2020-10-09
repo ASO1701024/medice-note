@@ -60,7 +60,7 @@ router.post('/account-delete', async (ctx) => {
     sql = 'DELETE FROM session WHERE user_id = ?';
     await connection.query(sql, [userId]);
 
-    session.success.message = 'アカウントを削除しました';
+    session.success.message = 'アカウントは30日後に削除されます\nご利用ありがとうございました';
     session.auth_id = undefined;
     session.error = undefined;
     session.old = undefined;
