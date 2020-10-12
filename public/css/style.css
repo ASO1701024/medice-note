@@ -165,8 +165,13 @@ input.form-control-plaintext {
     font-size: 2em;
     transition: 0.3s ease-in-out;
 }
-.fab-menu.active span {
-    transform: rotate(135deg);
+.fab-menu span:before {
+    font-family: "Font Awesome 5 Free";
+    content: "\f0c9";
+    font-weight: bold;
+}
+.fab-menu.active span:before {
+    content: "\f00d";
 }
 .fab-menu ul {
     position: absolute;
