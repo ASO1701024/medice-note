@@ -13,6 +13,7 @@
   "dependencies": {
     "@line/bot-sdk": "^7.0.0",
     "bcrypt": "^5.0.0",
+    "jaro-winkler": "^0.2.8",
     "koa": "^2.12.0",
     "koa-body": "^4.1.1",
     "koa-ejs": "^4.3.0",
