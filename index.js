@@ -49,6 +49,7 @@ app.proxy = true;
 // Cron
 require('./app/cron-push-message');
 require('./app/cron-verify-line-access-token');
+require('./app/cron-delete-user');
 
 const indexRouter = require('./router/index');
 app.use(indexRouter.routes());
