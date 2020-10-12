@@ -85,12 +85,23 @@
             </div>
         </div>
     <% } else { %>
+        <div class="fab-menu" onclick="fabMenuToggle();">
+            <span>+</span>
+            <ul>
+                <li>
+                    <a href="javascript:void(0)" class="modal-setting-button"><i class="fas fa-tasks"></i> 表示設定</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" class="notice-setting-button"><i class="fas fa-bell"></i> 通知設定</a>
+                </li>
+            </ul>
+        </div>
         <div class="section-body">
             <div class="row" style="justify-content: flex-end; padding: 0 16px;">
-                <a href="javascript:void(0)" class="btn btn-icon icon-left btn-primary mr-2" id="modal-setting-button">
+                <a href="javascript:void(0)" class="btn btn-icon icon-left btn-primary mr-2 modal-setting-button">
                     <i class="fas fa-tasks"></i> 表示設定
                 </a>
-                <a href="javascript:void(0)" class="btn btn-icon icon-left btn-primary mr-2" id="notice-setting-button">
+                <a href="javascript:void(0)" class="btn btn-icon icon-left btn-primary mr-2 notice-setting-button">
                     <i class="fas fa-bell"></i> 通知設定
                 </a>
             </div>
