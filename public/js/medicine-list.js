@@ -24,7 +24,7 @@ window.onload = function () {
         },
     });
 
-    $('#modal-setting-button').fireModal({
+    $('.modal-setting-button').fireModal({
         title: '表示設定',
         body: $("#modal-setting-layout"),
         footerClass: 'bg-whitesmoke',
@@ -91,7 +91,7 @@ window.onload = function () {
         ]
     });
 
-    $('#notice-setting-button').on('click', function () {
+    $('.notice-setting-button').on('click', function () {
         let checkbox = $('input:checked[data-medicine-id]');
         if (checkbox.length === 0) {
             notyf.error('選択された項目が見つかりませんでした');
@@ -155,4 +155,10 @@ function toggleShowItem(showItem) {
             $(element).css('display', 'none');
         }
     });
+}
+
+function fabMenuToggle() {
+    let fab = document.getElementsByClassName('fab-menu');
+    fab = fab[0];
+    fab.classList.toggle('active');
 }
