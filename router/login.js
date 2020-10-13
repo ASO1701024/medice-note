@@ -4,6 +4,8 @@ const connection = require('../app/db');
 const app = require('../app/app');
 const bcrypt = require('bcrypt');
 const {v4: uuid} = require('uuid');
+const transporter = require('../app/mail');
+const config = require('../config.json');
 
 router.get('/login', async (ctx) => {
     // Session
@@ -60,7 +62,7 @@ router.post('/login', async (ctx) => {
     await connection.query(sql, [new Date()]);
 
     // Lookup Account
-    sql = 'SELECT user_id, password, is_enable FROM user WHERE mail = ? AND deleted_at IS NULL';
+    sql = 'SELECT user_id, mail, password, is_enable FROM user WHERE mail = ? AND deleted_at IS NULL';
     let [user] = await connection.query(sql, [mail]);
     if (user.length === 0) {
         session.error.message = 'アカウントが見つかりませんでした';
@@ -71,25 +73,41 @@ router.post('/login', async (ctx) => {
     user = user[0];
     if (user['is_enable'] === 0) {
         session.error.no_escape = 'メールアドレス認証が行われていません<a href="/renew-mail-auth" class="alert-link">こちら</a>からメールアドレス認証を行ってください';
+
+        return ctx.redirect('/login');
     } else {
         let hashPassword = user['password'];
         if (bcrypt.compareSync(password, hashPassword)) {
-            let sessionId = uuid().split('-').join('');
-            let date = new Date();
-            date.setDate(date.getDate() + 30);
+            let authKey = uuid() + uuid() + uuid()
+            authKey = authKey.split('-').join('')
 
-            sql = 'INSERT INTO session VALUES (?, ?, ?)';
-            await connection.query(sql, [user['user_id'], sessionId, date]);
+            sql = 'INSERT INTO user_two_factor_authentication VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 10 MINUTE))';
+            await connection.query(sql, [user['user_id'], authKey]);
 
-            session.auth_id = sessionId;
+            await transporter.sendMail({
+                from: config.mail.auth.user,
+                to: user['mail'],
+                subject: '二段階認証',
+                text: '登録されているメールアドレスにログインリクエストが行われました\n' +
+                    'アカウントにログインするには以下のURLをクリックしてください\n' +
+                    'https://www.medice-note.vxx0.com/two-factor-authentication/' + authKey
+            }).then(() => {
+                session.success.message = '認証メールを送信しました';
 
-            return ctx.redirect('/');
+                ctx.redirect('/login');
+            }).catch(() => {
+                session.error.message = '認証メールの送信に失敗しました';
+
+                ctx.redirect('/login');
+            });
         } else {
             session.error.message = 'ログインに失敗しました';
-        }
-    }
 
-    ctx.redirect('/login');
+            return ctx.redirect('/login');
+        }
+
+        return ctx.redirect('/login');
+    }
 })
 
 module.exports = router;
