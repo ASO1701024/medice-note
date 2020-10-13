@@ -24,7 +24,7 @@ window.onload = function () {
         },
     });
 
-    $('.modal-setting-button').fireModal({
+    $('#modal-setting-button').fireModal({
         title: '表示設定',
         body: $("#modal-setting-layout"),
         footerClass: 'bg-whitesmoke',
