@@ -209,3 +209,15 @@ input.form-control-plaintext {
     color: #6c757d;
     text-decoration: none;
 }
+/*
+@media screen and (max-width: 450px) {
+    .action-button {
+        display: none;
+    }
+}
+@media screen and (min-width: 450px) {
+    .fab-menu {
+        display: none;
+    }
+}
+*/
