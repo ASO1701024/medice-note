@@ -64,6 +64,10 @@ const loginRouter = require('./router/login');
 app.use(loginRouter.routes());
 app.use(loginRouter.allowedMethods());
 
+const twoFactorAuthenticationRouter = require('./router/two-factor-authentication');
+app.use(twoFactorAuthenticationRouter.routes());
+app.use(twoFactorAuthenticationRouter.allowedMethods());
+
 const logoutRouter = require('./router/logout');
 app.use(logoutRouter.routes());
 app.use(logoutRouter.allowedMethods());
