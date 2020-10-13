@@ -38,14 +38,15 @@ router.get('/api/calendar', async (ctx) => {
 
     let sql = `
         SELECT medicine_name                                                       as title,
-               date_format(starts_date, '%Y-%m-%d')                                as start,
-               date_format(date_add(starts_date, INTERVAL period DAY), '%Y-%m-%d') as end,
-               concat('/medicine/', medicine_id)                                   as url
+               DATE_FORMAT(starts_date, '%Y-%m-%d')                                as start,
+               DATE_FORMAT(DATE_ADD(starts_date, INTERVAL period DAY), '%Y-%m-%d') as end,
+               CONCAT('/medicine/', medicine_id)                                   as url
         FROM medicine
-        WHERE starts_date BETWEEN ? AND ?
-          AND group_id IN (SELECT group_id FROM medicine_group WHERE user_id = ?)`;
+        WHERE group_id IN (SELECT group_id FROM medicine_group WHERE user_id = ?)
+          AND (DATE_FORMAT(starts_date, '%Y-%m-%d') BETWEEN ? AND ?
+            OR DATE_FORMAT(DATE_ADD(starts_date, INTERVAL period DAY), '%Y-%m-1') BETWEEN ? AND ?)`;
 
-    let [calendar] = await connection.query(sql, [start, end, userId]);
+    let [calendar] = await connection.query(sql, [userId, start, end, start, end]);
 
     return ctx.body = calendar;
 })
