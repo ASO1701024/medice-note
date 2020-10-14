@@ -208,6 +208,8 @@ input.form-control-plaintext {
 .fab-menu ul li a {
     color: #6c757d;
     text-decoration: none;
+    display: block;
+    width: 100%;
 }
 @media screen and (max-width: 450px) {
     .action-button {
