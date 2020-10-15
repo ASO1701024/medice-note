@@ -1,12 +1,14 @@
 const cron = require('node-cron');
 const connection = require('./db');
+const fs = require('fs');
+const path = require('path');
 
 module.exports = cron.schedule('0 0 0 * * *', async () => {
     let sql = `
         SELECT user_id FROM user
         WHERE deleted_at IS NOT NULL
         AND CURRENT_DATE() > DATE_ADD(deleted_at, INTERVAL 30 DAY)`;
-    let users = await connection.query(sql);
+    let [users] = await connection.query(sql);
 
     for (let i = 0; i < users.length; i++) {
         let user = users[i];
@@ -46,6 +48,21 @@ module.exports = cron.schedule('0 0 0 * * *', async () => {
             DELETE FROM medicine_take_time
             WHERE medicine_id IN (SELECT medicine_id FROM medicine WHERE group_id IN (SELECT group_id FROM medicine_group WHERE user_id = ?))`;
         await connection.query(sql, [userId]);
+
+        sql = `
+            SELECT image FROM medicine
+            WHERE group_id IN (SELECT group_id FROM medicine_group WHERE user_id = ?)
+            AND image != ''`;
+        let [image] = await connection.query(sql, [userId]);
+        let deleteImage = [];
+        for (let key in image) {
+            if (image.hasOwnProperty(key)) {
+                deleteImage.push(image[key]['image']);
+            }
+        }
+        deleteImage.forEach(value => {
+            fs.unlinkSync(path.join(__dirname, '../public/upload/', value));
+        });
 
         sql = 'DELETE FROM medicine WHERE group_id IN (SELECT group_id FROM medicine_group WHERE user_id = ?)';
         await connection.query(sql, [userId]);
