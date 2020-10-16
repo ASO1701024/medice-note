@@ -22,39 +22,6 @@ span.select2.select2-container.select2-container--default {
 .link-danger:hover {
     color: #fc544b;
 }
-.line-login {
-    width: 150px;
-    height: auto;
-}
-.line-log-out {
-    display: flex;
-    width: 150px;
-    height: 40px;
-}
-.line-log-out:hover {
-    text-decoration: none;
-}
-.line-log-out img {
-    background-color: #00C300;
-    border-radius: 7px 0 0 7px;
-    width: 40px;
-    height: auto;
-    padding: 1px;
-}
-.line-log-out div:nth-of-type(1) {
-    width: 1px;
-    height: 40px;
-    background-color: #00b330;
-}
-.line-log-out div:nth-of-type(2) {
-    width: 109px;
-    background-color: #00C300;
-    border-radius: 0 7px 7px 0;
-    color: white;
-    font-weight: bold;
-    text-align: center;
-    padding-top: 9px;
-}
 .medicine-table-outer {
     min-height: 61px;
     display: block;
@@ -63,38 +30,11 @@ span.select2.select2-container.select2-container--default {
     border-radius: .25rem;
     padding-left: 10px;
 }
-.medicine-table tbody tr td:nth-of-type(1) {
-    width: calc(100% - 70px - 40px);
-}
-.medicine-table tbody tr td:nth-of-type(2) {
-    width: 70px;
-}
-.medicine-table tbody tr td:nth-of-type(3) {
-    width: 40px;
-}
-.time-table tr td:nth-of-type(1) {
-    width: calc(100% - 40px);
-}
-.time-table tr td:nth-of-type(2) {
-    width: 40px;
-}
 input.form-control-plaintext {
     pointer-events: none;
 }
-.bootstrap-timepicker-hour,
-.bootstrap-timepicker-minute,
-.bootstrap-timepicker-meridian {
-    border: 1px solid #888;
-}
-.bootstrap-timepicker-meridian {
-    width: 32px !important;
-}
 .readonly-background {
     background-color: #fdfdff !important;
-}
-.bootstrap-timepicker-widget.dropdown-menu.timepicker-orient-left.timepicker-orient-top.open,
-.bootstrap-timepicker-widget.dropdown-menu.timepicker-orient-left.timepicker-orient-bottom.open {
-    width: 150px;
 }
 .accordion-header[aria-expanded=true] h4:before {
     content: '\f078';
