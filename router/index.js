@@ -69,7 +69,7 @@ router.get('/', async (ctx) => {
             LEFT JOIN medicine_type ON medicine.type_id = medicine_type.type_id
             LEFT JOIN medicine_group ON medicine.group_id = medicine_group.group_id
             WHERE medicine.group_id in (SELECT group_id FROM medicine_group WHERE user_id = ?)
-            ORDER BY starts_date DESC`;
+            ORDER BY starts_date`;
 
         let [data] = await connection.query(sql, [userId]);
 
