@@ -26,6 +26,9 @@ module.exports = cron.schedule('0 0 0 * * *', async () => {
         sql = 'DELETE FROM user_reset_password_key WHERE user_id = ?';
         await connection.query(sql, [userId]);
 
+        sql = 'DELETE FROM user_two_factor_authentication WHERE user_id = ?';
+        await connection.query(sql, [userId]);
+
         sql = 'DELETE FROM user_message WHERE user_id = ?';
         await connection.query(sql, [userId]);
 
