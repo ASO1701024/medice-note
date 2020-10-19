@@ -101,6 +101,10 @@ const medicineRegisterRouter = require('./router/medicine-register');
 app.use(medicineRegisterRouter.routes());
 app.use(medicineRegisterRouter.allowedMethods());
 
+const bulkRegisterRouter = require('./router/bulk-register');
+app.use(bulkRegisterRouter.routes());
+app.use(bulkRegisterRouter.allowedMethods());
+
 const medicineUpdateRouter = require('./router/medicine-update');
 app.use(medicineUpdateRouter.routes());
 app.use(medicineUpdateRouter.allowedMethods());
@@ -156,5 +160,9 @@ app.use(lineLoginRouter.allowedMethods());
 const apiCalenderRouter = require('./router/api-calendar');
 app.use(apiCalenderRouter.routes());
 app.use(apiCalenderRouter.allowedMethods());
+
+const apiOcrRouter = require('./router/api-ocr');
+app.use(apiOcrRouter.routes());
+app.use(apiOcrRouter.allowedMethods());
 
 app.listen(5000);
