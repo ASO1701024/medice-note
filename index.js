@@ -46,6 +46,8 @@ app.use(session({
 }, app));
 app.proxy = true;
 
+process.env.GOOGLE_APPLICATION_CREDENTIALS = path.join(__dirname, '/private/cloud-vision-credentials.json');
+
 // Cron
 require('./app/cron-push-message');
 require('./app/cron-verify-line-access-token');

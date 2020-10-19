@@ -40,8 +40,8 @@ module.exports = {
         }
 
         // cloud visionから受け取ったjson内のテキストデータを行ごとに分割し、配列で返す。
-        function splitLine(jsonObject) {
-            let splitText = jsonObject['fullTextAnnotation']['text'].split('\n');
+        function splitLine(data) {
+            let splitText = data.split('\n');
             return splitText.slice(0, splitText.length - 1)
         }
     },
