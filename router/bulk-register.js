@@ -56,7 +56,39 @@ router.get('/bulk-register', async (ctx) => {
 })
 
 router.post('/bulk-register', async (ctx) => {
+    let session = ctx.session;
+    app.initializeSession(session);
 
+    let authId = session.auth_id;
+    let userId = await app.getUserId(authId);
+    if (!userId) {
+        session.error.message = 'ログインしていないため続行できませんでした';
+
+        return ctx.redirect('/login');
+    }
+
+    let referer = ctx.request.header['referer'];
+    let contentType = ctx.request.header['content-type'];
+    let parser = new URL(referer);
+    if (parser.pathname !== '/bulk-register' || contentType !== 'application/json') {
+        return ctx.body = {
+            'status': false,
+            'error': '不明なリクエストが発生しました'
+        };
+    }
+
+    let json = ctx.request.body;
+    console.log(json);
+
+    let hospitalName = json['hospital_name'];
+    let startsDate = json['starts_date'];
+    let groupId = json['group_id'];
+
+    let items = json['item'];
+    console.log(items);
+    for (let i = 0; i < items.length; i++) {
+        console.log(items[i]);
+    }
 })
 
 module.exports = router;
