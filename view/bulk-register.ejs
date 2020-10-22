@@ -39,17 +39,17 @@
         <div class="row" id="medicine-list">
             <div class="col-12">
                 <div class="row" data-type="medicine-basic">
-                    <div class="form-group col-12 col-md-4">
+                    <div class="form-group col-12 col-md-4" data-item-name="hospital-name">
                         <label>病院名</label>
                         <input type="text" class="form-control autocomplete-hospital" name="hospital_name" required>
                         <span class="form-error"></span>
                     </div>
-                    <div class="form-group col-12 col-md-4">
+                    <div class="form-group col-12 col-md-4" data-item-name="starts-date">
                         <label>処方日</label>
                         <input type="text" class="form-control datepicker readonly-background" name="starts_date" required readonly>
                         <span class="form-error"></span>
                     </div>
-                    <div class="form-group col-12 col-md-4">
+                    <div class="form-group col-12 col-md-4" data-item-name="group-id">
                         <label>グループ</label>
                         <select class="form-control select2" name="group_id">
                             <% if (typeof data.meta.group_list != "undefined") {
@@ -80,7 +80,7 @@
     <div class="col-12" data-type="medicine-item" data-medicine-item-id="">
         <div class="row">
             <div class="col-12 col-md-6">
-                <div class="form-group">
+                <div class="form-group" data-item-name="medicine-name">
                     <label>薬の名前</label>
                     <input type="text" class="form-control autocomplete-medicine-name" name="medicine_name" value="{{ medicine_name }}" required>
                     <span class="form-error"></span>
@@ -92,7 +92,7 @@
         </div>
         <div class="row">
             <div class="col-12 col-md-6">
-                <div class="form-group">
+                <div class="form-group" data-item-name="take-time">
                     <label>飲む時間</label>
                     <select class="form-control select2" multiple="" name="take_time" required>
                         <% if (typeof data.meta.take_time != "undefined") {
@@ -105,19 +105,19 @@
                     </select>
                     <span class="form-error"></span>
                 </div>
-                <div class="form-group">
+                <div class="form-group" data-item-name="number">
                     <label>飲む個数</label>
                     <input type="number" class="form-control" min="1" name="number" required value="1">
                     <span class="form-error"></span>
                 </div>
             </div>
             <div class="col-12 col-md-6">
-                <div class="form-group">
+                <div class="form-group" data-item-name="period">
                     <label>処方期間 (日)</label>
                     <input type="number" class="form-control" min="1" name="period" required value="1">
                     <span class="form-error"></span>
                 </div>
-                <div class="form-group">
+                <div class="form-group" data-item-name="medicine-type">
                     <label>種類</label>
                     <select class="form-control select2" name="medicine_type" required>
                         <% if (typeof data.meta.medicine_type != "undefined") {

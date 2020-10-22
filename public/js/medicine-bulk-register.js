@@ -69,9 +69,12 @@ function ocrImagePicker() {
             } else {
                 notyf.success('文字を検出しました');
 
-                for (let i = 0; i < response['result'].length; i++) {
-                    console.log(response['result'][i]['result']);
-                    let medicineName = response['result'][i]['result'];
+                // medicineName
+                // hospitalName
+                // period
+
+                for (let i = 0; i < response['result'][0]['medicineName'].length; i++) {
+                    let medicineName = response['result'][0]['medicineName'][i]['result'];
 
                     addMedicine({
                         'medicine_name': medicineName
@@ -133,19 +136,20 @@ function postMedicine() {
 
     // item value
     for (let i = 0; i < itemDom.length; i++) {
+        let itemId = $(itemDom[i]).attr('data-medicine-item-id');
         let medicineName = $(itemDom[i]).find('input[name=medicine_name]').val();
         let takeTime = $(itemDom[i]).find('select[name=take_time]').val();
         let number = $(itemDom[i]).find('input[name=number]').val();
         let period = $(itemDom[i]).find('input[name=period]').val();
         let medicineType = $(itemDom[i]).find('select[name=medicine_type]').val();
 
-        data['item'].push({
+        data['item'][itemId] = {
             'medicine_name': medicineName,
             'take_time': takeTime,
             'number': number,
             'period': period,
             'medicine_type': medicineType
-        });
+        };
     }
 
     console.log(data);
@@ -158,7 +162,7 @@ function postMedicine() {
         dataType: 'json',
         success: function (json) {
             if (json['status'] === false) {
-                notyf.error(json['error']);
+                notyf.error(json['message']);
             } else {
                 console.log(json);
             }
@@ -176,6 +180,5 @@ function setMedicineItemId() {
     }
     for (let i = 0; i < itemDom.length; i++) {
         $(itemDom[i]).attr('data-medicine-item-id', i + 1);
-        console.log(itemDom[i]);
     }
 }

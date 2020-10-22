@@ -2,6 +2,7 @@ const Router = require('koa-router');
 const router = new Router();
 const app = require('../app/app');
 const connection = require('../app/db');
+const Validator = require('validatorjs');
 
 router.get('/bulk-register', async (ctx) => {
     let session = ctx.session;
@@ -53,7 +54,7 @@ router.get('/bulk-register', async (ctx) => {
     }
 
     await ctx.render('bulk-register', result);
-})
+});
 
 router.post('/bulk-register', async (ctx) => {
     let session = ctx.session;
@@ -73,22 +74,136 @@ router.post('/bulk-register', async (ctx) => {
     if (parser.pathname !== '/bulk-register' || contentType !== 'application/json') {
         return ctx.body = {
             'status': false,
-            'error': '不明なリクエストが発生しました'
+            'message': '不明なリクエストが発生しました'
         };
     }
 
     let json = ctx.request.body;
-    console.log(json);
 
     let hospitalName = json['hospital_name'];
     let startsDate = json['starts_date'];
     let groupId = json['group_id'];
 
+    let validate = await validateMedicineBasic(hospitalName, startsDate, groupId, userId);
+
     let items = json['item'];
-    console.log(items);
-    for (let i = 0; i < items.length; i++) {
-        console.log(items[i]);
+    for (let i = 1; i < items.length; i++) {
+        let medicineName = items[i]['medicine_name'];
+        let takeTime = items[i]['take_time'];
+        let number = items[i]['number'];
+        let period = items[i]['period'];
+        let medicineType = items[i]['medicine_type'];
+
+        let temp = await validateMedicineItem(medicineName, takeTime, number, period, medicineType)
+        if (Object.keys(temp).length !== 0) {
+            validate['item_' + i] = temp;
+        }
     }
-})
+
+    console.log(validate)
+    console.log(JSON.stringify(validate));
+
+    return ctx.body = {}
+});
+
+async function validateMedicineBasic(hospitalName, startsDate, groupId, userId) {
+    let validateResult = [];
+
+    let validate = new Validator({
+        hospitalName: hospitalName,
+        startsDate: startsDate
+    }, {
+        hospitalName: 'required|string|min:1|max:20',
+        startsDate: 'required|date',
+    }, {
+        'required.hospitalName': '100文字以内で入力してください',
+        'string.hospitalName': '100文字以内で入力してください',
+        'min.hospitalName': '100文字以内で入力してください',
+        'max.hospitalName': '100文字以内で入力してください',
+        'required.startsDate': '日付の書式で入力してください',
+        'date.startsDate': '日付の書式で入力してください'
+    });
+
+    await validate.checkAsync(() => {
+
+    }, () => {
+        if (validate.errors.first('hospitalName')) {
+            validateResult['hospital_name'] = validate.errors.first('hospitalName');
+        }
+        if (validate.errors.first('startsDate')) {
+            validateResult['starts_date'] = validate.errors.first('startsDate');
+        }
+    });
+
+    let sql = 'SELECT group_id FROM medicine_group WHERE user_id = ?';
+    let [group] = await connection.query(sql, [userId]);
+
+    let haveGroupId = group.map(item => item['group_id']);
+    if (!haveGroupId.includes(groupId)) {
+        validateResult['group_id'] = 'グループ情報が見つかりませんでした';
+    }
+
+    return validateResult;
+}
+
+async function validateMedicineItem(medicineName, takeTime, number, period, medicineType) {
+    let validateResult = [];
+
+    let validate = new Validator({
+        medicineName: medicineName,
+        number: number,
+        period: period
+    }, {
+        medicineName: 'required|max:200',
+        number: 'required|numeric|min:0|max:99',
+        period: 'required|numeric|min:0|max:1000',
+    }, {
+        'required.medicineName': '200文字以内で入力してください',
+        'max.medicineName': '200文字以内で入力してください',
+        'required.number': '0以上99以下の数字で入力してください',
+        'numeric.number': '0以上99以下の数字で入力してください',
+        'min.number': '0以上99以下の数字で入力してください',
+        'max.number': '0以上99以下の数字で入力してください',
+        'required.period': '0以上で1000以内の数字で入力してください',
+        'numeric.period': '0以上で1000以内の数字で入力してください',
+        'min.period': '0以上で1000以内の数字で入力してください',
+        'max.period': '0以上で1000以内の数字で入力してください'
+    });
+    await validate.checkAsync(() => {
+
+    }, () => {
+        if (validate.errors.first('medicineName')) {
+            validateResult['medicine_name'] = validate.errors.first('medicineName');
+        }
+        if (validate.errors.first('number')) {
+            validateResult['number'] = validate.errors.first('number');
+        }
+        if (validate.errors.first('period')) {
+            validateResult['period'] = validate.errors.first('period');
+        }
+    });
+
+    let sql = 'SELECT take_time_id FROM take_time';
+    let [data] = await connection.query(sql);
+    let masterTakeTime = data.map(item => item['take_time_id']);
+    for (let i = 0; i < takeTime.length; i++) {
+        if (!masterTakeTime.includes(takeTime[i])) {
+            validateResult['take_time'] = '飲む時間が正しく選択されていません';
+            break;
+        }
+    }
+
+    sql = 'SELECT type_id FROM medicine_type';
+    [data] = await connection.query(sql);
+    let masterMedicineType = data.map(item => item['type_id']);
+    for (let i = 0; i < medicineType.length; i++) {
+        if (!masterMedicineType.includes(medicineType[i])) {
+            validateResult['medicine_type'] = '種類が正しく選択されていません';
+            break;
+        }
+    }
+
+    return validateResult;
+}
 
 module.exports = router;
