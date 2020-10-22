@@ -6,7 +6,7 @@ const render = require('koa-ejs');
 const koaBody = require('koa-body');
 const session = require('koa-generic-session');
 const SQLite3Store = require('koa-sqlite3-session');
-const json = require('koa-json')
+const json = require('koa-json');
 const config = require('./config.json');
 
 let uploadCache = path.join(__dirname, '/upload_cache')
