@@ -196,24 +196,25 @@ async function validateMedicineItem(medicineName, takeTime, number, period, medi
         }
     });
 
-    let sql = 'SELECT take_time_id FROM take_time';
-    let [data] = await connection.query(sql);
-    let masterTakeTime = data.map(item => item['take_time_id']);
-    for (let i = 0; i < takeTime.length; i++) {
-        if (!masterTakeTime.some(value => parseInt(value) === parseInt(takeTime[i]))) {
-            validateResult['take_time'] = '飲む時間が正しく選択されていません';
-            break;
+    if (takeTime === '' || takeTime === undefined || takeTime.length <= 0) {
+        validateResult['take_time'] = '飲む時間が正しく選択されていません';
+    } else {
+        let sql = 'SELECT take_time_id FROM take_time';
+        let [data] = await connection.query(sql);
+        let masterTakeTime = data.map(item => item['take_time_id']);
+        for (let i = 0; i < takeTime.length; i++) {
+            if (!masterTakeTime.some(value => parseInt(value) === parseInt(takeTime[i]))) {
+                validateResult['take_time'] = '飲む時間が正しく選択されていません';
+                break;
+            }
         }
     }
 
-    sql = 'SELECT type_id FROM medicine_type';
-    [data] = await connection.query(sql);
+    let sql = 'SELECT type_id FROM medicine_type';
+    let [data] = await connection.query(sql);
     let masterMedicineType = data.map(item => item['type_id']);
-    for (let i = 0; i < medicineType.length; i++) {
-        if (!masterMedicineType.some(value => parseInt(value) === parseInt(medicineType[i]))) {
-            validateResult['medicine_type'] = '種類が正しく選択されていません';
-            break;
-        }
+    if (!masterMedicineType.some(value => parseInt(value) === parseInt(medicineType))) {
+        validateResult['medicine_type'] = '種類が正しく選択されていません';
     }
 
     return validateResult;

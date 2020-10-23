@@ -152,8 +152,6 @@ function postMedicine() {
         };
     }
 
-    console.log(data);
-
     $.ajax({
         type: 'post',
         url: '/bulk-register',
@@ -163,6 +161,8 @@ function postMedicine() {
         success: function (json) {
             if (json['status'] === false) {
                 notyf.error(json['message']);
+                let error = json['error'];
+                console.log(error);
             } else {
                 console.log(json);
             }
