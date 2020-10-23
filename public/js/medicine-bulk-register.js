@@ -164,7 +164,7 @@ function postMedicine() {
                 let error = json['error'];
                 console.log(error);
             } else {
-                console.log(json);
+                location.href = '/';
             }
         },
         error: function () {

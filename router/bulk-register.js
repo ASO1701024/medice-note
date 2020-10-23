@@ -100,13 +100,11 @@ router.post('/bulk-register', async (ctx) => {
                 validate['item'] = [];
             }
             validate['item'][i] = temp;
-            // validate['item_' + i] = temp;
         }
     }
 
-    console.log(validate)
-
     if (Object.keys(validate).length === 0) {
+        session.success.message = '薬情報を登録しました';
         return ctx.body = {
             'status': true
         }
