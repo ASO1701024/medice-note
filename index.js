@@ -49,6 +49,7 @@ app.proxy = true;
 // Cron
 require('./app/cron-push-message');
 require('./app/cron-verify-line-access-token');
+require('./app/cron-delete-user');
 
 const indexRouter = require('./router/index');
 app.use(indexRouter.routes());
@@ -62,6 +63,10 @@ app.use(signupRouter.allowedMethods());
 const loginRouter = require('./router/login');
 app.use(loginRouter.routes());
 app.use(loginRouter.allowedMethods());
+
+const twoFactorAuthenticationRouter = require('./router/two-factor-authentication');
+app.use(twoFactorAuthenticationRouter.routes());
+app.use(twoFactorAuthenticationRouter.allowedMethods());
 
 const logoutRouter = require('./router/logout');
 app.use(logoutRouter.routes());
@@ -88,10 +93,6 @@ app.use(contactRouter.routes());
 app.use(contactRouter.allowedMethods());
 
 // Medicine
-const medicineListRouter = require('./router/medicine-list');
-app.use(medicineListRouter.routes());
-app.use(medicineListRouter.allowedMethods());
-
 const medicineRouter = require('./router/medicine');
 app.use(medicineRouter.routes());
 app.use(medicineRouter.allowedMethods());
@@ -152,10 +153,6 @@ app.use(lineLoginRouter.routes());
 app.use(lineLoginRouter.allowedMethods());
 
 // API
-const apiMedicineRouter = require('./router/api-medicine');
-app.use(apiMedicineRouter.routes());
-app.use(apiMedicineRouter.allowedMethods());
-
 const apiCalenderRouter = require('./router/api-calendar');
 app.use(apiCalenderRouter.routes());
 app.use(apiCalenderRouter.allowedMethods());
