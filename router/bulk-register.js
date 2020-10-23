@@ -96,18 +96,31 @@ router.post('/bulk-register', async (ctx) => {
 
         let temp = await validateMedicineItem(medicineName, takeTime, number, period, medicineType)
         if (Object.keys(temp).length !== 0) {
-            validate['item_' + i] = temp;
+            if (validate['item'] === undefined) {
+                validate['item'] = [];
+            }
+            validate['item'][i] = temp;
+            // validate['item_' + i] = temp;
         }
     }
 
     console.log(validate)
-    console.log(JSON.stringify(validate));
 
-    return ctx.body = {}
+    if (Object.keys(validate).length === 0) {
+        return ctx.body = {
+            'status': true
+        }
+    } else {
+        return ctx.body = {
+            'status': false,
+            'message': '正しく入力されていない項目があります',
+            'error': validate
+        };
+    }
 });
 
 async function validateMedicineBasic(hospitalName, startsDate, groupId, userId) {
-    let validateResult = [];
+    let validateResult = {};
 
     let validate = new Validator({
         hospitalName: hospitalName,
@@ -139,7 +152,7 @@ async function validateMedicineBasic(hospitalName, startsDate, groupId, userId) 
     let [group] = await connection.query(sql, [userId]);
 
     let haveGroupId = group.map(item => item['group_id']);
-    if (!haveGroupId.includes(groupId)) {
+    if (!haveGroupId.some(value => parseInt(value) === parseInt(groupId))) {
         validateResult['group_id'] = 'グループ情報が見つかりませんでした';
     }
 
@@ -147,7 +160,7 @@ async function validateMedicineBasic(hospitalName, startsDate, groupId, userId) 
 }
 
 async function validateMedicineItem(medicineName, takeTime, number, period, medicineType) {
-    let validateResult = [];
+    let validateResult = {};
 
     let validate = new Validator({
         medicineName: medicineName,
@@ -187,7 +200,7 @@ async function validateMedicineItem(medicineName, takeTime, number, period, medi
     let [data] = await connection.query(sql);
     let masterTakeTime = data.map(item => item['take_time_id']);
     for (let i = 0; i < takeTime.length; i++) {
-        if (!masterTakeTime.includes(takeTime[i])) {
+        if (!masterTakeTime.some(value => parseInt(value) === parseInt(takeTime[i]))) {
             validateResult['take_time'] = '飲む時間が正しく選択されていません';
             break;
         }
@@ -197,7 +210,7 @@ async function validateMedicineItem(medicineName, takeTime, number, period, medi
     [data] = await connection.query(sql);
     let masterMedicineType = data.map(item => item['type_id']);
     for (let i = 0; i < medicineType.length; i++) {
-        if (!masterMedicineType.includes(medicineType[i])) {
+        if (!masterMedicineType.some(value => parseInt(value) === parseInt(medicineType[i]))) {
             validateResult['medicine_type'] = '種類が正しく選択されていません';
             break;
         }
