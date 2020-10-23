@@ -69,9 +69,7 @@ function ocrImagePicker() {
             } else {
                 notyf.success('文字を検出しました');
 
-                // medicineName
-                // hospitalName
-                // period
+                $('div[data-medicine-item-id="1"]').remove();
 
                 for (let i = 0; i < response['result'][0]['medicineName'].length; i++) {
                     let medicineName = response['result'][0]['medicineName'][i]['result'];
@@ -162,7 +160,35 @@ function postMedicine() {
             if (json['status'] === false) {
                 notyf.error(json['message']);
                 let error = json['error'];
-                console.log(error);
+
+                if (error['hospital_name'] !== undefined) {
+                    $(basicDom).find('div[data-item-name="hospital-name"] > span.form-error').text(error['hospital_name']);
+                }
+                if (error['starts_date'] !== undefined) {
+                    $(basicDom).find('div[data-item-name="starts-date"] > span.form-error').text(error['starts_date']);
+                }
+                if (error['group_id'] !== undefined) {
+                    $(basicDom).find('div[data-item-name="group-id"] > span.form-error').text(error['group_id']);
+                }
+
+                let item = error['item'];
+                for (let i = 1; i < item.length; i++) {
+                    if (item[i]['medicine_name'] !== undefined) {
+                        $(`div[data-medicine-item-id="${i}"]`).find('div[data-item-name="medicine-name"] > span.form-error').text(item[i]['medicine_name']);
+                    }
+                    if (item[i]['number'] !== undefined) {
+                        $(`div[data-medicine-item-id="${i}"]`).find('div[data-item-name="number"] > span.form-error').text(item[i]['number']);
+                    }
+                    if (item[i]['period'] !== undefined) {
+                        $(`div[data-medicine-item-id="${i}"]`).find('div[data-item-name="period"] > span.form-error').text(item[i]['period']);
+                    }
+                    if (item[i]['take_time'] !== undefined) {
+                        $(`div[data-medicine-item-id="${i}"]`).find('div[data-item-name="take-time"] > span.form-error').text(item[i]['take_time']);
+                    }
+                    if (item[i]['medicine_type'] !== undefined) {
+                        $(`div[data-medicine-item-id="${i}"]`).find('div[data-item-name="medicine-type"] > span.form-error').text(item[i]['medicine_type']);
+                    }
+                }
             } else {
                 location.href = '/';
             }
@@ -174,7 +200,7 @@ function postMedicine() {
 }
 
 function setMedicineItemId() {
-    let itemDom = $('div[data-type=medicine-item]');
+    let itemDom = $('div[data-type="medicine-item"]');
     if (itemDom.length === 0) {
         return false;
     }

@@ -104,6 +104,21 @@ router.post('/bulk-register', async (ctx) => {
     }
 
     if (Object.keys(validate).length === 0) {
+        for (let i = 1; i < items.length; i++) {
+            let sql = `
+                INSERT INTO medicine (medicine_name, hospital_name, number, starts_date, period, type_id, group_id) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)`;
+            let [medicine] = await connection.query(sql, [
+                items[i]['medicine_name'], hospitalName, items[i]['number'],
+                startsDate, items[i]['period'], items[i]['medicine_type'], groupId
+            ]);
+            let medicineId = medicine.insertId;
+            for (const item of items[i]['take_time']) {
+                let sql = 'INSERT INTO medicine_take_time (medicine_id, take_time_id) VALUES (?, ?)';
+                await connection.query(sql, [medicineId, item]);
+            }
+        }
+
         session.success.message = '薬情報を登録しました';
         return ctx.body = {
             'status': true
