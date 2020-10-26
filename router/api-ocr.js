@@ -14,7 +14,28 @@ router.post('/api/ocr', async (ctx) => {
         return ctx.body = {};
     }
 
-    let image = ctx.request.files['image'];
+    let image;
+
+    try {
+        image = ctx.request.files['image'];
+    } catch (e) {
+        return ctx.body = {};
+    }
+
+    if (image['size'] === 0) {
+        fs.unlinkSync(image.path);
+        return ctx.body = {};
+    }
+
+    switch (app.getExt(image['name'])) {
+        case 'jpeg':
+        case 'jpg':
+        case 'png':
+            break;
+        default:
+            fs.unlinkSync(image.path);
+            return ctx.body = {};
+    }
 
     let client = new vision.ImageAnnotatorClient();
     let [result] = await client.textDetection(image.path);
