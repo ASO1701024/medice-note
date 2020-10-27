@@ -155,9 +155,6 @@ async function postMedicine(button) {
         $(button).addClass('btn-progress');
     }
 
-    // btn-progress debug
-    // await new Promise(resolve => setTimeout(resolve, 3000))
-
     $(`div[data-item-name] > span.form-error`).text('');
 
     $.ajax({
@@ -183,20 +180,22 @@ async function postMedicine(button) {
 
             let item = error['item'];
             for (let i = 1; i < item.length; i++) {
+                let medicineItem = $(`div[data-medicine-item-id="${i}"]`);
+
                 if (item[i]['medicine_name'] !== undefined) {
-                    $(`div[data-medicine-item-id="${i}"]`).find('div[data-item-name="medicine-name"] > span.form-error').text(item[i]['medicine_name']);
+                    $(medicineItem).find('div[data-item-name="medicine-name"] > span.form-error').text(item[i]['medicine_name']);
                 }
                 if (item[i]['number'] !== undefined) {
-                    $(`div[data-medicine-item-id="${i}"]`).find('div[data-item-name="number"] > span.form-error').text(item[i]['number']);
+                    $(medicineItem).find('div[data-item-name="number"] > span.form-error').text(item[i]['number']);
                 }
                 if (item[i]['period'] !== undefined) {
-                    $(`div[data-medicine-item-id="${i}"]`).find('div[data-item-name="period"] > span.form-error').text(item[i]['period']);
+                    $(medicineItem).find('div[data-item-name="period"] > span.form-error').text(item[i]['period']);
                 }
                 if (item[i]['take_time'] !== undefined) {
-                    $(`div[data-medicine-item-id="${i}"]`).find('div[data-item-name="take-time"] > span.form-error').text(item[i]['take_time']);
+                    $(medicineItem).find('div[data-item-name="take-time"] > span.form-error').text(item[i]['take_time']);
                 }
                 if (item[i]['medicine_type'] !== undefined) {
-                    $(`div[data-medicine-item-id="${i}"]`).find('div[data-item-name="medicine-type"] > span.form-error').text(item[i]['medicine_type']);
+                    $(medicineItem).find('div[data-item-name="medicine-type"] > span.form-error').text(item[i]['medicine_type']);
                 }
             }
         } else {
