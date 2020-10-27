@@ -101,7 +101,7 @@ function ocrImagePicker() {
                     addMedicine({
                         'medicine_name': medicineName,
                         'period': period
-                    });
+                    }, 'ocr');
                 }
             }
         }).fail(function () {
@@ -112,12 +112,68 @@ function ocrImagePicker() {
     }
 }
 
-function addMedicine(values) {
+function addMedicine(values, flag = 'normal') {
     let source = $('#template_medicine_item').html();
     let template = Handlebars.compile(source);
+
+    let firstItem = $('div[data-medicine-item-id="1"]');
+
+    if (flag === 'normal' && $(firstItem).length !== 0) {
+        firstItem = firstItem[0];
+
+        let takeTime = $(firstItem).find('select[name=take_time]').val();
+        let number = $(firstItem).find('input[name=number]').val();
+        let period = $(firstItem).find('input[name=period]').val();
+        let medicineType = $(firstItem).find('select[name=medicine_type]').val();
+
+        if (takeTime.length !== 0) {
+            values['takeTime'] = takeTime;
+        }
+        if (number !== '1') {
+            values['number'] = number;
+        }
+        if (period !== '1') {
+            values['period'] = period;
+        }
+        if (medicineType !== '1') {
+            values['medicineType'] = medicineType;
+        }
+    }
     let html = template(values);
     let body = $('#medicine-list')[0];
-    body.insertAdjacentHTML('beforeend', html);
+
+    let parser = new DOMParser();
+    html = parser.parseFromString(html, 'text/html');
+    html = $(html).find('div[data-medicine-item-id]')[0];
+
+    if (flag === 'normal' && $(firstItem).length !== 0) {
+        if (values['takeTime'] !== undefined) {
+            let takeTimeOption = $(html).find('select[name=take_time] > option');
+
+            for (let i = 0; i < takeTimeOption.length; i++) {
+                let option = takeTimeOption[i];
+                $(option).removeAttr('selected');
+                values['takeTime'].some((value) => {
+                    if ($(option).attr('value') === value) {
+                        $(option).attr({selected: true});
+                    }
+                });
+            }
+        }
+        if (values['medicineType'] !== undefined) {
+            let medicineTypeOption = $(html).find('select[name=medicine_type] > option');
+
+            for (let i = 0; i < medicineTypeOption.length; i++) {
+                let option = medicineTypeOption[i];
+                $(option).removeAttr('selected');
+                if ($(option).attr('value') === values['medicineType']) {
+                    $(option).attr({selected: true});
+                }
+            }
+        }
+    }
+
+    body.insertAdjacentElement('beforeend', html);
 
     $('.select2').select2();
     bindAutocompleteMedicineName();
