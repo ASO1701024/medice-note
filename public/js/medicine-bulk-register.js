@@ -84,7 +84,7 @@ function ocrImagePicker() {
                     }
                 }
 
-                response['result'][1]['hospitalName'][0] = '福岡大学病院';
+                // response['result'][1]['hospitalName'][0] = '福岡大学病院';
                 // response['result'][3]['startsDate'] = '2020-10-27';
 
                 if (response['result'][1]['hospitalName'][0] !== undefined || response['result'][1]['hospitalName'][0] !== '') {
@@ -260,24 +260,27 @@ async function postMedicine(button) {
                 $(basicDom).find('div[data-item-name="group-id"] > span.form-error').text(error['group_id']);
             }
 
-            let item = error['item'];
-            for (let i = 1; i < item.length; i++) {
-                let medicineItem = $(`div[data-medicine-item-id="${i}"]`);
+            if (error['item'] !== undefined) {
+                let item = error['item'];
 
-                if (item[i]['medicine_name'] !== undefined) {
-                    $(medicineItem).find('div[data-item-name="medicine-name"] > span.form-error').text(item[i]['medicine_name']);
-                }
-                if (item[i]['number'] !== undefined) {
-                    $(medicineItem).find('div[data-item-name="number"] > span.form-error').text(item[i]['number']);
-                }
-                if (item[i]['period'] !== undefined) {
-                    $(medicineItem).find('div[data-item-name="period"] > span.form-error').text(item[i]['period']);
-                }
-                if (item[i]['take_time'] !== undefined) {
-                    $(medicineItem).find('div[data-item-name="take-time"] > span.form-error').text(item[i]['take_time']);
-                }
-                if (item[i]['medicine_type'] !== undefined) {
-                    $(medicineItem).find('div[data-item-name="medicine-type"] > span.form-error').text(item[i]['medicine_type']);
+                for (let i = 1; i < item.length; i++) {
+                    let medicineItem = $(`div[data-medicine-item-id="${i}"]`);
+
+                    if (item[i]['medicine_name'] !== undefined) {
+                        $(medicineItem).find('div[data-item-name="medicine-name"] > span.form-error').text(item[i]['medicine_name']);
+                    }
+                    if (item[i]['number'] !== undefined) {
+                        $(medicineItem).find('div[data-item-name="number"] > span.form-error').text(item[i]['number']);
+                    }
+                    if (item[i]['period'] !== undefined) {
+                        $(medicineItem).find('div[data-item-name="period"] > span.form-error').text(item[i]['period']);
+                    }
+                    if (item[i]['take_time'] !== undefined) {
+                        $(medicineItem).find('div[data-item-name="take-time"] > span.form-error').text(item[i]['take_time']);
+                    }
+                    if (item[i]['medicine_type'] !== undefined) {
+                        $(medicineItem).find('div[data-item-name="medicine-type"] > span.form-error').text(item[i]['medicine_type']);
+                    }
                 }
             }
         } else {
