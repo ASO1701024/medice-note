@@ -68,13 +68,39 @@ function ocrImagePicker() {
             } else {
                 notyf.success('文字を検出しました');
 
-                $('div[data-medicine-item-id="1"]').remove();
+                let basicDom = $('div[data-type=medicine-basic]');
+                let itemDom = $('div[data-type=medicine-item]');
+                basicDom = basicDom[0];
+
+                for (let i = 0; i < itemDom.length; i++) {
+                    let medicineName = $(itemDom[i]).find('input[name=medicine_name]').val();
+                    let takeTime = $(itemDom[i]).find('select[name=take_time]').val();
+                    let number = $(itemDom[i]).find('input[name=number]').val();
+                    let period = $(itemDom[i]).find('input[name=period]').val();
+                    let medicineType = $(itemDom[i]).find('select[name=medicine_type]').val();
+
+                    if (medicineName === '' && medicineType === '1' && number === '1' && period === '1' && takeTime.length === 0) {
+                        $(itemDom[i]).remove();
+                    }
+                }
+
+                response['result'][1]['hospitalName'][0] = '福岡大学病院';
+                // response['result'][3]['startsDate'] = '2020-10-27';
+
+                if (response['result'][1]['hospitalName'][0] !== undefined || response['result'][1]['hospitalName'][0] !== '') {
+                    $(basicDom).find('input[name=hospital_name]').val(response['result'][1]['hospitalName'][0]);
+                }
+                // if (response['result'][3]['startsDate'] !== undefined || response['result'][3]['startsDate'] !== '') {
+                //     $(basicDom).find('input[name=starts_date]').val(response['result'][3]['startsDate'][0]);
+                // }
 
                 for (let i = 0; i < response['result'][0]['medicineName'].length; i++) {
                     let medicineName = response['result'][0]['medicineName'][i]['result'];
+                    let period = response['result'][2]['period'];
 
                     addMedicine({
-                        'medicine_name': medicineName
+                        'medicine_name': medicineName,
+                        'period': period
                     });
                 }
             }
