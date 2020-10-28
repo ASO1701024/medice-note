@@ -84,19 +84,20 @@ function ocrImagePicker() {
                     }
                 }
 
-                // response['result'][1]['hospitalName'][0] = '福岡大学病院';
-                // response['result'][3]['startsDate'] = '2020-10-27';
-
-                if (response['result'][1]['hospitalName'][0] !== undefined || response['result'][1]['hospitalName'][0] !== '') {
-                    $(basicDom).find('input[name=hospital_name]').val(response['result'][1]['hospitalName'][0]);
+                if (response['result']['medicineName'].length === 0 && $('div[data-type=medicine-item]').length === 0) {
+                    addMedicine([]);
                 }
-                // if (response['result'][3]['startsDate'] !== undefined || response['result'][3]['startsDate'] !== '') {
-                //     $(basicDom).find('input[name=starts_date]').val(response['result'][3]['startsDate'][0]);
-                // }
 
-                for (let i = 0; i < response['result'][0]['medicineName'].length; i++) {
-                    let medicineName = response['result'][0]['medicineName'][i]['result'];
-                    let period = response['result'][2]['period'];
+                if (response['result']['hospitalName'] !== undefined || response['result']['hospitalName'] !== '') {
+                    $(basicDom).find('input[name=hospital_name]').val(response['result']['hospitalName']);
+                }
+                if (response['result']['date'] !== undefined || response['result']['date'] !== '') {
+                    $(basicDom).find('input[name=starts_date]').val(response['result']['date']);
+                }
+
+                for (let i = 0; i < response['result']['medicineName'].length; i++) {
+                    let medicineName = response['result']['medicineName'][i]['result'];
+                    let period = response['result']['period'];
 
                     addMedicine({
                         'medicine_name': medicineName,
