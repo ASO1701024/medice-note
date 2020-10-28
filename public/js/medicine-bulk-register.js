@@ -232,7 +232,7 @@ async function postMedicine(button) {
         };
     }
 
-    if(!$(button).hasClass('clicked') || !$(button).hasClass('btn-progress')) {
+    if (!$(button).hasClass('clicked') || !$(button).hasClass('btn-progress')) {
         $(button).addClass('disabled');
         $(button).addClass('btn-progress');
     }
@@ -242,7 +242,7 @@ async function postMedicine(button) {
     $.ajax({
         type: 'post',
         url: '/bulk-register',
-        data:JSON.stringify(data),
+        data: JSON.stringify(data),
         contentType: 'application/json',
         dataType: 'json'
     }).done(function (json) {
