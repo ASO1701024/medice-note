@@ -89,8 +89,8 @@ function ocrImagePicker() {
                     addMedicine([]);
                 }
 
-                if (response['result']['hospitalName'] !== undefined || response['result']['hospitalName'] !== '') {
-                    $(basicDom).find('input[name=hospital_name]').val(response['result']['hospitalName']);
+                if (response['result']['hospitalName']['result'] !== undefined || response['result']['hospitalName']['result'] !== '') {
+                    $(basicDom).find('input[name=hospital_name]').val(response['result']['hospitalName']['result']);
                 }
                 if (response['result']['date'] !== undefined || response['result']['date'] !== '') {
                     $(basicDom).find('input[name=starts_date]').val(response['result']['date']);
