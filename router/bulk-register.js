@@ -106,7 +106,7 @@ router.post('/bulk-register', async (ctx) => {
     if (Object.keys(validate).length === 0) {
         for (let i = 1; i < items.length; i++) {
             let sql = `
-                INSERT INTO medicine (medicine_name, hospital_name, number, starts_date, period, type_id, group_id) 
+                INSERT INTO medicine (medicine_name, hospital_name, number, starts_date, period, type_id, group_id)
                 VALUES (?, ?, ?, ?, ?, ?, ?)`;
             let [medicine] = await connection.query(sql, [
                 items[i]['medicine_name'], hospitalName, items[i]['number'],
