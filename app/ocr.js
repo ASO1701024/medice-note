@@ -14,8 +14,9 @@ class DistanceChecker {
         this.checkTargetList.push(new CheckTarget(targetName, checkType, args));
         return this
     }
-    setResult(target, item){
-        if(typeof item === 'undefined'){
+
+    setResult(target, item) {
+        if (typeof item === 'undefined') {
             item = '';
         }
         this.resultList[target.name] = item;
@@ -87,15 +88,15 @@ class DistanceChecker {
     }
 
     // 最初に抽出した日付を返す。
-    getDate(){
+    getDate() {
         for (let row of this.OCRData) {
             let result = row.match(/(\d{4})(\/|年)(\d{1,2})(\/|月)(\d{1,2})/);
-            if(result){
+            if (result) {
                 return result[1] + '-' + result[3] + '-' + result[5];
             }
             let result2 = row.match(/(令和)(\d{1,2})(\/|年)(\d{1,2})(\/|月)(\d{1,2})/);
-            if(result2){
-                result2[2] = (parseInt(result2[2])+2018).toString();
+            if (result2) {
+                result2[2] = (parseInt(result2[2]) + 2018).toString();
                 return result2[2] + '-' + result2[4] + '-' + result2[6];
             }
         }
@@ -122,7 +123,7 @@ function getOCRText(jsonObject) {
         .setTarget('medicineName', 1, {'targetList': medicineJSONData, 'minDistance': 0.9})
         .setTarget('hospitalName', 2, {'targetList': hospitalJSONData, 'minDistance': 0.9})
         .setTarget('period', 3)
-        .setTarget('date',4);
+        .setTarget('date', 4);
 
     return checker.execute();
 }
@@ -144,7 +145,7 @@ function splitLine(jsonObject) {
 }
 
 // getSimilarDataで取得した内、最初のデータのみを返す。
-function getFirst(dataList){
+function getFirst(dataList) {
     return dataList[0];
 }
 
