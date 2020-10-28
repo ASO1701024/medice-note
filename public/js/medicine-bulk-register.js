@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    bindAutocompleteMedicineName();
-    bindAutocompleteHospital();
+    bindAutocompleteHospitalName();
 
     addMedicine([]);
 });
@@ -19,8 +18,8 @@ function bindAutocompleteMedicineName() {
     });
 }
 
-function bindAutocompleteHospital() {
-    $('.autocomplete-hospital').autocomplete({
+function bindAutocompleteHospitalName() {
+    $('.autocomplete-hospital-name').autocomplete({
         source: (request, response) => {
             $.getJSON('/data/hospital.json', (data) => {
                 let array = $.map(data, (value) => {
@@ -69,6 +68,7 @@ function ocrImagePicker() {
                 notyf.success('文字を検出しました');
 
                 let basicDom = $('div[data-type=medicine-basic]');
+                // noinspection JSJQueryEfficiency
                 let itemDom = $('div[data-type=medicine-item]');
                 basicDom = basicDom[0];
 
@@ -84,6 +84,7 @@ function ocrImagePicker() {
                     }
                 }
 
+                // noinspection JSJQueryEfficiency
                 if (response['result']['medicineName'].length === 0 && $('div[data-type=medicine-item]').length === 0) {
                     addMedicine([]);
                 }
