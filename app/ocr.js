@@ -6,7 +6,7 @@ class DistanceChecker {
     constructor(OCRData) {
         this.OCRData = OCRData;
         this.checkTargetList = [];
-        this.resultList = [];
+        this.resultList = {};
     }
 
     // getOCRText()で処理内容を設定し、execute()から一括して実行。
@@ -14,18 +14,33 @@ class DistanceChecker {
         this.checkTargetList.push(new CheckTarget(targetName, checkType, args));
         return this
     }
+    setResult(target, item){
+        if(typeof item === 'undefined'){
+            item = '';
+        }
+        this.resultList[target.name] = item;
+    }
 
     // 設定したCheckTargetの処理を実行。
     execute() {
         for (let target of this.checkTargetList) {
+            let result;
             switch (target.checkType) {
                 case 1:
-                    this.getSimilarData(target);
+                    result = this.getSimilarData(target);
                     break;
                 case 2:
-                    this.getMedicinePeriod(target);
+                    let hospitalNameList = this.getSimilarData(target);
+                    result = getFirst(hospitalNameList);
+                    break;
+                case 3:
+                    result = this.getMedicinePeriod();
+                    break;
+                case 4:
+                    result = this.getDate();
                     break;
             }
+            this.setResult(target, result);
         }
         return this.resultList
     }
@@ -50,27 +65,38 @@ class DistanceChecker {
                 dataList.push({defaultText: row, result: result});
             }
         }
-        this.resultList.push({[target.name]: dataList});
+        return dataList;
     }
 
     // 処方期間を返す。現在は'日分'の直前の日付を返している。
-    getMedicinePeriod(target) {
+    getMedicinePeriod() {
         for (let row of this.OCRData) {
             let periodIndex = row.indexOf('日分');
-            if (periodIndex < 0) {
-
-            } else {
+            if (periodIndex >= 0) {
                 let periodString = '';
                 for (let i = periodIndex - 1; i >= 0; i--) {
                     if (isFinite(row.substring(i, periodIndex))) {
                         periodString = row.substring(i, periodIndex);
-
                     } else {
-                        this.resultList.push({[target.name]: periodString});
-                        return
+                        return periodString;
                     }
                 }
-                this.resultList.push({[target.name]: periodString});
+                return periodString;
+            }
+        }
+    }
+
+    // 最初に抽出した日付を返す。
+    getDate(){
+        for (let row of this.OCRData) {
+            let result = row.match(/(\d{4})(\/|年)(\d{1,2})(\/|月)(\d{1,2})/);
+            if(result){
+                return result[1] + '-' + result[3] + '-' + result[5];
+            }
+            let result2 = row.match(/(令和)(\d{1,2})(\/|年)(\d{1,2})(\/|月)(\d{1,2})/);
+            if(result2){
+                result2[2] = (parseInt(result2[2])+2018).toString();
+                return result2[2] + '-' + result2[4] + '-' + result2[6];
             }
         }
     }
@@ -94,8 +120,9 @@ function getOCRText(jsonObject) {
     let checker = new DistanceChecker(OCRText);
     checker
         .setTarget('medicineName', 1, {'targetList': medicineJSONData, 'minDistance': 0.9})
-        .setTarget('hospitalName', 1, {'targetList': hospitalJSONData, 'minDistance': 0.9})
-        .setTarget('period', 2);
+        .setTarget('hospitalName', 2, {'targetList': hospitalJSONData, 'minDistance': 0.9})
+        .setTarget('period', 3)
+        .setTarget('date',4);
 
     return checker.execute();
 }
@@ -114,6 +141,11 @@ function getHospitalData() {
 function splitLine(jsonObject) {
     let splitText = jsonObject.split('\n');
     return splitText.slice(0, splitText.length - 1)
+}
+
+// getSimilarDataで取得した内、最初のデータのみを返す。
+function getFirst(dataList){
+    return dataList[0];
 }
 
 module.exports = {
