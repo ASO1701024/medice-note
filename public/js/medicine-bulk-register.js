@@ -89,10 +89,15 @@ function ocrImagePicker() {
                     addMedicine([]);
                 }
 
-                if (response['result']['hospitalName']['result'] !== undefined || response['result']['hospitalName']['result'] !== '') {
+                if (response['result']['hospitalName']['result'] !== undefined && response['result']['hospitalName']['result'] !== '' && $(basicDom).find('input[name=hospital_name]').val() === '') {
                     $(basicDom).find('input[name=hospital_name]').val(response['result']['hospitalName']['result']);
                 }
-                if (response['result']['date'] !== undefined || response['result']['date'] !== '') {
+
+                let now = new Date();
+                let year = now.getFullYear();
+                let month = now.getMonth() + 1;
+                let date = now.getDate();
+                if (response['result']['date'] !== undefined && response['result']['date'] !== '' && $(basicDom).find('input[name=starts_date]').val() === `${year}-${month}-${date}`) {
                     $(basicDom).find('input[name=starts_date]').val(response['result']['date']);
                 }
 
