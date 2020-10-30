@@ -85,7 +85,7 @@ function ocrImagePicker() {
                 }
 
                 // noinspection JSJQueryEfficiency
-                if (response['result']['medicineName'].length === 0 && $('div[data-type=medicine-item]').length === 0) {
+                if (response['result']['medicine'].length === 0 && $('div[data-type=medicine-item]').length === 0) {
                     addMedicine([]);
                 }
 
@@ -101,13 +101,18 @@ function ocrImagePicker() {
                     $(basicDom).find('input[name=starts_date]').val(response['result']['date']);
                 }
 
-                for (let i = 0; i < response['result']['medicineName'].length; i++) {
-                    let medicineName = response['result']['medicineName'][i]['result'];
+                for (let i = 0; i < response['result']['medicine'].length; i++) {
+                    let medicineName = response['result']['medicine'][i]['result'];
                     let period = response['result']['period'];
+                    let number = response['result']['medicine'][i]['takeNumber'];
+                    if (number === '') {
+                        number = 1;
+                    }
 
                     addMedicine({
                         'medicine_name': medicineName,
-                        'period': period
+                        'period': period,
+                        'number': number
                     }, 'ocr');
                 }
             }
