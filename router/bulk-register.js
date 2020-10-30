@@ -44,6 +44,11 @@ router.get('/bulk-register', async (ctx) => {
     let [takeTime] = await connection.query(sql);
     result['data']['meta']['take_time'] = takeTime;
 
+    let targetGroupId = ctx.request.query['target_group_id'];
+    if (targetGroupId !== undefined) {
+        result['data']['meta']['target_group_id'] = targetGroupId;
+    }
+
     if (session.error !== undefined) {
         result['data']['error'] = session.error;
         session.error = undefined;
