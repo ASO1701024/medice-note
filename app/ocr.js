@@ -16,10 +16,7 @@ class DistanceChecker {
     }
 
     setResult(target, item) {
-        if (typeof item === 'undefined') {
-            item = '';
-        }
-        this.resultList[target.name] = item;
+        this.resultList[target.name] = item || '';
     }
 
     // 設定したCheckTargetの処理を実行。
@@ -28,7 +25,12 @@ class DistanceChecker {
             let result;
             switch (target.checkType) {
                 case 1:
-                    result = this.getSimilarData(target);
+                    let medicineItem = this.getSimilarData(target);
+                    let takeNumberResult = this.getTakeNumber();
+                    for (let medicineIndex in medicineItem){
+                        medicineItem[medicineIndex]['takeNumber'] = takeNumberResult[medicineIndex] || '';
+                    }
+                    result = medicineItem;
                     break;
                 case 2:
                     let hospitalNameList = this.getSimilarData(target);
@@ -40,8 +42,6 @@ class DistanceChecker {
                 case 4:
                     result = this.getDate();
                     break;
-                case 5:
-                    result = this.getTakeNumber();
             }
             this.setResult(target, result);
         }
@@ -108,14 +108,14 @@ class DistanceChecker {
     // 前後の行も含めるとか、ある程度範囲を持って検索かける方向で作ってたけど、
     // 飲む個数は間違えられない項目だから、一番厳しく「.*1回x[単位].*」の形式でしか読み取らないようにする。
     getTakeNumber() {
-        // 飲む個数は後半にありがちみたいだから逆順で判定
-        let reverseList = [].concat(this.OCRData).reverse();
-        for (let row of reverseList) {
-            let result = row.match(/1回(\d)(個|カプセル|錠|包|ml|mL|g|mg)/);
-            if (result) {
-                return result[1];
+        let takeTimeList = [];
+        for (let row of this.OCRData) {
+            let matchResult = row.match(/1回(\d)(個|カプセル|錠|包|ml|mL|g|mg)/);
+            if (matchResult) {
+                takeTimeList.push(matchResult[1]);
             }
         }
+        return takeTimeList;
     }
 }
 
@@ -136,11 +136,10 @@ function getOCRText(jsonObject) {
 
     let checker = new DistanceChecker(OCRText);
     checker
-        .setTarget('medicineName', 1, {'targetList': medicineJSONData, 'minDistance': 0.9})
+        .setTarget('medicine', 1, {'targetList': medicineJSONData, 'minDistance': 0.9})
         .setTarget('hospitalName', 2, {'targetList': hospitalJSONData, 'minDistance': 0.9})
         .setTarget('period', 3)
-        .setTarget('date', 4)
-        .setTarget('takeNumber', 5);
+        .setTarget('date', 4);
 
     return checker.execute();
 }
