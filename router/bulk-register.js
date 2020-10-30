@@ -139,7 +139,7 @@ async function validateMedicineBasic(hospitalName, startsDate, groupId, userId) 
         hospitalName: hospitalName,
         startsDate: startsDate
     }, {
-        hospitalName: 'required|string|min:1|max:20',
+        hospitalName: 'required|string|min:1|max:100',
         startsDate: 'required|date',
     }, {
         'required.hospitalName': '100文字以内で入力してください',
