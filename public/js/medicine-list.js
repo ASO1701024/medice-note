@@ -106,11 +106,11 @@ window.onload = function () {
                 checkbox.each(function (index, element) {
                     medicineIdArray.push($(element).data('medicine-id'));
                 });
-                let dest_group_id = $('input:radio[name="radio-bulk-update-group-id"]:checked').val();
+                let destGroupId = $('input:radio[name="radio-bulk-update-group-id"]:checked').val();
                 $.ajax({
                     type: "POST",
                     url: "/group-bulk-update",
-                    data: {medicine_id_list: medicineIdArray, group_id: dest_group_id},
+                    data: {medicine_id_list: medicineIdArray, group_id: destGroupId},
                     success: function () {
                         location.reload()
                     },
