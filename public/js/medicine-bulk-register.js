@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function bindAutocompleteMedicineName() {
     $('.autocomplete-medicine-name').autocomplete({
         source: (request, response) => {
-            $.getJSON('/data/medicine.json', (data) => {
+            $.getJSON('/data/medicine.min.json', (data) => {
                 let array = $.map(data, (value) => {
                     return value.data;
                 });
@@ -21,7 +21,7 @@ function bindAutocompleteMedicineName() {
 function bindAutocompleteHospitalName() {
     $('.autocomplete-hospital-name').autocomplete({
         source: (request, response) => {
-            $.getJSON('/data/hospital.json', (data) => {
+            $.getJSON('/data/hospital.min.json', (data) => {
                 let array = $.map(data, (value) => {
                     return value.data;
                 });
