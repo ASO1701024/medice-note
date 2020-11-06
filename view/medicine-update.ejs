@@ -24,6 +24,12 @@
     </div>
 <% } %>
 
+<style>
+    .custom-file-label::after {
+        content: "選択";
+    }
+</style>
+
 <div class="card">
     <form action="/medicine-update/<%= data.old.medicine_id %>" method="post" enctype="multipart/form-data">
         <div class="card-body pb-0">
