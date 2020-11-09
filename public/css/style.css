@@ -3,6 +3,7 @@
     font-weight: 300;
 }
 .form-error {
+    min-height: 16px;
     display: block;
     width: 100%;
     margin-top: 0.25rem;

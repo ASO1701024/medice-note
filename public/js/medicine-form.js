@@ -1,5 +1,5 @@
 $(() => {
-    $.getJSON('/data/medicine.json', (data) => {
+    $.getJSON('/data/medicine.min.json', (data) => {
         let array = $.map(data, (value) => {
             return value.data;
         })
@@ -12,7 +12,7 @@ $(() => {
         });
     });
 
-    $.getJSON('/data/hospital.json', (data) => {
+    $.getJSON('/data/hospital.min.json', (data) => {
         let array = $.map(data, (value) => {
             return value.data;
         })

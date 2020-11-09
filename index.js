@@ -6,7 +6,7 @@ const render = require('koa-ejs');
 const koaBody = require('koa-body');
 const session = require('koa-generic-session');
 const SQLite3Store = require('koa-sqlite3-session');
-const json = require('koa-json')
+const json = require('koa-json');
 const config = require('./config.json');
 
 let uploadCache = path.join(__dirname, '/upload_cache')
@@ -45,6 +45,8 @@ app.use(session({
     secure: false
 }, app));
 app.proxy = true;
+
+process.env.GOOGLE_APPLICATION_CREDENTIALS = path.join(__dirname, '/private/cloud-vision-credentials.json');
 
 // Cron
 require('./app/cron-push-message');
@@ -101,6 +103,10 @@ const medicineRegisterRouter = require('./router/medicine-register');
 app.use(medicineRegisterRouter.routes());
 app.use(medicineRegisterRouter.allowedMethods());
 
+const bulkRegisterRouter = require('./router/bulk-register');
+app.use(bulkRegisterRouter.routes());
+app.use(bulkRegisterRouter.allowedMethods());
+
 const medicineUpdateRouter = require('./router/medicine-update');
 app.use(medicineUpdateRouter.routes());
 app.use(medicineUpdateRouter.allowedMethods());
@@ -156,5 +162,9 @@ app.use(lineLoginRouter.allowedMethods());
 const apiCalenderRouter = require('./router/api-calendar');
 app.use(apiCalenderRouter.routes());
 app.use(apiCalenderRouter.allowedMethods());
+
+const apiOcrRouter = require('./router/api-ocr');
+app.use(apiOcrRouter.routes());
+app.use(apiOcrRouter.allowedMethods());
 
 app.listen(5000);
