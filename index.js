@@ -119,6 +119,10 @@ const calenderRouter = require('./router/medicine-calendar');
 app.use(calenderRouter.routes());
 app.use(calenderRouter.allowedMethods());
 
+const groupBulkUpdateRouter = require('./router/medicine-group-bulk-update');
+app.use(groupBulkUpdateRouter.routes());
+app.use(groupBulkUpdateRouter.allowedMethods());
+
 // Group
 const groupListRouter = require('./router/group-list');
 app.use(groupListRouter.routes());

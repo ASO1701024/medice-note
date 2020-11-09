@@ -91,6 +91,59 @@ window.onload = function () {
         ]
     });
 
+    $('#modal-group-update-button').fireModal({
+        title: '所属グループ変更',
+        body: $("#modal-group-update-layout"),
+        footerClass: 'bg-whitesmoke',
+        autoFocus: false,
+        center: true,
+        onFormSubmit: function (modal, e, form) {
+            let checkbox = $('input:checked[data-medicine-id]');
+            if (checkbox.length === 0) {
+                notyf.error('選択された項目が見つかりませんでした');
+            } else {
+                let medicineIdArray = [];
+                checkbox.each(function (index, element) {
+                    medicineIdArray.push($(element).data('medicine-id'));
+                });
+                let destGroupId = $('input:radio[name="radio-bulk-update-group-id"]:checked').val();
+                $.ajax({
+                    type: "POST",
+                    url: "/group-bulk-update",
+                    data: {medicine_id_list: medicineIdArray, group_id: destGroupId},
+                }).done(function (data) {
+                    if (data.result === "success") {
+                        location.reload();
+                    } else {
+                        // 不正なデータって書くとユーザー目線で語感が強いからエラー扱いにしてます。
+                        notyf.error('エラーが発生しました');
+                    }
+                }).fail(function () {
+                    notyf.error('通信エラーが発生しました');
+                });
+            }
+            form.stopProgress();
+            e.preventDefault();
+            $.destroyModal(modal);
+        },
+        buttons: [
+            {
+                text: '閉じる',
+                class: 'btn btn-secondary',
+                handler: function (modal) {
+                    $.destroyModal(modal);
+                }
+            },
+            {
+                text: '変更',
+                submit: true,
+                class: 'btn btn-primary btn-shadow',
+                handler: function (modal) {
+                }
+            }
+        ]
+    });
+
     $('.notice-setting-button').on('click', function () {
         let checkbox = $('input:checked[data-medicine-id]');
         if (checkbox.length === 0) {
