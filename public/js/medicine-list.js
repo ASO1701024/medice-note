@@ -108,11 +108,11 @@ window.onload = function () {
                 });
                 let destGroupId = $('input:radio[name="radio-bulk-update-group-id"]:checked').val();
                 $.ajax({
-                    type: "POST",
-                    url: "/group-bulk-update",
+                    type: 'POST',
+                    url: '/group-bulk-update',
                     data: {medicine_id_list: medicineIdArray, group_id: destGroupId},
                 }).done(function (data) {
-                    if (data.result === "success") {
+                    if (data.result === 'success') {
                         location.reload();
                     } else {
                         // 不正なデータって書くとユーザー目線で語感が強いからエラー扱いにしてます。

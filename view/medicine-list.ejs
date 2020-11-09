@@ -197,8 +197,8 @@
         <% if(typeof data.meta.group_list !== "undefined"){ %>
             <form class="modal-part" id="modal-group-update-layout">
                 <% let d = data.meta.group_list; %>
-                <% for(let i = 0; i < d.length; i++){ %>
-                    <% if(i === 0){ %>
+                <% for(let i = 0; i < d.length; i++) { %>
+                    <% if(i === 0) { %>
                         <div class="custom-control custom-radio">
                             <input type="radio" class="custom-control-input" name="radio-bulk-update-group-id"
                                    id="radio-id-<%= d[i].group_id %>" value="<%= d[i].group_id %>" checked>
