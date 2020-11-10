@@ -131,12 +131,17 @@
                         <select class="form-control select2" name="group_id">
                             <% if (typeof data.meta.group_list != "undefined") {
                                 for (var gl = 0; gl < data.meta.group_list.length; gl++) {
-                                    %>
-                                        <option value="<%= data.meta.group_list[gl]['group_id'] %>"
-                                            <% if (typeof data.old.group_id !== "undefined" && data.old.group_id == data.meta.group_list[gl]['group_id']) { %> selected <% } %>>
-                                            <%= data.meta.group_list [gl]['group_name'] %>
-                                        </option>
-                                    <%
+                                %>
+                                    <option value="<%= data.meta.group_list[gl]['group_id'] %>"
+                                    <% if (typeof data.old.group_id !== "undefined" && data.old.group_id == data.meta.group_list[gl]['group_id']) { %>
+                                            selected
+                                    <% } else if(typeof data.referer_group_id !== "undefined" && data.referer_group_id == data.meta.group_list[gl]['group_id']){ %>
+                                            selected
+                                            <% } %>
+                                    >
+                                        <%= data.meta.group_list [gl]['group_name'] %>
+                                    </option>
+                                <%
                                 }
                             } %>
                         </select>
