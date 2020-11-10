@@ -135,7 +135,7 @@
                                     <option value="<%= data.meta.group_list[gl]['group_id'] %>"
                                     <% if (typeof data.old.group_id !== "undefined" && data.old.group_id == data.meta.group_list[gl]['group_id']) { %>
                                             selected
-                                    <% } else if(typeof data.source_group_id !== "undefined" && data.source_group_id == data.meta.group_list[gl]['group_id']){ %>
+                                    <% } else if(typeof data.target_group_id !== "undefined" && data.target_group_id == data.meta.group_list[gl]['group_id']){ %>
                                             selected
                                             <% } %>
                                     >
