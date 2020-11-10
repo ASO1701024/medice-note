@@ -5,18 +5,9 @@ const Router = require('koa-router');
 const router = new Router();
 const app = require('../app/app');
 const connection = require('../app/db');
+const url = require('url');
 
 router.get('/medicine-register', async (ctx) => {
-    await medicineRegister(ctx);
-})
-
-router.get('/medicine-register/:referer_group_id', async (ctx) => {
-    await medicineRegister(ctx)
-})
-
-// ルート情報にreferer_group_idを含む場合と含まない場合の2通りある。
-// それぞれで同じ処理を書くと見づらいので、内部の処理を関数にしてそれぞれから呼び出している。
-let medicineRegister = async (ctx) => {
     // Session
     let session = ctx.session;
     app.initializeSession(session);
@@ -70,12 +61,12 @@ let medicineRegister = async (ctx) => {
     }
 
     // group.jsから遷移した場合、グループの初期値に当該グループを設定する。
-    if (ctx.params['referer_group_id'] !== undefined) {
-        result['data']['referer_group_id'] = ctx.params['referer_group_id'];
+    if (url.parse(ctx.url, true).query['i'] !== undefined) {
+        result['data']['referer_group_id'] = url.parse(ctx.url, true).query['i'];
     }
 
     await ctx.render('/medicine-register', result);
-}
+})
 
 router.post('/medicine-register', async (ctx) => {
     // Session

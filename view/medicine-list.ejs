@@ -29,7 +29,8 @@
         <div class="alert-title">注意</div>
         お使いのブラウザはサポートしていません<br>
         <a href="https://www.google.co.jp/chrome/" target="_blank" rel="noopener" class="alert-link">Google Chrome</a>か
-        <a href="https://www.mozilla.org/ja/firefox/" target="_blank" rel="noopener" class="alert-link">Mozilla Firefox</a>の最新版をご利用ください
+        <a href="https://www.mozilla.org/ja/firefox/" target="_blank" rel="noopener" class="alert-link">Mozilla
+            Firefox</a>の最新版をご利用ください
     </div>
 <% } %>
 
@@ -78,7 +79,7 @@
                     </p>
                     <div class="mt-4">
                         <% if (typeof data.group_id !== 'undefined'){ %>
-                            <a href="/medicine-register/<%= data.group_id %>"
+                            <a href="/medicine-register?i=<%= data.group_id %>"
                                class="btn btn-outline-white btn-lg btn-icon icon-left">
                                 <i class="fas fa-plus"></i> 薬情報を登録
                             </a>
@@ -114,7 +115,7 @@
             <div class="row action-button"
                  style="justify-content: flex-end; padding: 0 16px; margin-right: -1.45rem; margin-top: -0.5rem;">
                 <% if(typeof data.group_id !== 'undefined'){ %>
-                    <a href="/medicine-register/<%= data.group_id %>"
+                    <a href="/medicine-register?i=<%= data.group_id %>"
                        class="btn btn-icon icon-left btn-primary mr-2 mt-2">
                         <i class="fas fa-plus"></i> 薬情報追加
                     </a>
