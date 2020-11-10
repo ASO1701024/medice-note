@@ -60,8 +60,8 @@ router.get('/medicine-register', async (ctx) => {
     }
 
     // group.jsから遷移した場合、グループの初期値に当該グループを設定する。
-    if (ctx.request.query['i'] !== undefined) {
-        result['data']['target_group_id'] = ctx.request.query['i'];
+    if (ctx.request.query['target_group_id'] !== undefined) {
+        result['data']['target_group_id'] = ctx.request.query['target_group_id'];
     }
 
     await ctx.render('/medicine-register', result);

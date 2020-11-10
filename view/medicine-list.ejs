@@ -79,7 +79,7 @@
                     </p>
                     <div class="mt-4">
                         <% if (typeof data.group_id !== 'undefined'){ %>
-                            <a href="/medicine-register?i=<%= data.group_id %>"
+                            <a href="/medicine-register?target_group_id=<%= data.group_id %>"
                                class="btn btn-outline-white btn-lg btn-icon icon-left">
                                 <i class="fas fa-plus"></i> 薬情報を登録
                             </a>
@@ -115,7 +115,7 @@
             <div class="row action-button"
                  style="justify-content: flex-end; padding: 0 16px; margin-right: -1.45rem; margin-top: -0.5rem;">
                 <% if(typeof data.group_id !== 'undefined'){ %>
-                    <a href="/medicine-register?i=<%= data.group_id %>"
+                    <a href="/medicine-register?target_group_id=<%= data.group_id %>"
                        class="btn btn-icon icon-left btn-primary mr-2 mt-2">
                         <i class="fas fa-plus"></i> 薬情報追加
                     </a>
