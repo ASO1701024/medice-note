@@ -5,7 +5,6 @@ const Router = require('koa-router');
 const router = new Router();
 const app = require('../app/app');
 const connection = require('../app/db');
-const url = require('url');
 
 router.get('/medicine-register', async (ctx) => {
     // Session
@@ -61,8 +60,8 @@ router.get('/medicine-register', async (ctx) => {
     }
 
     // group.jsから遷移した場合、グループの初期値に当該グループを設定する。
-    if (url.parse(ctx.url, true).query['i'] !== undefined) {
-        result['data']['target_group_id'] = url.parse(ctx.url, true).query['i'];
+    if (ctx.request.query['i'] !== undefined) {
+        result['data']['target_group_id'] = ctx.request.query['i'];
     }
 
     await ctx.render('/medicine-register', result);
