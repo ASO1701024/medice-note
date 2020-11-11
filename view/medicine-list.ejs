@@ -29,7 +29,8 @@
         <div class="alert-title">注意</div>
         お使いのブラウザはサポートしていません<br>
         <a href="https://www.google.co.jp/chrome/" target="_blank" rel="noopener" class="alert-link">Google Chrome</a>か
-        <a href="https://www.mozilla.org/ja/firefox/" target="_blank" rel="noopener" class="alert-link">Mozilla Firefox</a>の最新版をご利用ください
+        <a href="https://www.mozilla.org/ja/firefox/" target="_blank" rel="noopener" class="alert-link">Mozilla
+            Firefox</a>の最新版をご利用ください
     </div>
 <% } %>
 
@@ -77,9 +78,16 @@
                         登録されている薬情報が見つかりませんでした
                     </p>
                     <div class="mt-4">
-                        <a href="/medicine-register" class="btn btn-outline-white btn-lg btn-icon icon-left">
-                            <i class="fas fa-plus"></i> 薬情報を登録
-                        </a>
+                        <% if (typeof data.group_id !== 'undefined'){ %>
+                            <a href="/medicine-register?target_group_id=<%= data.group_id %>"
+                               class="btn btn-outline-white btn-lg btn-icon icon-left">
+                                <i class="fas fa-plus"></i> 薬情報を登録
+                            </a>
+                        <% } else { %>
+                            <a href="/medicine-register" class="btn btn-outline-white btn-lg btn-icon icon-left">
+                                <i class="fas fa-plus"></i> 薬情報を登録
+                            </a>
+                        <% } %>
                     </div>
                 </div>
             </div>
@@ -106,9 +114,16 @@
         <div class="section-body">
             <div class="row action-button"
                  style="justify-content: flex-end; padding: 0 16px; margin-right: -1.45rem; margin-top: -0.5rem;">
-                <a href="/medicine-register" class="btn btn-icon icon-left btn-primary mr-2 mt-2">
-                    <i class="fas fa-plus"></i> 薬情報追加
-                </a>
+                <% if(typeof data.group_id !== 'undefined'){ %>
+                    <a href="/medicine-register?target_group_id=<%= data.group_id %>"
+                       class="btn btn-icon icon-left btn-primary mr-2 mt-2">
+                        <i class="fas fa-plus"></i> 薬情報追加
+                    </a>
+                <% } else { %>
+                    <a href="/medicine-register" class="btn btn-icon icon-left btn-primary mr-2 mt-2">
+                        <i class="fas fa-plus"></i> 薬情報追加
+                    </a>
+                <% } %>
                 <a href="javascript:void(0)" class="btn btn-icon icon-left btn-primary mr-2 mt-2"
                    id="modal-setting-button">
                     <i class="fas fa-tasks"></i> 表示設定

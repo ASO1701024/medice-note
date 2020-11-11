@@ -82,6 +82,8 @@ router.get('/group/:group_id', async (ctx) => {
         session.error = undefined;
     }
 
+    result['data']['group_id'] = groupId;
+
     await ctx.render('medicine-list', result);
 })
 
