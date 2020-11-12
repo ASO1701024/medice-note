@@ -27,7 +27,7 @@ class DistanceChecker {
                 case 1:
                     let medicineItem = this.getSimilarData(target);
                     let takeNumberResult = this.getTakeNumber();
-                    for (let medicineIndex in medicineItem){
+                    for (let medicineIndex in medicineItem) {
                         medicineItem[medicineIndex]['takeNumber'] = takeNumberResult[medicineIndex] || '';
                     }
                     result = medicineItem;
@@ -94,10 +94,24 @@ class DistanceChecker {
         for (let row of this.OCRData) {
             let result = row.match(/(\d{4})(\/|年)(\d{1,2})(\/|月)(\d{1,2})/);
             if (result) {
+                // 1/1 から 01/01 に変換
+                if (result[3].length === 1) {
+                    result[3] = '0' + result[3];
+                }
+                if (result[5].length === 1) {
+                    result[5] = '0' + result[5];
+                }
                 return result[1] + '-' + result[3] + '-' + result[5];
             }
             let result2 = row.match(/(令和)(\d{1,2})(\/|年)(\d{1,2})(\/|月)(\d{1,2})/);
             if (result2) {
+                // 1/1 から 01/01 に変換
+                if (result2[4].length === 1) {
+                    result2[4] = '0' + result2[4];
+                }
+                if (result2[6].length === 1) {
+                    result2[6] = '0' + result2[6];
+                }
                 result2[2] = (parseInt(result2[2]) + 2018).toString();
                 return result2[2] + '-' + result2[4] + '-' + result2[6];
             }
