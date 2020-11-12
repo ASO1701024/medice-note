@@ -157,4 +157,8 @@ const apiCalenderRouter = require('./router/api-calendar');
 app.use(apiCalenderRouter.routes());
 app.use(apiCalenderRouter.allowedMethods());
 
+const functionIntroduction = require('./router/function-introduction');
+app.use(functionIntroduction.routes());
+app.use(functionIntroduction.allowedMethods());
+
 app.listen(5000);

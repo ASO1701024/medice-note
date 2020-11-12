@@ -1,0 +1,11 @@
+#btn {
+    position: fixed;
+    margin-right: 250px;
+}
+.modal {
+    z-index: 100;
+}
+.main-wrapper {
+    z-index: 1000;
+}
+
