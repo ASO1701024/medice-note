@@ -60,20 +60,15 @@
                         <div class="form-group">
                             <label class="control-label">時間 *</label>
                             <select class="form-control select2" name="notice_time" multiple required>
-                                <% for (var t = 0; t < 24; t++) {
-                                    var hour = '';
-                                    if (t < 10) {
-                                        hour = `0${t}`;
-                                    } else {
-                                        hour = `${t}`;
-                                    } %>
-                                <% if (typeof data.old.notice_time !== "undefined") { %>
-                                    <option value="<%= `${hour}:00` %>" <% if (data.old.notice_time.some(t => t === `${hour}:00`)) { %> selected <% } %>><%= `${hour}:00` %></option>
-                                    <option value="<%= `${hour}:30` %>" <% if (data.old.notice_time.some(t => t === `${hour}:30`)) { %> selected <% } %>><%= `${hour}:30` %></option>
-                                <% } else { %>
-                                    <option value="<%= `${hour}:00` %>" <% if (`${hour}:00` === '20:00') { %> selected <% } %>><%= `${hour}:00` %></option>
-                                    <option value="<%= `${hour}:30` %>" <% if (`${hour}:30` === '07:30' || `${hour}:30` === '12:30') { %> selected <% } %>><%= `${hour}:30` %></option>
-                                <% } %>
+                                <% var hourArray = ['06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','00','01','02','03','04','05']; %>
+                                <% for (var hour of hourArray) { %>
+                                    <% if (typeof data.old.notice_time !== "undefined") { %>
+                                        <option value="<%= `${hour}:00` %>" <% if (data.old.notice_time.some(t => t === `${hour}:00`)) { %> selected <% } %>><%= `${hour}:00` %></option>
+                                        <option value="<%= `${hour}:30` %>" <% if (data.old.notice_time.some(t => t === `${hour}:30`)) { %> selected <% } %>><%= `${hour}:30` %></option>
+                                    <% } else { %>
+                                        <option value="<%= `${hour}:00` %>"><%= `${hour}:00` %></option>
+                                        <option value="<%= `${hour}:30` %>"><%= `${hour}:30` %></option>
+                                    <% } %>
                                 <% } %>
                             </select>
                             <span class="form-error">
