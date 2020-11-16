@@ -61,10 +61,12 @@ router.post('/forgot-password', async (ctx) => {
     date.setHours(date.getHours() + 24);
     await connection.query('INSERT INTO user_reset_password_key VALUES(?, ?, ?)', [userId, authKey, date]);
 
-    let data = fs.readFileSync(path.join(__dirname, '../view/email/auth-password.html'), 'utf-8')
+    let data = fs.readFileSync(path.join(__dirname, '../view/email/auth-template.html'), 'utf-8')
     let template = Handlebars.compile(data);
     let html = template({
-        authKey: authKey
+        title: 'パスワード再発行',
+        message: 'パスワード再発行が行われました<br>パスワードを復元するにはメールアドレスを認証してください',
+        url: `https://www.medice-note.vxx0.com/auth-password/${authKey}`
     })
     await transporter.sendMail({
         from: config.mail.auth.user,

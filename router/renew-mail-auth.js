@@ -62,10 +62,12 @@ router.post('/renew-mail-auth', async (ctx) => {
     date.setHours(date.getHours() + 24);
     await connection.query('INSERT INTO user_authentication_key VALUES (?, ?, ?)', [userId, authKey, date]);
 
-    let data = fs.readFileSync(path.join(__dirname, '../view/email/auth-mail.html'), 'utf-8')
+    let data = fs.readFileSync(path.join(__dirname, '../view/email/auth-template.html'), 'utf-8')
     let template = Handlebars.compile(data);
     let html = template({
-        authKey: authKey
+        title: 'メールアドレス認証',
+        message: '登録いただきありがとうございます<br>アカウントを有効化するにはメールアドレスを認証してください',
+        url: `https://www.medice-note.vxx0.com/auth-mail/${authKey}`
     })
     await transporter.sendMail({
         from: config.mail.auth.user,

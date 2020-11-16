@@ -102,10 +102,12 @@ router.post('/signup', async (ctx) => {
     sql = 'INSERT INTO medicine_group (group_name, user_id, is_deletable) VALUES (?, ?, ?)';
     await connection.query(sql, ['デフォルト', userId, true]);
 
-    let data = fs.readFileSync(path.join(__dirname, '../view/email/auth-mail.html'), 'utf-8')
+    let data = fs.readFileSync(path.join(__dirname, '../view/email/auth-template.html'), 'utf-8')
     let template = Handlebars.compile(data);
     let html = template({
-        authKey: authKey
+        title: 'メールアドレス認証',
+        message: '登録いただきありがとうございます<br>アカウントを有効化するにはメールアドレスを認証してください',
+        url: `https://www.medice-note.vxx0.com/auth-mail/${authKey}`
     })
     await transporter.sendMail({
         from: config.mail.auth.user,

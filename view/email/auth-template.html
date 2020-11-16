@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>メールアドレス認証</title>
+    <title>{{title}}</title>
     <style>
         * {
             font-family: sans-serif;
@@ -61,19 +61,18 @@
             <tr>
                 <td>
                     <h1>MediceNote</h1>
-                    <p>登録いただきありがとうございます<br>
-                        アカウントを有効化するにはメールアドレスを認証してください</p>
+                    <p>{{{message}}}</p>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.medice-note.vxx0.com/auth-mail/{{authKey}}" target="_blank" class="button">メールアドレス認証</a>
+                    <a href="{{url}}" target="_blank" class="button">メールアドレス認証</a>
                 </td>
             </tr>
             <tr>
                 <td>
                     <p class="p-grey">ボタンが押せない場合は、リンクから</p>
-                    <a href="https://www.medice-note.vxx0.com/auth-mail/{{authKey}}" target="_blank" class="link small">https://www.medice-note.vxx0.com/auth-mail/{{authKey}}</a>
+                    <a href="{{url}}" target="_blank" class="link small">{{url}}</a>
                 </td>
             </tr>
             <tr>
