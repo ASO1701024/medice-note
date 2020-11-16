@@ -1,0 +1,89 @@
+<!DOCTYPE>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>メールアドレス認証</title>
+    <style>
+        * {
+            font-family: sans-serif;
+            font-weight: normal
+        }
+        body {
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+        }
+        table {
+            margin: 0 auto;
+            border: 0;
+            width: 310px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 30px;
+            margin: 30px 0;
+        }
+        p {
+            font-size: 14px;
+            margin: 13px 0;
+        }
+        .button {
+            color: #fff;
+            display: block;
+            padding: 15px;
+            text-decoration: none;
+            width: 280px;
+            background-color: #6777ef;
+            border-radius: 4px;
+        }
+        .p-grey {
+            color: #8a9ba8;
+            font-size: 11px;
+            line-height: 13px;
+        }
+        .link {
+            color: #6777ef;
+            text-decoration: none;
+        }
+        .link.small {
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <table>
+            <tbody>
+            <tr>
+                <td>
+                    <h1>MediceNote</h1>
+                    <p>登録いただきありがとうございます<br>
+                        アカウントを有効化するにはメールアドレスを認証してください</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.medice-note.vxx0.com/auth-mail/{{authKey}}" target="_blank" class="button">メールアドレス認証</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="p-grey">ボタンが押せない場合は、リンクから</p>
+                    <a href="https://www.medice-note.vxx0.com/auth-mail/{{authKey}}" target="_blank" class="link small">https://www.medice-note.vxx0.com/auth-mail/{{authKey}}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="p-grey">
+                        これは自動で送信されたメールです。心当たりがない場合は、メールアドレスを認証しないでください。お困りの場合はサポートまで
+                        <a class="link" href="https://www.medice-note.vxx0.com/contact" target="_blank">お問い合わせ</a>ください。
+                    </p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

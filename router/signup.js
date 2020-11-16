@@ -7,6 +7,9 @@ const {v4: uuid} = require('uuid');
 const app = require('../app/app');
 const transporter = require('../app/mail');
 const config = require('../config.json');
+const fs = require('fs');
+const path = require('path');
+const Handlebars = require('handlebars');
 
 router.get('/signup', async (ctx) => {
     let session = ctx.session;
@@ -99,21 +102,24 @@ router.post('/signup', async (ctx) => {
     sql = 'INSERT INTO medicine_group (group_name, user_id, is_deletable) VALUES (?, ?, ?)';
     await connection.query(sql, ['デフォルト', userId, true]);
 
+    let data = fs.readFileSync(path.join(__dirname, '../view/email/auth-mail.html'), 'utf-8')
+    let template = Handlebars.compile(data);
+    let html = template({
+        authKey: authKey
+    })
     await transporter.sendMail({
         from: config.mail.auth.user,
         to: mail,
         subject: 'メールアドレス認証',
-        text: '登録いただきありがとうございます\n' +
-            'アカウントを有効化するには下記のURLにアクセスしメールアドレスを認証してください\n' +
-            'https://www.medice-note.vxx0.com/auth-mail/' + authKey
+        html: html
     }).then(() => {
         session.success.message = '認証メールを送信しました';
 
-        ctx.redirect('/signup');
+        return ctx.redirect('/signup');
     }).catch(() => {
         session.error.message = '認証メールの送信に失敗しました';
 
-        ctx.redirect('/signup');
+        return ctx.redirect('/signup');
     });
 })
 
