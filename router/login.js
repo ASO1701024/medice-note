@@ -6,6 +6,9 @@ const bcrypt = require('bcrypt');
 const {v4: uuid} = require('uuid');
 const transporter = require('../app/mail');
 const config = require('../config.json');
+const fs = require('fs');
+const path = require('path');
+const Handlebars = require('handlebars');
 
 router.get('/login', async (ctx) => {
     // Session
@@ -84,13 +87,18 @@ router.post('/login', async (ctx) => {
             sql = 'INSERT INTO user_two_factor_authentication VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 10 MINUTE))';
             await connection.query(sql, [user['user_id'], authKey]);
 
+            let data = fs.readFileSync(path.join(__dirname, '../view/email/auth-template.html'), 'utf-8');
+            let template = Handlebars.compile(data);
+            let html = template({
+                title: '二段階認証',
+                message: 'アカウントにログインするにはメールアドレスを認証してください',
+                url: `https://www.medice-note.vxx0.com/two-factor-authentication/${authKey}`
+            });
             await transporter.sendMail({
                 from: config.mail.auth.user,
                 to: user['mail'],
                 subject: '二段階認証',
-                text: '登録されているメールアドレスにログインリクエストが行われました\n' +
-                    'アカウントにログインするには以下のURLをクリックしてください\n' +
-                    'https://www.medice-note.vxx0.com/two-factor-authentication/' + authKey
+                html: html
             }).then(() => {
                 session.success.message = '認証メールを送信しました';
 

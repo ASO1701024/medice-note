@@ -5,6 +5,9 @@ const {v4: uuid} = require('uuid');
 const transporter = require('../app/mail');
 const app = require('../app/app');
 const config = require('../config.json');
+const fs = require('fs');
+const path = require('path');
+const Handlebars = require('handlebars');
 
 router.get('/renew-mail-auth', async (ctx) => {
     let session = ctx.session;
@@ -59,21 +62,26 @@ router.post('/renew-mail-auth', async (ctx) => {
     date.setHours(date.getHours() + 24);
     await connection.query('INSERT INTO user_authentication_key VALUES (?, ?, ?)', [userId, authKey, date]);
 
+    let data = fs.readFileSync(path.join(__dirname, '../view/email/auth-template.html'), 'utf-8');
+    let template = Handlebars.compile(data);
+    let html = template({
+        title: 'メールアドレス認証',
+        message: '登録いただきありがとうございます<br>アカウントを有効化するにはメールアドレスを認証してください',
+        url: `https://www.medice-note.vxx0.com/auth-mail/${authKey}`
+    });
     await transporter.sendMail({
         from: config.mail.auth.user,
         to: mail,
         subject: 'メールアドレス認証',
-        text: '登録いただきありがとうございます\n' +
-            'アカウントを有効化するには下記のURLにアクセスしメールアドレスを認証してください\n' +
-            'https://www.medice-note.vxx0.com/auth-mail/' + authKey
+        html: html
     }).then(() => {
         session.success.message = '認証メールを送信しました';
 
-        ctx.redirect('/renew-mail-auth');
+        return ctx.redirect('/renew-mail-auth');
     }).catch(() => {
         session.error.message = '認証メールの送信に失敗しました';
 
-        ctx.redirect('/signup');
+        return ctx.redirect('/signup');
     });
 });
 
