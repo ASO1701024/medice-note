@@ -156,6 +156,23 @@ input.form-control-plaintext {
         display: none;
     }
 }
+
+/* over ride medicine-calendar */
+/* needs to be same precedence */
+.fc-day-grid-event {
+    margin: 1px 2px 10px; /* an override! */
+}
+.fc-unthemed td.fc-today {
+    background-color: #ffe4c6; /* an override! */
+}
+.fc-unthemed td.fc-sat, td.fc-sun {
+    background-color: #f5f5f5; /* an override! */
+}
+.fc-view>table tr, .fc-view>table td, .fc-view>table th{
+    border-color: #e8e8e8; /* an override! */
+}
+/* end over ride medicine-calendar*/
+
 /*
 @media screen and (min-width: 450px) {
     .fab-menu {
