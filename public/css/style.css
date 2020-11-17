@@ -159,8 +159,11 @@ input.form-control-plaintext {
 
 /* over ride medicine-calendar */
 /* needs to be same precedence */
+tr:first-child>td>.fc-day-grid-event {
+    margin-bottom: 2px; /* an override! */
+}
 .fc-day-grid-event {
-    margin: 1px 2px 10px; /* an override! */
+    margin: 1px 2px 2px; /* an override! */
 }
 .fc-unthemed td.fc-today {
     background-color: #ffe4c6; /* an override! */
