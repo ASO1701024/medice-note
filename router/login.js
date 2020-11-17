@@ -87,13 +87,13 @@ router.post('/login', async (ctx) => {
             sql = 'INSERT INTO user_two_factor_authentication VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 10 MINUTE))';
             await connection.query(sql, [user['user_id'], authKey]);
 
-            let data = fs.readFileSync(path.join(__dirname, '../view/email/auth-template.html'), 'utf-8')
+            let data = fs.readFileSync(path.join(__dirname, '../view/email/auth-template.html'), 'utf-8');
             let template = Handlebars.compile(data);
             let html = template({
                 title: '二段階認証',
                 message: 'アカウントにログインするにはメールアドレスを認証してください',
                 url: `https://www.medice-note.vxx0.com/two-factor-authentication/${authKey}`
-            })
+            });
             await transporter.sendMail({
                 from: config.mail.auth.user,
                 to: user['mail'],
