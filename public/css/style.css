@@ -179,11 +179,11 @@ tr:first-child > td > .fc-day-grid-event {
 /* over ride top_page menu_button */
 /* needs to be same precedence */
 .navbar .nav-link {
-    height: auto;
-    margin-top: 8px;
+    height: auto; /* an override! */
+    margin-top: 8px; /* an override! */
 }
 #menu_icon_fa_bars {
-    font-size: 18px;
+    font-size: 18px; /* an override! */
 }
 /* end over ride top_page menu_button */
 
