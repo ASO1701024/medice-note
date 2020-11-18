@@ -182,7 +182,7 @@ tr:first-child > td > .fc-day-grid-event {
     height: auto; /* an override! */
     margin-top: 8px; /* an override! */
 }
-#menu_icon_fa_bars {
+.navbar .nav-link .fa-bars {
     font-size: 18px; /* an override! */
 }
 /* end over ride top_page menu_button */
