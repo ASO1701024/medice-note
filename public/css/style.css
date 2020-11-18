@@ -176,6 +176,17 @@ tr:first-child > td > .fc-day-grid-event {
 }
 /* end over ride medicine-calendar*/
 
+/* over ride top_page menu_button */
+/* needs to be same precedence */
+.navbar .nav-link {
+    height: auto; /* an override! */
+    margin-top: 8px; /* an override! */
+}
+.navbar .nav-link .fa-bars {
+    font-size: 18px; /* an override! */
+}
+/* end over ride top_page menu_button */
+
 /*
 @media screen and (min-width: 450px) {
     .fab-menu {
