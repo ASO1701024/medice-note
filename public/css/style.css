@@ -156,7 +156,6 @@ input.form-control-plaintext {
         display: none;
     }
 }
-
 /* over ride medicine-calendar */
 /* needs to be same precedence */
 tr:first-child > td > .fc-day-grid-event {
@@ -175,6 +174,16 @@ tr:first-child > td > .fc-day-grid-event {
     border-color: #e8e8e8; /* an override! */
 }
 /* end over ride medicine-calendar*/
+/* over ride top_page menu_button */
+/* needs to be same precedence */
+.navbar .nav-link {
+    height: auto;
+    margin-top: 8px;
+}
+#menu_icon_fa_bars {
+    font-size: 18px;
+}
+/* end over ride top_page menu_button */
 
 /*
 @media screen and (min-width: 450px) {
