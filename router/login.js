@@ -51,15 +51,14 @@ router.post('/login', async (ctx) => {
 
     let mail = ctx.request.body['mail'];
     let password = ctx.request.body['password'];
+    let skipTwoFactorCheck = ctx.request.body['skip_two_factor_check'] === 'yes';
+
+    let ua = ctx.request.headers['user-agent'];
+    let ip =  ctx.request.ip;
 
     // Login Log
     let sql = 'INSERT INTO user_login_log (mail, user_agent, ip_address, login_at) VALUES (?, ?, ?, ?)';
-    await connection.query(sql, [
-        mail,
-        ctx.request.headers['user-agent'],
-        ctx.request.ip,
-        new Date()
-    ]);
+    await connection.query(sql, [mail, ua, ip, new Date()]);
 
     sql = 'DELETE FROM session WHERE expired_at <= ?';
     await connection.query(sql, [new Date()]);
@@ -79,20 +78,45 @@ router.post('/login', async (ctx) => {
 
         return ctx.redirect('/login');
     } else {
+        let userId = user['user_id'];
         let hashPassword = user['password'];
         if (bcrypt.compareSync(password, hashPassword)) {
+            let pcUuid;
+
+            sql = 'SELECT pc_id FROM user_login_pc WHERE user_id = ? AND env_ua = ? AND env_ip = ? AND validity_flag = true';
+            let [pc] = await connection.query(sql, [userId, ua, ip]);
+            if (pc.length !== 0) {
+                let sessionId = uuid().split('-').join('');
+
+                sql = 'INSERT INTO session VALUES (?, ?, DATE_ADD(CURRENT_DATE, INTERVAL 30 DAY))';
+                await connection.query(sql, [userId, sessionId]);
+
+                session.auth_id = sessionId;
+
+                session.success.message = 'ログインしました';
+
+                return ctx.redirect('/');
+            } else if (skipTwoFactorCheck) {
+                pcUuid = uuid().split('-').join('');
+                sql = 'INSERT INTO user_login_pc (pc_uuid, user_id, env_ua, env_ip, timestamp) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)';
+                await connection.query(sql, [pcUuid, userId, ua, ip]);
+            }
+
             let authKey = uuid() + uuid() + uuid()
             authKey = authKey.split('-').join('')
 
             sql = 'INSERT INTO user_two_factor_authentication VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 10 MINUTE))';
-            await connection.query(sql, [user['user_id'], authKey]);
+            await connection.query(sql, [userId, authKey]);
+
+            let authUrl = `https://www.medice-note.vxx0.com/two-factor-authentication/${authKey}`;
+            if (skipTwoFactorCheck) authUrl += `?uuid=${pcUuid}`;
 
             let data = fs.readFileSync(path.join(__dirname, '../view/email/auth-template.html'), 'utf-8');
             let template = Handlebars.compile(data);
             let html = template({
                 title: '二段階認証',
                 message: 'アカウントにログインするにはメールアドレスを認証してください',
-                url: `https://www.medice-note.vxx0.com/two-factor-authentication/${authKey}`
+                url: authUrl
             });
             await transporter.sendMail({
                 from: config.mail.auth.user,
