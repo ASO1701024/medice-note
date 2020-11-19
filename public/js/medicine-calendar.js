@@ -1,5 +1,5 @@
 $('#medicine-calendar').fullCalendar({
-    height: window.innerHeight - 70,
+    height: window.innerHeight - 160,
     locale: 'ja',
     header: {
         left: 'prev,today,next',
