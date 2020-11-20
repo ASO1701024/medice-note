@@ -2,7 +2,6 @@ const Router = require('koa-router');
 const router = new Router();
 const app = require('../app/app');
 
-
 router.get('/function-introduction', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
@@ -25,9 +24,7 @@ router.get('/function-introduction', async (ctx) => {
         session.error = undefined;
     }
 
-
     await ctx.render('function-introduction', result);
 })
-
 
 module.exports = router;
