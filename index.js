@@ -162,6 +162,10 @@ const lineLoginRouter = require('./router/line-login');
 app.use(lineLoginRouter.routes());
 app.use(lineLoginRouter.allowedMethods());
 
+const twoFactorAuthenticationSetting = require('./router/two-factor-authentication-setting');
+app.use(twoFactorAuthenticationSetting.routes());
+app.use(twoFactorAuthenticationSetting.allowedMethods());
+
 // API
 const apiCalenderRouter = require('./router/api-calendar');
 app.use(apiCalenderRouter.routes());
