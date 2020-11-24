@@ -29,17 +29,20 @@ router.get('/notice-list', async (ctx) => {
     for (let i = 0; i < notice.length; i++) {
         let noticeId = notice[i]['notice_id'];
 
-        sql = 'SELECT medicine_name FROM notice_medicine ' +
-            'LEFT JOIN medicine ON notice_medicine.medicine_id = medicine.medicine_id ' +
-            'WHERE notice_id = ?';
+        sql = `
+            SELECT medicine_name, number FROM notice_medicine
+            LEFT JOIN medicine ON notice_medicine.medicine_id = medicine.medicine_id
+            WHERE notice_id = ?`;
         let [medicine] = await connection.query(sql, [noticeId]);
         notice[i]['medicine'] = [];
         medicine.forEach(d => {
-            notice[i]['medicine'].push(d['medicine_name']);
+            notice[i]['medicine'].push({
+                'medicine_name': d['medicine_name'],
+                'number': d['number']
+            })
         })
 
-        sql = 'SELECT time_format(notice_time, \'%H:%i\') as notice_time FROM notice_time ' +
-            'WHERE notice_id = ?';
+        sql = 'SELECT time_format(notice_time, \'%H:%i\') as notice_time FROM notice_time WHERE notice_id = ?';
         let [time] = await connection.query(sql, [noticeId]);
         notice[i]['time'] = [];
         time.forEach(d => {
@@ -56,6 +59,10 @@ router.get('/notice-list', async (ctx) => {
     }
 
     result['data']['notice_list'] = notice;
+
+    sql = 'SELECT user_id FROM line_login WHERE user_id = ?';
+    let [lineLogin] = await connection.query(sql, [userId]);
+    result['data']['meta']['line_login'] = lineLogin.length !== 0;
 
     if (session.success !== undefined) {
         result['data']['success'] = session.success;

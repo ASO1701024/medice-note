@@ -6,7 +6,7 @@ const render = require('koa-ejs');
 const koaBody = require('koa-body');
 const session = require('koa-generic-session');
 const SQLite3Store = require('koa-sqlite3-session');
-const json = require('koa-json')
+const json = require('koa-json');
 const config = require('./config.json');
 
 let uploadCache = path.join(__dirname, '/upload_cache')
@@ -46,9 +46,12 @@ app.use(session({
 }, app));
 app.proxy = true;
 
+process.env.GOOGLE_APPLICATION_CREDENTIALS = path.join(__dirname, '/private/cloud-vision-credentials.json');
+
 // Cron
 require('./app/cron-push-message');
 require('./app/cron-verify-line-access-token');
+require('./app/cron-delete-user');
 
 const indexRouter = require('./router/index');
 app.use(indexRouter.routes());
@@ -62,6 +65,10 @@ app.use(signupRouter.allowedMethods());
 const loginRouter = require('./router/login');
 app.use(loginRouter.routes());
 app.use(loginRouter.allowedMethods());
+
+const twoFactorAuthenticationRouter = require('./router/two-factor-authentication');
+app.use(twoFactorAuthenticationRouter.routes());
+app.use(twoFactorAuthenticationRouter.allowedMethods());
 
 const logoutRouter = require('./router/logout');
 app.use(logoutRouter.routes());
@@ -88,10 +95,6 @@ app.use(contactRouter.routes());
 app.use(contactRouter.allowedMethods());
 
 // Medicine
-const medicineListRouter = require('./router/medicine-list');
-app.use(medicineListRouter.routes());
-app.use(medicineListRouter.allowedMethods());
-
 const medicineRouter = require('./router/medicine');
 app.use(medicineRouter.routes());
 app.use(medicineRouter.allowedMethods());
@@ -99,6 +102,10 @@ app.use(medicineRouter.allowedMethods());
 const medicineRegisterRouter = require('./router/medicine-register');
 app.use(medicineRegisterRouter.routes());
 app.use(medicineRegisterRouter.allowedMethods());
+
+const bulkRegisterRouter = require('./router/bulk-register');
+app.use(bulkRegisterRouter.routes());
+app.use(bulkRegisterRouter.allowedMethods());
 
 const medicineUpdateRouter = require('./router/medicine-update');
 app.use(medicineUpdateRouter.routes());
@@ -111,6 +118,10 @@ app.use(medicineDeleteRouter.allowedMethods());
 const calenderRouter = require('./router/medicine-calendar');
 app.use(calenderRouter.routes());
 app.use(calenderRouter.allowedMethods());
+
+const groupBulkUpdateRouter = require('./router/medicine-group-bulk-update');
+app.use(groupBulkUpdateRouter.routes());
+app.use(groupBulkUpdateRouter.allowedMethods());
 
 // Group
 const groupListRouter = require('./router/group-list');
@@ -152,12 +163,12 @@ app.use(lineLoginRouter.routes());
 app.use(lineLoginRouter.allowedMethods());
 
 // API
-const apiMedicineRouter = require('./router/api-medicine');
-app.use(apiMedicineRouter.routes());
-app.use(apiMedicineRouter.allowedMethods());
-
 const apiCalenderRouter = require('./router/api-calendar');
 app.use(apiCalenderRouter.routes());
 app.use(apiCalenderRouter.allowedMethods());
+
+const apiOcrRouter = require('./router/api-ocr');
+app.use(apiOcrRouter.routes());
+app.use(apiOcrRouter.allowedMethods());
 
 app.listen(5000);

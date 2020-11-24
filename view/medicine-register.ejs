@@ -24,6 +24,12 @@
     </div>
 <% } %>
 
+<style>
+    .custom-file-label::after {
+        content: "選択";
+    }
+</style>
+
 <div class="card">
     <form action="/medicine-register" method="post" enctype="multipart/form-data">
         <div class="card-body pb-0">
@@ -61,7 +67,7 @@
                         </span>
                     </div>
                     <div class="form-group">
-                        <label>飲む時間 *</label>
+                        <label>飲む時間 (複数選択可) *</label>
                         <select class="form-control select2" multiple="" name="take_time" required>
                             <% if (typeof data.meta.take_time != "undefined") {
                                 for (var tt = 0; tt < data.meta.take_time.length; tt++) { %>
@@ -125,12 +131,17 @@
                         <select class="form-control select2" name="group_id">
                             <% if (typeof data.meta.group_list != "undefined") {
                                 for (var gl = 0; gl < data.meta.group_list.length; gl++) {
-                                    %>
-                                        <option value="<%= data.meta.group_list[gl]['group_id'] %>"
-                                            <% if (typeof data.old.group_id !== "undefined" && data.old.group_id == data.meta.group_list[gl]['group_id']) { %> selected <% } %>>
-                                            <%= data.meta.group_list [gl]['group_name'] %>
-                                        </option>
-                                    <%
+                                %>
+                                    <option value="<%= data.meta.group_list[gl]['group_id'] %>"
+                                    <% if (typeof data.old.group_id !== "undefined" && data.old.group_id == data.meta.group_list[gl]['group_id']) { %>
+                                            selected
+                                    <% } else if(typeof data.target_group_id !== "undefined" && data.target_group_id == data.meta.group_list[gl]['group_id']){ %>
+                                            selected
+                                            <% } %>
+                                    >
+                                        <%= data.meta.group_list [gl]['group_name'] %>
+                                    </option>
+                                <%
                                 }
                             } %>
                         </select>
@@ -145,7 +156,7 @@
                     <div class="form-group">
                         <label>薬画像</label>
                         <div class="custom-file">
-                            <input type="file" name="medicine_image" class="custom-file-input" id="medicine-image">
+                            <input type="file" accept="image/jpeg,image/png" name="medicine_image" class="custom-file-input" id="medicine-image">
                             <label class="custom-file-label" id="medicine-image-label">ファイルを選択</label>
                         </div>
                         <span class="form-error">

@@ -24,6 +24,12 @@
     </div>
 <% } %>
 
+<% if (data.meta.line_login === false) { %>
+    <div class="alert alert-warning">
+        LINE連携を行なっていないため、通知を行うことができません<br><a href="/account-setting">アカウント設定</a>からLINE連携を行ってください
+    </div>
+<% } %>
+
 <% if (typeof data.notice_list !== "undefined") { %>
     <% if (data.notice_list.length === 0) { %>
         <div class="col-12 mb-4 pl-0 pr-0">
@@ -33,7 +39,7 @@
                         登録されている通知情報が見つかりませんでした
                     </p>
                     <div class="mt-4">
-                        <a href="/notice-register" class="btn btn-outline-white btn-lg btn-icon icon-left">
+                        <a href="/" class="btn btn-outline-white btn-lg btn-icon icon-left">
                             <i class="fas fa-plus"></i> 通知を登録
                         </a>
                     </div>
@@ -43,7 +49,7 @@
     <% } else { %>
         <div class="row">
             <% for (var nl = 0; nl < data.notice_list.length; nl++) { %>
-                <div class="col-12 col-md-6 col-lg-3">
+                <div class="col-12 col-md-6 col-lg-4">
                     <div class="card">
                         <div class="card-body">
                             <div id="accordion_<%= (nl + 1) %>">
@@ -66,7 +72,7 @@
                                                     薬情報が削除されたため通知項目が見つかりませんでした
                                                 <% } else { %>
                                                     <% data.notice_list[nl]['medicine'].forEach(m => { %>
-                                                        ・<%= m %><br>
+                                                        ・<%= m['medicine_name'] %>（<%= m['number'] %>個）<br>
                                                     <% }) %>
                                                 <% } %>
                                             </p>
@@ -97,11 +103,17 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-12 col-md-6 col-lg-6">
-                                    <a href="/notice-update/<%= data.notice_list[nl]['notice_id'] %>" class="card-link">編集</a>
-                                    <a href="javascript:noticeDelete(<%= data.notice_list[nl]['notice_id'] %>)" class="card-link link-danger">削除</a>
+                                <div class="col-12 col-sm-6 text-center">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <a href="/notice-update/<%= data.notice_list[nl]['notice_id'] %>" class="btn card-link">編集</a>
+                                        </div>
+                                        <div class="col-6">
+                                            <a href="javascript:noticeDelete(<%= data.notice_list[nl]['notice_id'] %>)" class="btn card-link link-danger">削除</a>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-12 col-md-6 col-lg-6 text-right">
+                                <div class="col-12 col-sm-6 text-right text-sm-center">
                                     <% if (data.notice_list[nl]['is_enable']) { %>
                                         <a href="javascript:noticeToggleFalse(<%= data.notice_list[nl]['notice_id'] %>)" class="btn btn-icon icon-left">
                                             <i class="fas fa-bell-slash"></i> 無効化

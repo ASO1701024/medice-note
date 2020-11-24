@@ -168,7 +168,7 @@ router.post('/medicine-update/:medicine_id', async (ctx) => {
 
         session.success.message = '薬情報を更新しました';
 
-        return ctx.redirect('/medicine-list');
+        return ctx.redirect('/');
     } else {
         session.old = {};
         session.error = validationMedicine.error;

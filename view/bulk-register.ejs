@@ -1,0 +1,149 @@
+<div class="section-header">
+    <h1>薬情報一括登録</h1>
+</div>
+
+<% if (typeof data.success.message !== "undefined") { %>
+    <div class="alert alert-success alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>×</span>
+            </button>
+            <%= data.success.message %>
+        </div>
+    </div>
+<% } %>
+
+<% if (typeof data.error.message !== "undefined") { %>
+    <div class="alert alert-danger alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>×</span>
+            </button>
+            <%= data.error.message %>
+        </div>
+    </div>
+<% } %>
+
+<style>
+    @media (max-width: 768px) {
+        .card .card-header h4+.card-header-action {
+            width: unset;
+        }
+    }
+    .form-error {
+        min-height: 16px;
+    }
+</style>
+
+<div class="card">
+    <div class="card-header">
+        <h4></h4>
+        <div class="card-header-action">
+            <div>
+                <a href="javascript:void(0)" class="btn btn-icon icon-left btn-primary" onclick="ocrImagePicker()">
+                    <i class="fas fa-camera"></i> 画像から入力
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body pb-0">
+        <div class="row" id="medicine-list">
+            <div class="col-12">
+                <div class="row" data-type="medicine-basic">
+                    <div class="form-group col-12 col-md-4" data-item-name="hospital-name">
+                        <label>病院名</label>
+                        <input type="text" class="form-control autocomplete-hospital-name" name="hospital_name" required>
+                        <span class="form-error"></span>
+                    </div>
+                    <div class="form-group col-12 col-md-4" data-item-name="starts-date">
+                        <label>処方日</label>
+                        <input type="text" class="form-control datepicker readonly-background" name="starts_date" required readonly>
+                        <span class="form-error"></span>
+                    </div>
+                    <div class="form-group col-12 col-md-4" data-item-name="group-id">
+                        <label>グループ</label>
+                        <select class="form-control select2" name="group_id">
+                            <% if (typeof data.meta.group_list != "undefined") {
+                                for (var gl = 0; gl < data.meta.group_list.length; gl++) {
+                                    %>
+                                    <option value="<%= data.meta.group_list[gl]['group_id'] %>" <% if (typeof data.meta.target_group_id != "undefined" && parseInt(data.meta.target_group_id) === data.meta.group_list[gl]['group_id']) { %> selected <% } %>>
+                                        <%= data.meta.group_list [gl]['group_name'] %>
+                                    </option>
+                                    <%
+                                }
+                            } %>
+                        </select>
+                        <span class="form-error"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-right">
+                <a href="javascript:void(0)" class="btn btn-primary btn-sm action-medicine-add" onclick="addMedicine([])">項目を追加</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer pt-">
+        <button type="submit" class="btn btn-primary" onclick="postMedicine(this);">登録</button>
+    </div>
+</div>
+
+<script type="text/x-handlebars-template" id="template_medicine_item">
+    <div class="col-12" data-type="medicine-item" data-medicine-item-id="">
+        <div class="row">
+            <div class="col-12 col-md-6 order-2 order-md-1">
+                <div class="form-group" data-item-name="medicine-name">
+                    <label>薬の名前</label>
+                    <input type="text" class="form-control autocomplete-medicine-name" name="medicine_name" value="{{#if medicine_name}}{{medicine_name}}{{/if}}" required>
+                    <span class="form-error"></span>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 text-right order-1 order-md-2" style="padding-top: 30px;">
+                <a href="javascript:void(0)" class="btn btn-danger btn-sm" onclick="deleteMedicine(this)">項目を削除</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <div class="form-group" data-item-name="take-time">
+                    <label>飲む時間 (複数選択可)</label>
+                    <select class="form-control select2" multiple="" name="take_time" required>
+                        <% if (typeof data.meta.take_time != "undefined") {
+                            for (var tt = 0; tt < data.meta.take_time.length; tt++) {
+                                %>
+                                <option value="<%= data.meta.take_time[tt]['take_time_id'] %>"><%= data.meta.take_time[tt]['take_time_name'] %></option>
+                                <%
+                            }
+                        } %>
+                    </select>
+                    <span class="form-error"></span>
+                </div>
+                <div class="form-group" data-item-name="number">
+                    <label>飲む個数</label>
+                    <input type="number" class="form-control" min="1" name="number" required value="{{#if number}}{{number}}{{else}}1{{/if}}">
+                    <span class="form-error"></span>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="form-group" data-item-name="period">
+                    <label>処方期間 (日)</label>
+                    <input type="number" class="form-control" min="1" name="period" required value="{{#if period}}{{period}}{{else}}1{{/if}}">
+                    <span class="form-error"></span>
+                </div>
+                <div class="form-group" data-item-name="medicine-type">
+                    <label>種類</label>
+                    <select class="form-control select2" name="medicine_type" required>
+                        <% if (typeof data.meta.medicine_type != "undefined") {
+                            for (var mt = 0; mt < data.meta.medicine_type.length; mt++) {
+                                %>
+                                <option value="<%= data.meta.medicine_type[mt]['type_id'] %>"><%= data.meta.medicine_type[mt]['type_name'] %></option>
+                                <%
+                            }
+                        } %>
+                    </select>
+                    <span class="form-error"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>

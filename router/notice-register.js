@@ -15,6 +15,39 @@ router.get('/notice-register', async (ctx) => {
         return ctx.redirect('/login');
     }
 
+    let param = ctx.request.query['medicine_id'];
+    if (param === undefined || param === '') {
+        session.error.message = '薬情報が見つかりませんでした';
+
+        return ctx.redirect('/');
+    }
+
+    let medicine = param.split(',');
+    let medicineList = [];
+    for (const key in medicine) {
+        if (medicine.hasOwnProperty(key)) {
+            let sql = `
+                SELECT medicine_id, medicine_name
+                FROM medicine
+                WHERE medicine_id = ?
+                AND group_id in (SELECT group_id FROM medicine_group WHERE user_id = ?)`;
+            let [item] = await connection.query(sql, [medicine[key], userId]);
+            if (item.length !== 0) {
+                item = item[0];
+                medicineList.push({
+                    'medicine_id': item['medicine_id'],
+                    'medicine_name': item['medicine_name']
+                });
+            }
+        }
+    }
+
+    if (medicineList.length === 0) {
+        session.error.message = '使用できる薬情報が見つかりませんでした';
+
+        return ctx.redirect('/');
+    }
+
     let result = app.initializeRenderResult();
     result['data']['meta']['login_status'] = true;
     result['data']['meta']['site_title'] = '通知登録 - Medice Note';
@@ -26,14 +59,9 @@ router.get('/notice-register', async (ctx) => {
     result['data']['meta']['script'] = [
         '/stisla/modules/select2/dist/js/select2.full.min.js',
         '/stisla/modules/bootstrap-daterangepicker/daterangepicker.js',
-        '/js/library/handlebars.min.js',
         '/js/notice-register.js'
     ];
 
-    let sql = 'SELECT medicine_id, medicine_name FROM medicine  ' +
-        'WHERE group_id in (SELECT group_id FROM medicine_group WHERE user_id = ?)'
-
-    let [medicineList] = await connection.query(sql, [userId]);
     result['data']['medicine_list'] = medicineList;
 
     if (session.success !== undefined) {
@@ -64,6 +92,14 @@ router.post('/notice-register', async (ctx) => {
         session.error.message = 'ログインしていないため続行できませんでした';
 
         return ctx.redirect('/login');
+    }
+
+    let referer = ctx.request.header.referer;
+    let parser = new URL(referer);
+    if (parser.pathname !== '/notice-register') {
+        session.error.message = '不明なエラーが発生しました';
+
+        return ctx.redirect('/');
     }
 
     let noticeName = ctx.request.body['notice_name'];
@@ -145,7 +181,7 @@ router.post('/notice-register', async (ctx) => {
         if (!validationNoticeDay) session.error.notice_day = '通知曜日が正しく選択されていません';
         if (!validationEndDate) session.error.end_date = '日付の書式で入力してください';
 
-        return ctx.redirect('/notice-register');
+        return ctx.redirect(parser.pathname + parser.search);
     }
 })
 

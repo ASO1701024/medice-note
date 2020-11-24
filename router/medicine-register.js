@@ -59,6 +59,11 @@ router.get('/medicine-register', async (ctx) => {
         session.old = undefined;
     }
 
+    // group.jsから遷移した場合、グループの初期値に当該グループを設定する。
+    if (ctx.request.query['target_group_id'] !== undefined) {
+        result['data']['target_group_id'] = ctx.request.query['target_group_id'];
+    }
+
     await ctx.render('/medicine-register', result);
 })
 
@@ -153,7 +158,7 @@ router.post('/medicine-register', async (ctx) => {
 
         session.success.message = '薬情報を登録しました';
 
-        return ctx.redirect('/medicine-list');
+        return ctx.redirect('/');
     } else {
         session.old = {};
         session.error = validationMedicine.error;

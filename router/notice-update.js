@@ -35,7 +35,6 @@ router.get('/notice-update/:notice_id', async (ctx) => {
     result['data']['meta']['script'] = [
         '/stisla/modules/select2/dist/js/select2.full.min.js',
         '/stisla/modules/bootstrap-daterangepicker/daterangepicker.js',
-        '/js/library/handlebars.min.js',
         '/js/notice-register.js'
     ];
 
@@ -44,13 +43,17 @@ router.get('/notice-update/:notice_id', async (ctx) => {
     notice = notice[0];
 
     notice['notice_id'] = noticeId;
-    sql = 'SELECT m.medicine_id, m.medicine_name, m.number FROM notice_medicine AS nm ' +
-        'LEFT JOIN medicine AS m ON nm.medicine_id = m.medicine_id ' +
-        'WHERE notice_id = ?';
+    sql = `
+        SELECT medicine.medicine_id, medicine.medicine_name FROM notice_medicine
+        LEFT JOIN medicine ON notice_medicine.medicine_id = medicine.medicine_id
+        WHERE notice_id = ?`;
     let [medicine] = await connection.query(sql, [noticeId]);
-    notice['medicine_id'] = [];
+    let medicineList = [];
     medicine.forEach(d => {
-        notice['medicine_id'].push(d);
+        medicineList.push({
+            'medicine_id': d['medicine_id'],
+            'medicine_name': d['medicine_name']
+        });
     })
 
     sql = 'SELECT time_format(notice_time, \'%H:%i\') as notice_time FROM notice_time WHERE notice_id = ?';
@@ -68,9 +71,6 @@ router.get('/notice-update/:notice_id', async (ctx) => {
     })
     result['data']['old'] = notice;
 
-    sql = 'SELECT medicine_id, medicine_name FROM medicine  ' +
-        'WHERE group_id in (SELECT group_id FROM medicine_group WHERE user_id = ?)'
-    let [medicineList] = await connection.query(sql, [userId]);
     result['data']['medicine_list'] = medicineList;
 
     if (session.success !== undefined) {
@@ -113,16 +113,10 @@ router.post('/notice-update/:notice_id', async (ctx) => {
     }
 
     let noticeName = ctx.request.body['notice_name'];
-    let medicineId = ctx.request.body['medicine_id'];
     let noticeTime = ctx.request.body['notice_time'];
     let noticeDay = ctx.request.body['notice_day'];
     let endDate = ctx.request.body['end_date'];
 
-    if (typeof medicineId === "string") {
-        medicineId = [medicineId];
-    } else if (typeof medicineId === "undefined") {
-        medicineId = [];
-    }
     if (typeof noticeTime === "string") {
         noticeTime = [noticeTime];
     } else if (typeof noticeTime === "undefined") {
@@ -134,26 +128,17 @@ router.post('/notice-update/:notice_id', async (ctx) => {
         noticeDay = [];
     }
 
-    medicineId = Array.from(new Set(medicineId));
     noticeTime = Array.from(new Set(noticeTime));
     noticeDay = Array.from(new Set(noticeDay));
 
     let validationNoticeName = app.validationNoticeName(noticeName);
-    let validationNoticeMedicineId = await app.validationNoticeMedicineId(medicineId, userId);
     let validationNoticeTime = app.validationNoticeTime(noticeTime);
     let validationNoticeDay = app.validationNoticeDay(noticeDay);
     let validationEndDate = app.validationEndDate(endDate);
 
-    if (validationNoticeName && validationNoticeMedicineId && validationNoticeTime && validationNoticeDay && validationEndDate) {
+    if (validationNoticeName && validationNoticeTime && validationNoticeDay && validationEndDate) {
         let sql = 'UPDATE notice SET notice_name = ?, notice_period = ? WHERE notice_id = ?';
         await connection.query(sql, [noticeName, endDate, noticeId]);
-
-        sql = 'DELETE FROM notice_medicine WHERE notice_id = ?';
-        await connection.query(sql, [noticeId]);
-        for (let i = 0; i < medicineId.length; i++) {
-            sql = 'INSERT INTO notice_medicine (notice_id, medicine_id) VALUES (?, ?)';
-            await connection.query(sql, [noticeId, medicineId[i]]);
-        }
 
         sql = 'DELETE FROM notice_day WHERE notice_id = ?';
         await connection.query(sql, [noticeId]);
@@ -176,24 +161,13 @@ router.post('/notice-update/:notice_id', async (ctx) => {
         session.error.message = '通知情報編集に失敗しました';
 
         if (noticeName !== '') session.old.notice_name = noticeName;
-        if (medicineId.length > 0) {
-            let medicineList = [];
-            for (let i = 0; i < medicineId.length; i++) {
-                if (await app.isHaveMedicine(medicineId[i], userId)) {
-                    let sql = 'SELECT medicine_id, medicine_name, number FROM medicine WHERE medicine_id = ?';
-                    let [medicine] = await connection.query(sql, [medicineId[i]]);
-                    medicineList.push(medicine[0]);
-                }
-            }
-            session.old.medicine_id = medicineList;
-        }
+
         session.old.notice_id = noticeId;
         if (noticeTime.length > 0) session.old.notice_time = noticeTime;
         if (noticeDay.length > 0) session.old.notice_day = noticeDay;
         if (endDate) session.old.end_date = endDate;
 
         if (!validationNoticeName) session.error.notice_name = '100文字以内で入力してください';
-        if (!validationNoticeMedicineId) session.error.medicine_id = '薬情報が正しく選択されていません';
         if (!validationNoticeTime) session.error.notice_time = '通知時間が正しく選択されていません';
         if (!validationNoticeDay) session.error.notice_day = '通知曜日が正しく選択されていません';
         if (!validationEndDate) session.error.end_date = '日付の書式で入力してください';

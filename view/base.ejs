@@ -57,11 +57,11 @@
                     <div class="sidebar-brand sidebar-gone-show">
                         <a href="/">Medice Note</a>
                     </div>
-                    <% if (typeof data.meta.login_status !== "undefined" && data.meta.login_status == true) { %>
+                    <% if (typeof data.meta.login_status !== "undefined" && data.meta.login_status === true) { %>
                         <ul class="sidebar-menu">
                             <li class="menu-header">お薬</li>
                             <li>
-                                <a class="nav-link" href="/medicine-list">
+                                <a class="nav-link" href="/">
                                     <i class="fas fa-list"></i>
                                     <span>薬情報一覧</span>
                                 </a>
@@ -70,6 +70,12 @@
                                 <a class="nav-link" href="/medicine-register">
                                     <i class="fas fa-plus"></i>
                                     <span>薬情報登録</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="/bulk-register">
+                                    <i class="fas fa-plus"></i>
+                                    <span>薬情報一括登録</span>
                                 </a>
                             </li>
                             <li>
@@ -100,10 +106,6 @@
                                 <a class="nav-link" href="/notice-list">
                                     <i class="fas fa-bell"></i>
                                     <span>通知一覧</span>
-                                </a>
-                                <a class="nav-link" href="/notice-register">
-                                    <i class="fas fa-plus"></i>
-                                    <span>通知登録</span>
                                 </a>
                             </li>
                             <li class="menu-header">その他</li>
@@ -163,14 +165,6 @@
                     <div class="bullet"></div>
                     Theme By <a href="https://getstisla.com/" target="_blank" rel="noopener">STISLA</a>
                 </div>
-                <div class="footer-right">
-                    <a href="https://twitter.com/medice_note" class="mr-2" target="_blank" rel="noopener">
-                        <i class="fab fa-fw fa-twitter mr-1"></i>@medice_note
-                    </a>
-                    <a href="https://www.facebook.com/medicenote/" target="_blank" rel="noopener">
-                        <i class="fab fa-fw fa-facebook mr-1"></i>@medicenote
-                    </a>
-                </div>
             </footer>
         </div>
     </div>
@@ -188,6 +182,11 @@
     <% } %>
     <script src="/stisla/js/stisla.js"></script>
     <script src="/stisla/js/scripts.js"></script>
+    <% if (typeof data.meta.script_delay !== "undefined") { %>
+        <% for (var sd = 0; sd < data.meta.script_delay.length; sd++) { %>
+            <script src="<%= data.meta.script_delay[sd] %>"></script>
+        <% } %>
+    <% } %>
 </body>
 
 </html>

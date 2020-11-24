@@ -5,6 +5,9 @@ const {v4: uuid} = require('uuid');
 const transporter = require('../app/mail');
 const app = require('../app/app');
 const config = require('../config.json');
+const fs = require('fs');
+const path = require('path');
+const Handlebars = require('handlebars');
 
 router.get('/forgot-password', async (ctx) => {
     let session = ctx.session;
@@ -58,21 +61,26 @@ router.post('/forgot-password', async (ctx) => {
     date.setHours(date.getHours() + 24);
     await connection.query('INSERT INTO user_reset_password_key VALUES(?, ?, ?)', [userId, authKey, date]);
 
+    let data = fs.readFileSync(path.join(__dirname, '../view/email/auth-template.html'), 'utf-8');
+    let template = Handlebars.compile(data);
+    let html = template({
+        title: 'パスワード再発行',
+        message: 'パスワード再発行が行われました<br>パスワードを復元するにはメールアドレスを認証してください',
+        url: `https://www.medice-note.vxx0.com/auth-password/${authKey}`
+    });
     await transporter.sendMail({
         from: config.mail.auth.user,
         to: mail,
         subject: 'パスワード再発行',
-        text: 'パスワード再発行リクエストが行われました\n' +
-            'パスワードを復元するには下記のURLにアクセスしメールアドレスを認証してください\n' +
-            'https://www.medice-note.vxx0.com/auth-password/' + authKey
+        html: html
     }).then(() => {
         session.success.message = '認証メールを送信しました';
 
-        ctx.redirect('/forgot-password');
+        return ctx.redirect('/forgot-password');
     }).catch(() => {
         session.error.message = '認証メールの送信に失敗しました';
 
-        ctx.redirect('/forgot-password');
+        return ctx.redirect('/forgot-password');
     });
 });
 
