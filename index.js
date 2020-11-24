@@ -171,4 +171,8 @@ const apiOcrRouter = require('./router/api-ocr');
 app.use(apiOcrRouter.routes());
 app.use(apiOcrRouter.allowedMethods());
 
+const functionIntroduction = require('./router/function-introduction');
+app.use(functionIntroduction.routes());
+app.use(functionIntroduction.allowedMethods());
+
 app.listen(5000);
