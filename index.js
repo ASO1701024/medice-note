@@ -86,6 +86,10 @@ const authPasswordRouter = require('./router/auth-password');
 app.use(authPasswordRouter.routes());
 app.use(authPasswordRouter.allowedMethods());
 
+const functionIntroduction = require('./router/introduction');
+app.use(functionIntroduction.routes());
+app.use(functionIntroduction.allowedMethods());
+
 const renewMailAuthRouter = require('./router/renew-mail-auth');
 app.use(renewMailAuthRouter.routes());
 app.use(renewMailAuthRouter.allowedMethods());
@@ -161,6 +165,10 @@ app.use(accountDeleteRouter.allowedMethods());
 const lineLoginRouter = require('./router/line-login');
 app.use(lineLoginRouter.routes());
 app.use(lineLoginRouter.allowedMethods());
+
+const twoFactorAuthenticationSetting = require('./router/two-factor-authentication-setting');
+app.use(twoFactorAuthenticationSetting.routes());
+app.use(twoFactorAuthenticationSetting.allowedMethods());
 
 // API
 const apiCalenderRouter = require('./router/api-calendar');
