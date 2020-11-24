@@ -2,7 +2,7 @@ const Router = require('koa-router');
 const router = new Router();
 const app = require('../app/app');
 
-router.get('/function-introduction', async (ctx) => {
+router.get('/introduction', async (ctx) => {
     let session = ctx.session;
     app.initializeSession(session);
 
@@ -19,12 +19,7 @@ router.get('/function-introduction', async (ctx) => {
     result['data']['meta']['site_title'] = '使い方 - Medice Note';
     result['data']['meta']['group_list'] = await app.getGroupList(userId);
 
-    if (session.error !== undefined) {
-        result['data']['error'] = session.error;
-        session.error = undefined;
-    }
-
-    await ctx.render('function-introduction', result);
+    await ctx.render('introduction', result);
 })
 
 module.exports = router;

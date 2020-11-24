@@ -86,6 +86,10 @@ const authPasswordRouter = require('./router/auth-password');
 app.use(authPasswordRouter.routes());
 app.use(authPasswordRouter.allowedMethods());
 
+const functionIntroduction = require('./router/introduction');
+app.use(functionIntroduction.routes());
+app.use(functionIntroduction.allowedMethods());
+
 const renewMailAuthRouter = require('./router/renew-mail-auth');
 app.use(renewMailAuthRouter.routes());
 app.use(renewMailAuthRouter.allowedMethods());
@@ -170,9 +174,5 @@ app.use(apiCalenderRouter.allowedMethods());
 const apiOcrRouter = require('./router/api-ocr');
 app.use(apiOcrRouter.routes());
 app.use(apiOcrRouter.allowedMethods());
-
-const functionIntroduction = require('./router/function-introduction');
-app.use(functionIntroduction.routes());
-app.use(functionIntroduction.allowedMethods());
 
 app.listen(5000);
